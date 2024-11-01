@@ -1,0 +1,27 @@
+.button-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.slim-btn {
+  padding: 2px 8px; /* Slimmer padding */
+  font-size: 14px; /* Smaller font size */
+  margin: 2px 0; /* Small margin between buttons */
+  width: 80px; /* Adjust width to make it slimmer */
+}
+
+.btn-success {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+.btn-success:hover, .btn-danger:hover {
+  opacity: 0.9; /* Slight hover effect */
+}/*# sourceMappingURL=orderListing.css.map */

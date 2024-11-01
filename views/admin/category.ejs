@@ -1,0 +1,120 @@
+<html lang="en">
+<%- include("../partials/htmlHead.ejs", { csspath: "/css/adminCss/category/category.css" }) %>
+
+    <body>
+        <%- include('../partials/adminNavbar.ejs') %>
+
+            <div class="container-fluid wrapper">
+                <%- include("../partials/adminLeftsidebar.ejs") %>
+
+                    <div class="mainpanel">
+                        <nav class="navbar rounded-3 bg-body-tertiary">
+                            <div class="container-fluid">
+                                <h4>Category Management</h4>
+                                <div class="d-flex">
+                                    <form class="d-flex" role="search">
+                                        <!-- <input class="form-control me-2" type="search" placeholder="Search"
+                                            aria-label="Search">
+                                        <button class="btn btn-outline-success" type="submit">Search</button> -->
+                                    </form>
+                                    <a href="/admin/addCategory">
+                                        <button id="addCategory" class="btn btn-outline-primary ms-3" type="button">Add
+                                            Category</button></a>
+                                </div>
+                            </div>
+                        </nav>
+
+                        <!-- Category List -->
+                        <div class="categoryList">
+                            <div class="header">
+                                <ul>
+                                    <li>Category Name</li>
+                                    <li>Description</li>
+                                    <li>Products count</li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="categoryList list">
+
+                                <% for(let category of dbData){ %>
+
+                                    <div class="header user">
+                                        <ul>
+                                            <li>
+                                                <%= category.categoryName %>
+                                            </li>
+                                            <li>
+                                                <%= category.description.substring(0, 15)+"..." %>
+                                            </li>
+                                            <li>
+                                                <%= category.products.length %>
+                                            </li>
+                                            <li>
+
+                                                <% if(!category.isBlocked){ %>
+                                                    <a href="/admin/editCategoryPage/?id=<%= category._id  %>">
+                                                        <img id="edit" src="/assets/images/edit.png" alt="">
+                                                    </a>
+
+                                                    <a class="deleteBtn"
+                                                        href="/admin/removeCategory/?id=<%= category._id  %>">
+                                                        <img id="delete" src="/assets/images/delete1.png" alt="">
+                                                    </a>
+                                                    <% }else{ %>
+
+                                                        <a id="restoreBtn"
+                                                            href="/admin/restoreCategory/?id=<%= category._id  %>">
+                                                            <img  src="/assets/images/restore.png" alt="">
+                                                        </a>
+
+                                                        <% } %>
+
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <% } %>
+
+
+                            </div>
+                        </div>
+
+
+                        <!-- pagenation -->
+                        <Section class="d-flex justify-content-center mt-3">
+                            <div aria-label="Page navigation example ">
+                            <ul class="pagination">
+                              <li class="page-item">
+                                <a class="page-link" href="/admin/category/?currentpage=<%= currentpage-1 %>" aria-label="Previous">
+                                  <span aria-hidden="true">&laquo;</span>
+                                  <span class="sr-only">Previous</span>
+                                </a>
+                              </li>
+                         
+                              <li class="page-item"><a class="page-link" ><%= currentpage %></a></li>
+                            
+                              <li class="page-item">
+                                <a class="page-link" href="/admin/category/?currentpage=<%= Number(currentpage)+1 %>" aria-label="Next">
+                                  <span aria-hidden="true">&raquo;</span>
+                                  <span class="sr-only">Next</span>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </Section>
+
+                    </div>
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="/js/adminjs/category.js"></script>
+
+            <!-- Inline script for showing SweetAlert -->
+            <% if (typeof alert !=='undefined' && alert.trim() !=='' ) { %>
+                <script>
+                    callSweetAlert('<%= alert %>');
+                </script>
+                <% } %>
+
+    </body>
+
+</html>

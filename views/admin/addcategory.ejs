@@ -1,0 +1,70 @@
+<html lang="en">
+<%- include("../partials/htmlHead.ejs", { csspath: "/css/adminCss/category/category.css" }) %>
+
+    <body>
+        <%- include('../partials/adminNavbar.ejs') %>
+
+            <div class="container-fluid wrapper">
+                <%- include("../partials/adminLeftsidebar.ejs") %>
+
+                    <div class="mainpanel">
+                        <nav class="navbar rounded-3 bg-body-tertiary">
+                            <div class="container-fluid">
+                                <h4>Add Category </h4>
+
+                                <h5 class="text-danger"><%= message  %></h5>
+                                <div class="d-flex">
+                                    <button id="addCategory" class="btn btn-outline-primary ms-3" type="button">AddCategory</button>
+                                </div>
+                            </div>
+                        </nav>
+
+                        <section class="w-50 mx-auto pt-5">
+                            <form action="/admin/category" id="form" method="post" enctype="multipart/form-data">
+
+                                <div class="form-group">
+                                  <label for="exampleInputEmail1">Category Name</label>
+                                  <input name="categoryName"  type="text" class="form-control border border-info" id="categoryName" aria-describedby="emailHelp" placeholder="Catefory Name" >
+                                  <div class="text-danger" id="categoryErr"></div>
+                                  
+                                </div>
+
+                                <div class="form-group">
+                                  <label for="exampleInputPassword1">Description</label>
+                                  <input name="description" type="text" class="form-control border border-info" id="description" placeholder="Description" >
+                                  <div class="text-danger" id="descriptionErr"></div>
+                                  
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Logo</label>
+                                    <input name="image" accept="image/png, image/jpeg" type="file" class="form-control border border-info" id="exampleInputPassword1" placeholder="upload image "  required>
+                                </div>
+
+                                <button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
+                            </form>
+
+                        </section>
+
+
+
+
+                   
+
+                    </div>
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="/js/adminjs/addCategory.js"></script>
+           
+
+            <!-- Inline script for showing SweetAlert -->
+            <% if (typeof alert !=='undefined' && alert.trim() !=='' ) { %>
+                <script>
+                    callSweetAlert('<%= alert %>');
+                </script>
+                <% } %>
+
+    </body>
+
+</html>

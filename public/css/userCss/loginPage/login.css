@@ -1,0 +1,114 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "unito", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  font-size: 13px;
+}
+
+body {
+  background-color: #daedfd;
+}
+
+.Container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.Container .leftSection,
+.Container .rightSection {
+  font-weight: 500;
+  width: 400px;
+}
+.Container .leftSection p,
+.Container .rightSection p {
+  font-size: 13px;
+}
+.Container .leftSection img,
+.Container .rightSection img {
+  width: 300px;
+}
+.Container .rightSection {
+  background-color: #fff;
+}
+.Container .rightSection h3 {
+  font-weight: 600;
+}
+.Container .rightSection .resend {
+  width: 200px;
+  margin: auto;
+}
+.Container .rightSection span {
+  font-size: 12px;
+}
+.Container .rightSection .googleLogin {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Container .rightSection .googleLogin div {
+  border: 1px solid #B9B9B9;
+  width: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.Container .rightSection .googleLogin img {
+  width: 32px;
+  padding: 8px 0px;
+}
+.Container .rightSection .googleLogin .googleimg {
+  width: 25px;
+  margin-right: 10px;
+}
+.Container .rightSection .existingUser {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #ccc;
+  margin: 0 10px;
+}
+
+.separator span {
+  font-weight: bold;
+  color: #333;
+}
+
+.errorStyle {
+  color: red;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+@media screen and (max-width: 768px) {
+  .Container {
+    flex-direction: column;
+  }
+  .Container .leftSection img {
+    width: 200px;
+    margin-bottom: 15px;
+  }
+}/*# sourceMappingURL=login.css.map */

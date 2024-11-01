@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/userCss/purchase/orderSucessPage.css">
+  <title>Order Sucessfull</title>
+  
+</head>
+<body>
+  <div class="container">
+    <div class="checkmark-circle">
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark-circle-svg" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark-check" fill="none" d="M14 27l7 7 16-16"/>
+      </svg>
+    </div>
+    <h1>Thank you For Your Purchase</h1>
+    <p><%= `Your order of ${orderDetails.orderItems.length} items has been marked as successful`%></p>
+    <p><%= `your order Id is # ${orderDetails.orderId}`%></p>
+    <p>Thank you for your Order and choosing Essentials! <br> Your Order will Deliver Shortly</p>
+    <a href="/">
+      <button >Home</button>
+    </a>
+    
+    <!-- <p class="small-text">— Click to see opposite state —</p> -->
+  </div>
+
+</body>
+</html>
+
+
+
+
+

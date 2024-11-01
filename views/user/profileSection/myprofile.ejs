@@ -1,0 +1,89 @@
+<html lang="en">
+
+<%- include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/profile/profile.css'}) %>
+    <link rel="stylesheet" href="/css/commonCss/userProfileLeft/userProfileLeftbar.css">
+
+    <body>
+
+        <%- include('../../partials/userNavbar.ejs') %>
+
+
+        <section class=" container rounded-2 bg-light">
+            <ol class="d-flex align-items-center list-unstyled m-0 ">
+                <li><a class="text-decoration-none" href="/home">Home /</a></li>
+                <li><a class="text-decoration-none" href="/profile" >Profile</a></li>
+            </ol>
+          </section>
+
+            <section class="container d-flex gap-2">
+
+                <%- include('../../partials/userprofile/profileleftSec.ejs',{userData}) %>
+
+
+                    <!-- right Section -->
+                    <section id="rightSection">
+                        <h5>Profile</h5>
+                        <div class="line"></div>
+
+                        <form class="mt-4 mx-5">
+
+                            <input id="_id" type="text" value="<%= userData._id  %>" name="_id" hidden>
+
+
+                            <div class="form-group">
+                                <label for="name">Full Name</label><span id="nameerr" class=" text-danger"> </span>
+                                <input type="text" class="form-control w-50" value="<%= userData.name  %>" id="name"
+                                    placeholder="Full Name" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateOfBirth" value="<%= userData.dateOfBirth %>">Date of Birth</label>
+                                <span id="doberr" class=" text-danger"></span>
+
+                                <input type="date" class="form-control w-50" id="dateOfBirth" name="dateOfBirth"
+                                    value="<%= userData.dateOfBirth ? new Date(userData.dateOfBirth).toISOString().split('T')[0] : '' %>"
+                                    disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">Gender</label> <span id="gendererr" class=" text-danger"> </span><br>
+                                <div class="mx-3">
+
+
+                                    <input name="gender" id="male" value="male" type="radio" <%=userData.gender==="male"
+                                        ? 'checked' : '' %> disabled>
+                                    <label for="male">Male</label><br>
+
+                                    <input name="gender" id="female" value="female" <%=userData.gender==="female"
+                                        ? 'checked' : '' %> type="radio" disabled>
+                                    <label for="female">Female</label>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Mobile Number</label> <span id="phoneerr" class=" text-danger">
+                                </span>
+                                <input type="text" class="form-control w-50" value="<%= userData.phone %>" id="phone"
+                                    placeholder="Mobile Number" disabled>
+
+                            </div>
+
+                            <button type="button" onclick="getEdit()" id="editBtn" class="btn btn-primary">Edit
+                                Profile</button>
+                            <button type="button" id="submitBtn" class="btn btn-primary" hidden>Submit</button>
+
+                        </form>
+                    </section>
+
+
+            </section>
+
+
+
+            <%- include('../../partials/userFooter.ejs') %>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script src="/js/userjs/profileSection/myProfile.js"></script>
+
+    </body>
+
+</html>

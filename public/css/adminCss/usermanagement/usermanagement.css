@@ -1,0 +1,73 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #D0FFEF;
+  font-family: "Inter", sans-serif;
+}
+
+.line {
+  width: 100%;
+  height: 2px;
+  background-color: #DFE1E7;
+}
+
+.wrapper {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+.wrapper .mainpanel {
+  flex-grow: 1;
+  min-height: 500px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+.wrapper .mainpanel nav {
+  z-index: 0;
+}
+.wrapper .userListing {
+  margin-top: 15px;
+}
+.wrapper .userListing .header {
+  width: 90%;
+  height: 50px;
+  padding: 0px 15px;
+  padding-right: 25px;
+  background-color: #F4FAF8;
+  border: 1px solid #459D7A;
+  border-radius: 6px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+.wrapper .userListing .header:hover {
+  background-color: #F4FAF8;
+}
+.wrapper .userListing .header ul {
+  width: 100%;
+  list-style: none;
+  padding: 0 40px;
+  display: flex;
+  margin: 0;
+  justify-content: space-between;
+  align-items: center;
+}
+.wrapper .userListing .header ul li {
+  flex: 1;
+}
+.wrapper .userListing .header ul li:nth-child(3) {
+  flex: 1.8;
+}
+.wrapper .userListing .header ul li:nth-child(1) {
+  flex: 0.5;
+}
+.wrapper .list .user {
+  background-color: #ffffff;
+  border: 1px solid #459D7A;
+}/*# sourceMappingURL=usermanagement.css.map */

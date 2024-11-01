@@ -1,0 +1,24 @@
+nav {
+  width: 100%;
+  height: 70px;
+  background-color: #fff;
+  position: fixed;
+  z-index: 9;
+  top: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+nav .logo img {
+  width: 200px;
+}
+nav .adminLogo img {
+  width: 30px;
+}
+nav .adminLogo span {
+  padding: 10px;
+}
+
+.blank {
+  height: 70px;
+}/*# sourceMappingURL=adminNav.css.map */

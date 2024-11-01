@@ -1,0 +1,21 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+p{
+    margin: 0;
+    padding-left: 10px;
+}
+.addressSec{
+    display: flex;
+    align-items: center;
+
+}
+
+
+#editIcon{
+    width: 25px;
+    cursor: pointer;
+    margin-left: auto;
+}

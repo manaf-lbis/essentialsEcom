@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #D0FFEF;
+  font-family: "Inter", sans-serif;
+}
+
+.line {
+  width: 100%;
+  height: 2px;
+  background-color: #DFE1E7;
+}
+
+.wrapper {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+.wrapper .mainpanel {
+  flex-grow: 1;
+  height: 500px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+.wrapper .mainpanel h4 {
+  padding: 15px 0 5px 15px;
+}/*# sourceMappingURL=dashboard.css.map */

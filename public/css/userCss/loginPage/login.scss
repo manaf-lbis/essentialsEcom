@@ -1,0 +1,124 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "unito", sans-serif;
+}
+a{
+    text-decoration: none;
+    font-size: 13px;
+}
+
+// ====== variables ======
+$fontColor: #379ae6;
+
+body {
+  background-color: #daedfd;
+  // font-family: Inter, sans-serif;
+}
+
+.Container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  
+  .leftSection,
+  .rightSection {
+    font-weight: 500;
+    width: 400px;
+    p{
+        font-size: 13px;
+    }
+    img {
+      width: 300px;
+    }
+  }
+  .rightSection {
+    background-color: #fff;
+    h3 {
+      font-weight: 600;
+    }
+    .resend{
+       
+        width: 200px;
+        margin: auto;
+    }
+    span{
+        font-size: 12px;
+    }
+    .googleLogin{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        div{
+          border: 1px solid #B9B9B9 ;
+          width: 60%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 10px;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        img{
+            width: 32px;
+            padding: 8px 0px;
+
+        }
+        .googleimg{
+            width: 25px;
+            margin-right: 10px;
+        }
+    }
+    .existingUser{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+  }
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center; 
+    margin: 20px 0; 
+  }
+  
+  .separator::before,
+  .separator::after {
+    content: "";
+    flex: 1; 
+    height: 1px; 
+    background-color: #ccc; 
+    margin: 0 10px; 
+  }
+  
+  .separator span {
+    font-weight: bold; 
+    color: #333;
+  }
+// validation
+.errorStyle{
+  color: red;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+
+
+@media screen and (max-width:768px) {
+    .Container{
+        flex-direction: column; 
+        .leftSection{
+            
+            img{
+               width: 200px;
+               margin-bottom: 15px;
+               
+            }
+        }
+    }
+}

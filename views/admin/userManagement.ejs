@@ -1,0 +1,110 @@
+<html lang="en">
+  <%- include("../partials/htmlHead.ejs",{csspath:"/css/adminCss/usermanagement/usermanagement.css"}) %>
+<body>
+    <!-- navbar -->
+    <%- include('../partials/adminNavbar.ejs') %>
+    
+    <div class="container-fluid wrapper">
+        <!-- left pannel -->
+            <%- include("../partials/adminLeftsidebar.ejs") %>
+
+
+        <div class="mainpanel">
+            <nav class="navbar rounded-3 bg-body-tertiary">
+                <div class="container-fluid">
+                  <h4>User Management</h4>
+                  <div class="d-flex">
+
+                    <form method="get" action="/admin/usermanagement" class="d-flex" role="search">
+                        <input name="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+
+                    <!-- <button class="btn btn-outline-primary ms-3" type="button">Add user +</button> -->
+                 </div>
+                </div>
+              </nav>
+            <!-- nav ends -->
+
+            <div class="userListing">
+                <div class="header">
+                    <ul>
+                        <li>Sl no.</li>
+                        <li>Name</li>
+                        <li>Emial ID</li>
+                        <li>Phone</li>
+                        <li>Status</li>
+                    </ul>
+                </div>
+                <!-- user listing -->
+                <div class=" userListing list">
+
+                   <% if(typeof userData !== 'undefined' || userData.length !== 0){ %>
+                     <%   userData.forEach((user,index)=>{ %>
+                            <div class=" header user"> %>
+                                <ul>
+                                    <li><%= index+1 %></li>
+                                    <li><%= user.name %></li>
+                                    <li><%= user.email %></li>
+                                    <li><%= user.phone %></li>
+                                  <%  if(!user.isBlocked){ %>
+                                        <li> 
+                                            <form method="post" action="/admin/blockUser/<%= user._id %>">
+                                               <button  type="submit" class="btn btn-success">Active</button>
+                                             </form>
+                                        </li>
+                                  <%  }else{ %>
+
+                                        <li> 
+                                            <form method="post" action="/admin/unblockUser/<%= user._id%>">
+                                              <button  type="submit" class="btn btn-danger">Blocked</button>
+                                           </form>
+                                        </li>
+
+                                   <% } %>
+                                    
+                                </ul>
+                            </div>
+
+                       <% }) %>
+                   <% } %> 
+
+                    
+
+                </div>
+
+                <div class="d-flex justify-content-center mt-3" aria-label="Page navigation example">
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <a class="page-link" href="/admin/usermanagement/?pageReq=<%= currentPage-1 %>" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                      </li>
+
+                      <li class="page-item"><a class="page-link" href="#"> <%= currentPage %> </a></li>
+
+                      <li class="page-item">
+                        <a class="page-link" href="/admin/usermanagement/?pageReq=<%=currentPage+1%>" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </li>
+                    </ul>
+                </div>
+
+
+            </div>
+
+          
+
+
+
+
+        </div>
+
+</div>
+
+    <script src="/js/adminjs/usermanagement.js"></script>
+</body>
+</html>

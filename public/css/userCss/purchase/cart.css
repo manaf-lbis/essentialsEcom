@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.countBtn {
+  height: 40px;
+}
+
+.line {
+  width: 100%;
+  height: 2px;
+  background-color: #DFE1E7;
+  margin: 5px 0;
+}
+
+p {
+  padding: 0;
+  margin: 0;
+}
+
+.fa-heart {
+  color: red;
+}/*# sourceMappingURL=cart.css.map */

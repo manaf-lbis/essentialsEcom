@@ -1,0 +1,135 @@
+<html lang="en">
+
+</html>
+<%- include("../../partials/htmlHead.ejs",{csspath:"/css/adminCss/productmanagement/productmanagement.css"}) %>
+    <link rel="stylesheet" href="/css/adminCss/ordermanagement/orderListing.css">
+
+    <body>
+        <!-- navbar -->
+        <%- include('../../partials/adminNavbar.ejs') %>
+
+            <div class="container-fluid wrapper">
+                <!-- left pannel -->
+                <%- include("../../partials/adminLeftsidebar.ejs") %>
+
+
+                    <div class="mainpanel">
+                        <nav class="navbar rounded-3 bg-body-tertiary">
+                            <div class="container-fluid">
+                                <h4>Order Management</h4>
+                                <div class="d-flex">
+                                    <form class="d-flex" role="search" method="get" action="/admin/products/">
+                                        <input class="form-control me-2" name="search" type="search"
+                                            placeholder="Search" aria-label="Search">
+                                        <button class="btn btn-outline-success" type="submit">Search</button>
+                                    </form>
+                                    <a href="/admin/addProduct">
+                                        <button class="btn btn-outline-primary ms-3" type="button">Add Product</button>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </nav>
+                        <!-- nav ends -->
+
+                        <!-- main panel -->
+
+                        <div class="userListing">
+                            <div class="header">
+                                <ul>
+                                    <li>order Id</li>
+                                    <li>Product Name</li>
+                                    <li>Order Qty</li>
+                                    <li>Total price</li>
+                                    <li>Payment</li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <!-- user listing -->
+                            <div class=" userListing list">
+
+
+                                <% allOrders.forEach((order) => { %>
+
+                                    <% order.orderItems.forEach((item)=>{  %>
+                                        <div class=" header user">
+                                            <ul>
+                                                <li><%= order.orderId %></li>
+                                                <li> <%= item.productId.productName.substring(0,15)+'..'%> </li>
+                                                <li> <%= item.quantity %></li>
+                                                <li> <%= item.price * item.quantity %></li>
+
+                                                <li class="text-success"> <%= order.paymentMethod %> </li>
+
+                                                <li class="button-group">
+                                                    
+                                                    <% if(item.status === 'Pending'){ %>
+                                                        <a href="/admin/updateOrderStatus/?status=Processing&orderId=<%= order.orderId %>&productId=<%=item.productId._id%>">
+                                                        <button type="button"  class="btn btn-success slim-btn">Approve</button>
+                                                        </a>
+
+                                                    <% }else if(item.status === 'Processing'){ %>
+                                                        <a href="/admin/updateOrderStatus/?status=Shipped&orderId=<%= order.orderId %>&productId=<%=item.productId._id%>">
+                                                        <button type="button" class="btn btn-success slim-btn">Shipped</button>
+                                                        </a>
+                                                    <% } else if(item.status === 'Shipped'){ %>
+                                                        <a href="/admin/updateOrderStatus/?status=Delivered&orderId=<%= order.orderId %>&productId=<%=item.productId._id%>">
+                                                            <button type="button" class="btn btn-success slim-btn">delivered</button>
+                                                        </a>
+                                                     <% } %>
+                                        
+                                                    <!-- after delivery no need to reject the order -->
+                                                    <% if(item.status !== 'Delivered' && item.status !== 'Rejected' && item.status !== 'Cancelled'  ){ %>
+                                                        <a href="/admin/updateOrderStatus/?status=Rejected&orderId=<%= order.orderId %>&productId=<%=item.productId._id%>">
+                                                            <button type="button" class="btn btn-danger slim-btn">Reject</button>
+                                                        </a>
+                                                    <% } %>
+
+                                                    <!-- if the order is rejected by admin -->
+                                                    <% if(item.status === 'Rejected'  ){ %>
+                                                        <p class="text-danger" >Rejected</p>
+                                                    <% } %>
+
+                                                    <!-- if the order is cancelled by user -->
+                                                    <% if(item.status === 'Cancelled' ){ %>
+                                                        <p class="text-danger">Cancelled</p>
+                                                    <% } %>
+
+                                                     <!-- if the order is cancelled by user -->
+                                                     <% if(item.status === 'Delivered' ){ %>
+                                                        <p class="text-success">Delivered</p>
+                                                    <% } %>
+
+
+  
+
+
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                     <% })  %>
+
+
+                                <% })  %>
+
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- main panel ends -->
+
+                    </div>
+
+            </div>
+
+            <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="/js/adminjs/usermanagement.js"></script>
+    </body>
+
+    </html>

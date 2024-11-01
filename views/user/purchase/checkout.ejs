@@ -1,0 +1,325 @@
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <%-include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/purchase/checkout.css'}) %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+
+  <%- include('../../partials/userNavbar.ejs') %>
+
+  <section class=" container rounded-2 bg-light">
+    <ol class="d-flex align-items-center list-unstyled m-0 ">
+        <li><a class="text-decoration-none" href="/home">Home/ </a></li>
+        <li><a class="text-decoration-none" href="/cart" >Cart/</a></li>
+        <li><a class="text-decoration-none"  >checkout</a></li>
+
+    </ol>
+  </section>
+
+    <section class=" gradient-custom">
+      <div class="container py-2">
+
+        <form id="checkoutForm" action="/placeOrder" method="post">
+          <div class="row d-flex justify-content-center my-4">
+
+            <div class="col-md-8">
+              <!-- Heading -->
+              <div class="card mb-4">
+                <div class="card-header py-3 ">
+                  <h5 class="mb-0">Checkout </h5>
+                </div>
+
+              </div>
+              <!-- Heading Ends -->
+
+
+
+              <!-- card Ends -->
+              <div class="card mb-4">
+                <div class="card-header py-3 bg-white">
+                  <h5 class="mb-0">Delivery Address </h5>
+                </div>
+
+                <div class="card-body">
+                  <!-- Single item -->
+                  <div class="row">
+
+                    <% if(userAddress?.length> 0 ){ %>
+
+                      <% for( let address of userAddress){ %>
+
+                        <div class="addressSec col-md-12 mb-3">
+                          <input name="deliveryAddress" <%=address.defaultAddress ? 'checked' :''%> value="<%=
+                            address._id %>" type="radio">
+                            <p  class="">
+                            <address class="mb-0">
+                              <%= `${address.fullName },${address.houseName },${address.area},${address.street
+                                },${address.pincode }` %>
+                            </address>
+                            </p>
+                            <img id="editIcon" class="me-2 editBtn" addressId="<%=address._id%>" src="/assets/images/edit.png" alt="">
+                        </div>
+
+                        <% } %>
+                          <% } %>
+                  </div>
+
+                  <button type="button" onclick="clearAllField()" class="btn btn-primary mt-3" data-toggle="modal"
+                            data-target="#exampleModalCenter">
+                            Add New Address
+                        </button>
+
+
+                </div>
+
+              </div>
+              <!-- card Ends -->
+
+
+              <!-- card Starts -->
+              <div class="card mb-4">
+                <div class="card-header py-3 bg-white">
+                  <h5 class="mb-0">Payment Methord </h5>
+                </div>
+
+                <div class="card-body">
+                  <!-- Single item -->
+                  <div class="row">
+
+                    <div class="addressSec col-md-12">
+                      <input name="paymentMethod" value="COD" type="radio">
+                      <p class="">Cash on Delivery</p>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+              <!-- card Ends -->
+            </div>
+
+
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header py-3">
+                  <h5 class="mb-0">Summary</h5>
+                </div>
+                <div class="card-body">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                      Price
+                      <span>₹<%= totalAmount %></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                      Total Items
+                      <span>
+                        <%= totalItems %>
+                      </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                      Shipping charge
+                      <span>0</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                      <div>
+                        <strong>Total amount</strong>
+                        <strong>
+                          <p class="mb-0">(including all taxes)</p>
+                        </strong>
+                      </div>
+                      <span><strong>₹<%= totalAmount %></strong></span>
+                    </li>
+                  </ul>
+
+                  <button type="submit" data-mdb-button-init data-mdb-ripple-init id="proceedButton"
+                    class="btn btn-primary btn-lg btn-block">
+                    Place Your Order
+                  </button>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </section>
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div id="modalHead" class="modal-content">
+
+          <form method="post" action="/addNewAddress" id="addressAddingForm" role="form">
+
+            <div  class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Add New Address</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+
+
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label id="name-label" for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter your name"
+                      class="form-control border border-primary">
+                    <small class="text-danger" id="fullNameErr"></small>
+                  </div>
+
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label id="name-label" for="houseName">House Name</label>
+                    <input type="text" id="houseName" name="houseName" placeholder="Enter your name"
+                      class="form-control border border-primary">
+                    <small class="text-danger" id="houseNameErr"></small>
+                  </div>
+                  <input hidden name="addressId" id="hiddenId" type="text">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label id="name-label" for="area">Area</label>
+                    <input type="text" id="area" name="area" placeholder="Enter your name"
+                      class="form-control border border-primary">
+                    <small class="text-danger" id="areaErr"></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label id="email-label" for="street">Street</label>
+                    <input type="text" id="street" name="street" placeholder="Enter your email"
+                      class="form-control border border-primary">
+                    <small class="text-danger" id="streetErr"></small>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label id="email-label" for="city">City</label>
+                    <input type="text" id="city" name="city" placeholder="City" class="form-control border border-primary">
+                    <small class="text-danger" id="cityErr"></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>State</label>
+                    <select id="state" name="state" class="form-control border border-primary">
+                      <option disabled selected value>Select</option>
+                      <option value="Andhra Pradesh">Andhra Pradesh</option>
+                      <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                      <option value="Assam">Assam</option>
+                      <option value="Bihar">Bihar</option>
+                      <option value="Chhattisgarh">Chhattisgarh</option>
+                      <option value="Goa">Goa</option>
+                      <option value="Gujarat">Gujarat</option>
+                      <option value="Haryana">Haryana</option>
+                      <option value="Himachal Pradesh">Himachal Pradesh</option>
+                      <option value="Jharkhand">Jharkhand</option>
+                      <option value="Karnataka">Karnataka</option>
+                      <option value="Kerala">Kerala</option>
+                      <option value="Madhya Pradesh">Madhya Pradesh</option>
+                      <option value="Maharashtra">Maharashtra</option>
+                      <option value="Manipur">Manipur</option>
+                      <option value="Meghalaya">Meghalaya</option>
+                      <option value="Mizoram">Mizoram</option>
+                      <option value="Nagaland">Nagaland</option>
+                      <option value="Odisha">Odisha</option>
+                      <option value="Punjab">Punjab</option>
+                      <option value="Rajasthan">Rajasthan</option>
+                      <option value="Sikkim">Sikkim</option>
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                      <option value="Telangana">Telangana</option>
+                      <option value="Tripura">Tripura</option>
+                      <option value="Uttar Pradesh">Uttar Pradesh</option>
+                      <option value="Uttarakhand">Uttarakhand</option>
+                      <option value="West Bengal">West Bengal</option>
+                      <option value="Andaman and Nicobar Islands">Andaman and
+                        Nicobar Islands</option>
+                      <option value="Chandigarh">Chandigarh</option>
+                      <option value="Dadra and Nagar Haveli and Daman and Diu">
+                        Dadra and Nagar Haveli and Daman and Diu</option>
+                      <option value="Lakshadweep">Lakshadweep</option>
+                      <option value="Delhi">Delhi</option>
+                      <option value="Puducherry">Puducherry</option>
+
+                    </select>
+                    <small class="text-danger" id="stateErr"></small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label id="name-label" for="pincode">Picode</label>
+                    <input type="number" min="100000" max="999999" id="pincode" name="pincode"
+                      placeholder="Area Pincode" class="form-control border border-primary">
+                    <small class="text-danger" id="pincodeErr"></small>
+                  </div>
+                  <input name="defaultAddress" id="defaultAddress" value="true" type="checkbox"><label
+                    for="defaultAddress"> Set as default Address</label>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label id="email-label" for="phone">Phone</label>
+                    <input type="text" name="phone" id="phone" placeholder="Enter your phone No"
+                      class="form-control border border-primary">
+                    <small class="text-danger" id="phoneErr"></small>
+                    <input hidden name="requestPage" value="/checkout">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" id="newAddressSubmit" class="btn btn-primary">Add Address</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal ends -->
+
+
+
+
+    <%- include('../../partials/userFooter.ejs') %>
+
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+      <script src="/js/userjs/purchase/checkout.js"></script>
+
+
+</body>
+
+</html>

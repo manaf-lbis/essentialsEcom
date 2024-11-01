@@ -1,0 +1,44 @@
+a{
+    text-decoration: none;
+    color: #000;
+}
+
+
+.leftSidebar{
+    width: 250px;
+    background-color: #fff;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    height: 520px;
+    padding-top: 15px;
+    border-radius: 6px;
+    // position: fixed;
+    // top: 70px;
+    h5{
+        padding-left: 15px;
+    }
+
+    .menu{
+       margin-top: 20px;
+        div{
+            padding: 15px 0px 5px 20px;
+            height: 55px;
+            border-radius: 6px;
+            transition: 0.3s ease;
+            cursor: pointer;
+            
+            img{
+                width: 25px;
+            }
+            span{
+                padding-left: 5px;
+                
+            }
+            &:hover{
+                background-color: #F4FAF8;  
+                border: 1px solid #459D7A;
+            }
+        }
+
+    }
+   
+}

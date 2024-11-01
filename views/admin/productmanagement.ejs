@@ -1,0 +1,107 @@
+<html lang="en">
+
+</html>
+<%- include("../partials/htmlHead.ejs",{csspath:"/css/adminCss/productmanagement/productmanagement.css"}) %>
+
+    <body>
+        <!-- navbar -->
+        <%- include('../partials/adminNavbar.ejs') %>
+
+            <div class="container-fluid wrapper">
+                <!-- left pannel -->
+                <%- include("../partials/adminLeftsidebar.ejs") %>
+
+
+                    <div class="mainpanel">
+                        <nav class="navbar rounded-3 bg-body-tertiary">
+                            <div class="container-fluid">
+                                <h4>Product Management</h4>
+                                <div class="d-flex">
+                                    <form class="d-flex" role="search" method="get" action="/admin/products/">
+                                        <input class="form-control me-2" name="search" type="search" placeholder="Search"
+                                            aria-label="Search">
+                                        <button class="btn btn-outline-success" type="submit">Search</button>
+                                    </form>
+                                    <a href="/admin/addProduct">
+                                        <button class="btn btn-outline-primary ms-3" type="button">Add Product</button>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </nav>
+                        <!-- nav ends -->
+
+                        <div class="userListing">
+                            <div class="header">
+                                <ul>
+                                    <li>Image</li>
+                                    <li>Product Name</li>
+                                    <li>Stock </li>
+                                    <li>price</li>
+                                    <li>Status</li>
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <!-- user listing -->
+                            <div class=" userListing list">
+
+                                <% for(let product of products){ %>
+
+                                    <div class=" header user">
+                                        <ul>
+                                            <li><img src="<%= product.productImage[0] %>" alt="image"></li>
+                                            <li> <%= product.productName.substring(0, 8)+"..." %> </li>
+                                            <li> <%= product.quantity %> </li>
+                                            <li> <%= product.sellingPrice %> </li>
+
+                                            <% if(!product.isBlocked){  %>
+                                                <li class="text-success"> Active </li>
+                                           <% }else{ %>
+                                            <li class="text-danger"> Bolcked </li>
+                                           <% } %>
+                                             
+
+                                            <li><a href="/admin/editProduct/<%=product._id%>"><img src="/assets/images/edit.png" alt=""></a>
+                                                <img src="/assets/images/delete1.png" alt="" onclick="confirmRemove('<%=product._id%>')"> </li>
+                                        </ul>
+                                    </div>
+
+                                <% } %>
+
+
+                               
+
+
+                            </div>
+
+                            
+                            <section class="d-flex justify-content-center mt-3 " aria-label="Page navigation example">
+                                <ul class="pagination">
+                                  <li class="page-item">
+                                    <a class="page-link" href="/admin/products/?pageReq = <%=currentPage-1%>&search=<%=searchQuery%>" aria-label="Previous">
+                                      <span aria-hidden="true">&laquo;</span>
+                                      <span class="sr-only">Previous</span>
+                                    </a>
+                                  </li>
+                                   <li class="page-item"><a class="page-link" href=""><%=currentPage%></a></li>
+                                  <li class="page-item">
+                                    <a class="page-link" href="/admin/products/?pageReq=<%=currentPage+1%>&search=<%=searchQuery%>" aria-label="Next">
+                                      <span aria-hidden="true">&raquo;</span>
+                                      <span class="sr-only">Next</span>
+                                    </a>
+                                  </li>
+                                </ul>
+                            </section>
+
+
+                        </div>
+
+                    </div>
+
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="/js/adminjs/usermanagement.js"></script>
+    </body>
+ 
+    </html>
