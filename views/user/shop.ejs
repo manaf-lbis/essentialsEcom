@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/css/coreui.min.css" rel="stylesheet"
+    integrity="sha384-/ElSMRaKgsWY7yc9is+yGoOmLb0lEnL0i8BqJoNBrejJNHx8+6ZSD0u13ea6fUn3" crossorigin="anonymous">
+<%- include('../partials/htmlHeadUser.ejs',{csspath:''}) %>
+
+    <body>
+
+        <%- include('../partials/userNavbar.ejs') %>
+
+
+            <!-- best selling products  -->
+            <section class="pb-5 container">
+                <div class="container-lg">
+
+
+
+
+                    <!-- filter menu  -->
+                    <div class="d-flex justify-content-end mt-3">
+                        <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Apply
+                            Filter</button>
+                    </div>
+
+                    <!-- filter  -->
+
+                    <form action="/search" method="get">
+
+                        <input name="searchQuery" value="<%=searchQuery%>" hidden>
+
+                        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1"
+                            id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+                            <div class="offcanvas-header ">
+                                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Choose Filter</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body py-3">
+
+
+                                <!-- filter options start-->
+                                <!-- Category Filter -->
+                                <div class="form-group">
+                                    <label for="category">Category:</label>
+                                    <select name="category" class="form-control border border-primary " id="category">
+                                        <option value="">All Categories</option>
+                                        <option value="electronics">Electronics</option>
+                                        <option value="clothing">Clothing</option>
+                                        <option value="home-appliances">Home Appliances</option>
+                                        <option value="books">Books</option>
+                                    </select>
+                                </div>
+
+                                <!-- Price Range Filter -->
+                                <div class="form-group mt-3">
+                                    <label for="priceRange">Price Range:</label><br>
+                                    <input name="priceRange" type="range" class="form-control-range w-100" id="priceRange" min="500"
+                                        max="100000" value="500" step="10">
+                                    <span>₹</span><span id="price-value">500</span>
+                                </div>
+
+                                <!-- Sort Options -->
+                                <div class="form-group mt-3">
+                                    <label for="sort-by">Sort By:</label>
+                                    <select name="sort" class="form-control border border-primary" id="sort-by">
+                                        <option value="ace">Price: Low to High</option>
+                                        <option value="dec">Price: High to Low</option>
+                                        <option value="average-ratings">Average Ratings</option>
+                                        <option value="new-arrivals">New Arrivals</option>
+                                        <option value="a-z">A - Z</option>
+                                        <option value="z-a">Z - A</option>
+                                    </select>
+                                </div>
+
+                                <!-- Apply Filters Button -->
+                                <button type="submit" class="btn btn-primary mt-3" id="apply-filters">Apply Filters</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- filter menu ends -->
+
+
+                <!-- heading  -->
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="section-header d-flex flex-wrap justify-content-between my-4">
+
+                            <h5 class="section-title">Showing Result of (<%= products.length %>) products..</h5>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- heading  ends -->
+
+
+                <!-- product list 5*2 rows  -->
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div
+                            class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+
+                            <!-- product start -->
+
+
+                            <% products.forEach((product)=> {%>
+                                <div class="col">
+                                    <div class="product-item">
+                                        <figure>
+                                            <a href="/product/<%= product._id %> " title="Product Title">
+                                                <img src="<%= product.productImage[0] %>" alt="Product Thumbnail"
+                                                    class="tab-image">
+                                            </a>
+                                        </figure>
+
+                                        <div class="d-flex flex-column text-center">
+                                            <!-- <h3 class="fs-6 fw-normal">name</h3> -->
+                                            <div class="row">
+                                                <div class="col-12 text-truncate">
+                                                    <%=product.productName%>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <!-- rating -->
+                                                <div class="justify-content-center" data-coreui-read-only="true"
+                                                    data-coreui-size="sm" data-coreui-toggle="rating"
+                                                    data-coreui-value="<%= Number(product.averageRating).toFixed(2)  %>">
+                                                </div>
+
+                                                <% if( !isNaN(Number(product.averageRating))){ %>
+                                                    <small> (<%= Number(product.averageRating).toFixed(1) %>) </small>
+                                                    <% } %>
+
+
+                                            </div>
+
+                                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                                <del>₹<%=product.regularPrice %></del>
+                                                <span class="text-dark fw-semibold">₹ <%=product.sellingPrice %> </span>
+                                                <span
+                                                    class="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">
+                                                    <%=(((product.regularPrice -
+                                                        product.sellingPrice)/product.sellingPrice)*100).toFixed(0) %>%
+                                                        OFF
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- product ends -->
+                                <% }); %>
+
+                        </div>
+                        <!-- / product-grid -->
+
+                    </div>
+                </div>
+                </div>
+            </section>
+
+
+            <%- include('../partials/userFooter.ejs') %>
+                <!-- rating -->
+                <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/js/coreui.bundle.min.js"
+                    integrity="sha384-mLGa1g62d9QzDXVGjvdUasvKUjkIoq7kjvKJsQifgQdr9x+4Ge3SZuGRTHYwvAl/"
+                    crossorigin="anonymous"></script>
+
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script src="/js/userjs/shop.js"></script>
+
+    </body>
+
+</html>

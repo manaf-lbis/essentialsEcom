@@ -47,6 +47,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 
+
+
 // user router
 app.use('/', userRouter);
 

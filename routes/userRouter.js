@@ -10,6 +10,7 @@ const cartController = require('../controllers/user/cartController')
 const checkoutController = require('../controllers/user/checkoutController')
 const orderController = require('../controllers/user/orderController');
 const commentRatingController = require('../controllers/user/commentRatingController');
+const shopController = require('../controllers/user/shopController') 
 
 
 // google auth 
@@ -50,6 +51,11 @@ router.get('/logout',userController.userLogout);
 
 //product details
 router.get('/product/:id',userMiddleware.isAuthenticated,productsController.getDetailedPage );
+
+//shop page
+router.get('/search',userMiddleware.isAuthenticated,shopController.search );
+
+
 
 
 //cart
