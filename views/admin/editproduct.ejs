@@ -20,7 +20,7 @@
                 </div>
             </nav>
             <!-- Nav ends -->
-       <form id="form" action="/admin/updateProduct" method="post" >
+       <form id="form" action="/admin/updateProduct" method="post" enctype="multipart/form-data" >
             <div class="productDetails row pb-5">
                 <div class="left col-md-5">
                     <!-- <form id="productForm" action="/add-product" method="POST" enctype="multipart/form-data"> -->
@@ -73,35 +73,51 @@
                 </div>
 
                 <div class="col-md-5 right">
+
+                    <div>
+                        <% dbResult.productImage.forEach((ele) => { %>
+
+                        <div class="position-relative d-inline-block me-2 mt-2">
+                            <img class="rounded-3 border border-dark" height="100" src="<%= ele  %>" alt="">
+
+                            <a href="/admin/removeProductImage/?productId=<%= dbResult._id%>&image=<%= ele%>">
+                                <button type="button" class="btn-close position-absolute bg-danger" style="top: 0; right: 0;" aria-label="Close"></button>
+                            </a>
+                        </div>
+
+                      <%  });  %>
+                    
+                    </div>
+
                    <!-- First image input -->
-                    <!-- <div>
+                    <div>
                         <label for="productImage1">Upload Image 1</label>
-                        <input type="file" id="productImage1" class="form-control" accept=".jpeg,.jpg,.png" onchange="prepareCrop(event, 'imagePreview1')">
+                        <input type="file" id="productImage1" name="images" class="form-control" accept=".jpeg,.jpg,.png" onchange="prepareCrop(event, 'imagePreview1')">
                         <img id="imagePreview1" src="" alt="Image Preview 1" style="display:none; width:100%; max-height:200px; object-fit:contain;">
                         <canvas id="cropImage1" name="cropImage1" style="display:none;"></canvas>
                         <button type="button" class="btn btn-primary mt-2" onclick="cropImage('cropImage1', 'croppedImagePreview1')">Crop Image 1</button>
                         <div id="croppedImagePreview1" class="mt-3"></div>
-                    </div> -->
+                    </div>
 
                     <!-- Second image input -->
-                    <!-- <div>
+                    <div>
                         <label for="productImage2">Upload Image 2</label>
-                        <input type="file" id="productImage2" class="form-control" accept=".jpeg,.jpg,.png" onchange="prepareCrop(event, 'imagePreview2')">
+                        <input type="file" id="productImage2" name="images" class="form-control" accept=".jpeg,.jpg,.png" onchange="prepareCrop(event, 'imagePreview2')">
                         <img id="imagePreview2" src="" alt="Image Preview 2" style="display:none; width:100%; max-height:200px; object-fit:contain;">
                         <canvas id="cropImage2" name="cropImage2" style="display:none;"></canvas>
                         <button type="button" class="btn btn-primary mt-2" onclick="cropImage('cropImage2', 'croppedImagePreview2')">Crop Image 2</button>
                         <div id="croppedImagePreview2" class="mt-3"></div>
-                    </div> -->
+                    </div>
 
                     <!-- Third image input -->
-                    <!-- <div>
+                    <div>
                         <label for="productImage3">Upload Image 3</label>
-                        <input type="file" id="productImage3" class="form-control" accept=".jpeg,.jpg,.png" onchange="prepareCrop(event, 'imagePreview3')">
+                        <input type="file" id="productImage3" name="images"  class="form-control" accept=".jpeg,.jpg,.png" onchange="prepareCrop(event, 'imagePreview3')">
                         <img id="imagePreview3" src="" alt="Image Preview 3" style="display:none; width:100%; max-height:200px; object-fit:contain;">
                         <canvas id="cropImage3" name="cropImage3" style="display:none;"></canvas>
                         <button type="button" class="btn btn-primary mt-2" onclick="cropImage('cropImage3', 'croppedImagePreview3')">Crop Image 3</button>
                         <div id="croppedImagePreview3" class="mt-3"></div>
-                    </div> -->
+                    </div>
                 </div>
                 
                 <div class="w-50">
@@ -109,7 +125,7 @@
                        <button id="cancelBtn"  type="button" class="btn btn-danger" >Cancel</button> 
                     </a>
                     
-                    <button id="submitBtn" type="submit" class="btn btn-success" >Add Product</button>
+                    <button id="submitBtn" type="submit" class="btn btn-success" >Update product</button>
                 </div>
 
             </div>
@@ -119,5 +135,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/adminjs/addproduct.js"></script>
+
 </body>
 </html>

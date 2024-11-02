@@ -62,6 +62,10 @@ const producSchema = new Schema({
     type:Number,
     min:[0],
     max:[5]
+  },
+  createdAt:{
+    type:Date,
+    default:Date.now
   }
 });
 

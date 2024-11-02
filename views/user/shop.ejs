@@ -42,7 +42,7 @@
                                 <!-- filter options start-->
                                 <!-- Category Filter -->
                                 <div class="form-group">
-                                    <label for="category">Category:</label>
+                                    <label for="category"><strong>Category: </strong></label>
                                     <select name="category" class="form-control border border-primary " id="category">
                                         <option value="">All Categories</option>
                                         <option value="electronics">Electronics</option>
@@ -54,22 +54,22 @@
 
                                 <!-- Price Range Filter -->
                                 <div class="form-group mt-3">
-                                    <label for="priceRange">Price Range:</label><br>
+                                    <label for="priceRange"><strong>Price Range</strong>:</label><br>
                                     <input name="priceRange" type="range" class="form-control-range w-100" id="priceRange" min="500"
-                                        max="100000" value="500" step="10">
-                                    <span>₹</span><span id="price-value">500</span>
+                                        max="100000" value="50000" step="10">
+                                    <span>₹</span><span id="price-value">50000</span>
                                 </div>
 
                                 <!-- Sort Options -->
                                 <div class="form-group mt-3">
-                                    <label for="sort-by">Sort By:</label>
+                                    <label for="sort-by"><strong>Sort By:</strong></label>
                                     <select name="sort" class="form-control border border-primary" id="sort-by">
                                         <option value="ace">Price: Low to High</option>
                                         <option value="dec">Price: High to Low</option>
-                                        <option value="average-ratings">Average Ratings</option>
-                                        <option value="new-arrivals">New Arrivals</option>
-                                        <option value="a-z">A - Z</option>
-                                        <option value="z-a">Z - A</option>
+                                        <option value="ratings">Top Ratings</option>
+                                        <option value="new">New Arrivals</option>
+                                        <option value="atz">A - Z</option>
+                                        <option value="zta">Z - A</option>
                                     </select>
                                 </div>
 

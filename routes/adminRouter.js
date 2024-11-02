@@ -41,7 +41,9 @@ router.get('/addProduct', auth.adminAuth, productController.addproductPage);
 router.post('/addProduct', auth.adminAuth, config.upload.array('images', 3), productController.addProduct);
 router.get('/removeProduct/:id', auth.adminAuth, productController.removeProduct);
 router.get('/editProduct/:id', auth.adminAuth, productController.editProduct);
-router.post('/updateProduct', auth.adminAuth, productController.updateProduct);
+router.post('/updateProduct', auth.adminAuth,config.upload.array('images', 3),productController.updateProduct);
+
+router.get('/removeProductImage',auth.adminAuth,productController.removeImage)
 
 
 

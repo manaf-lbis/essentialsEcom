@@ -1,6 +1,7 @@
 const Product = require('../../models/productSchema');
 const Category = require('../../models/categorySchema');
 const path = require('path');
+const fs = require('fs');
 
 
 const products = async (req, res) => {
@@ -116,8 +117,8 @@ const removeProduct = async (req, res) => {
 
 
 const editProduct = async (req, res) => {
-
   try {
+
     const _id = req.params.id;
     const dbResult = await Product.findOne({ _id });
 
@@ -137,22 +138,56 @@ const updateProduct = async (req,res)=>{
       regularPrice,sellingPrice,material,description,_id,status
     } = req.body;
 
-    const dbResult = await Product.updateOne({_id},{productName,brand,color,size,quantity,
-      regularPrice,sellingPrice,material,description,status});
+    const imagesArray = req.files.map(file => `/uploads/${file.filename}`);
+
+    const dbResult = await Product.updateOne({_id},
+      {
+        $set:{
+          productName,
+          brand,
+          color,
+          size,
+          quantity,
+          regularPrice,
+          sellingPrice,
+          material,
+          description,
+          status,
+        },
+        $push:{
+          productImage:{$each:imagesArray}
+        }
+      }
+    );
 
     console.log(dbResult);
 
     res.redirect('/admin/products')
   
-    
   } catch (error) {
 
+    console.log(error);
+  }
+}
+
+
+
+const removeImage = async (req,res)=>{
+  try {
+    const {productId,image}=req.query
+    console.log(image);
+    
+    console.log(await Product.updateOne({_id:productId},{$pull:{productImage:image}}))
+
+
+    res.redirect(`/admin/editProduct/${productId}`)
+
+  } catch (error) {
     console.log(error);
     
     
   }
 }
-
 
 
 
@@ -162,5 +197,6 @@ module.exports = {
   addProduct,
   removeProduct,
   editProduct,
-  updateProduct
+  updateProduct,
+  removeImage
 };
