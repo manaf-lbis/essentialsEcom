@@ -160,9 +160,8 @@ const updateProduct = async (req,res)=>{
       }
     );
 
-    console.log(dbResult);
 
-    res.redirect('/admin/products')
+    res.status(200).json({message:'sucessfully updated'})
   
   } catch (error) {
 
