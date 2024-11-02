@@ -1,0 +1,158 @@
+<html lang="en">
+<head>
+  
+  <%-include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/purchase/orderDetailedPage.css'})  %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body class="d-flex flex-column">
+
+  <%- include('../../partials/userNavbar.ejs')  %>
+
+    <section class=" container rounded-2 bg-light">
+        <ol class="d-flex align-items-center list-unstyled m-0 ">
+            <li><a class="text-decoration-none" href="/home">Home/</a></li>
+            <li><a class="text-decoration-none" href="/cart"> Cart/</a></li>
+            <li><a class="text-decoration-none" href="/cart"> Order Details</a></li>
+
+        </ol>
+    </section>
+
+
+    <div class="container mt-5">
+
+        <div class="card">
+            <div class="card-header">
+              <h5>Items <%= orders[0].orderItems.length%> | Order ID : #<%=orders[0].orderId  %></h5>
+            </div>
+
+
+           <% for(let product of orders[0].orderItems){  %>
+                <div class="card-body ">
+                    <!-- Single item -->
+                    <div class="row">
+                      <div class="col-lg-2 col-md-12 mb-4 mb-lg-0">
+                        <!-- Image -->
+                        <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                          <img src="<%= product.productId.productImage[0]%>"
+                            class="w-100" alt="Blue Jeans Jacket" />
+                          <a href="#!">
+                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                          </a>
+                        </div>
+                        <!-- Image -->
+                      </div>
+        
+                      <div class=" data col-lg-5 col-md-6 mb-4 mb-lg-0">
+                        <!-- Data -->
+
+
+                        <div class="row">
+                            <div class="col-12 text-truncate">
+                                <strong><%= product.productId.productName%></strong>
+                            </div>
+                          </div>
+
+
+
+                        <p>Color : <%= product.productId.color%></p>
+                        <p>Size : <%= product.productId.size%></p>
+                        <p>Brand : <%= product.productId.brand%></p>
+                        <p>Quantity : <%= product.quantity%></p>
+                        <p >Price: ₹ <span class="price"><%= product.productId.sellingPrice%></span>/-</p>
+  
+                      </div>
+
+        
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-0 d-flex align-items-center justify-content-center">
+                        <!-- Quantity -->
+                       <div id="items" class="d-flex mb-4" style="max-width: 300px">
+                        <!-- Price -->
+                            <span class="text-start text-md-center a">
+                                <p>Total Amount per item</p>
+                                <strong class="totalPrice"  >₹ <%= product.quantity * product.productId.sellingPrice %>/-</strong>
+                              </span>
+                        <!-- Price -->
+                        </div>
+
+                    </div>
+
+
+                    <div style="height: 2px; width: 100%; background-color: rgb(199, 198, 198);"></div>
+                    <!-- Single item -->
+                  </div>
+            </div>
+        <% } %>
+
+
+
+
+
+          </div>
+
+
+          <div class="card mt-3">
+            <h5 class="card-header">Order summary</h5>
+            <div class="card-body">
+
+                <div class="container ordersummarry">
+
+                    <div class="row">
+
+                        <div class="row address">
+                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                <p><strong>Delivery Address:</strong></p>
+                                <p><%= orders[0].address.fullName%></p>
+                                <p><%= orders[0].address.houseName%></p>
+                                <p><%= orders[0].address.area%></p>
+                                <p><%= orders[0].address.state%></p>
+                                <p><%= orders[0].address.pincode%></p>
+                            </div>
+                            <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                <p><strong>Shipping From:</strong></p>
+                                <p>Essentials</p>
+                                <p>381/Essential Tower </p>
+                                <p>Anagalapura</p>
+                                <p>bangloore</p>
+                                <p>691723</p>
+
+
+                            </div>
+
+                            <div class="col-lg-4 col-md-12 mt-3 mb-4 mb-lg-0">
+                                <p><strong>Order Details</strong></p>
+                                <p>order Id : #<%=orders[0].orderId  %></p>
+                                <p>Ordered Date: <%=orders[0].orderDate.toString().substring(0,15) %></p>
+                                <p>Payment Methord : <%= orders[0].paymentMethod=== 'COD' ? 'Cash on Delivery' :'' %></p>
+                                <p>Total Items: <%= orders[0].orderItems.length%></p>
+                                <p>Total Amound: <%= orders[0].finalPrice%>/-</p>
+
+    
+                            </div>
+                            
+                        </div>
+
+
+                        <div class="line"></div>
+
+                       
+                    </div>
+
+
+                </div>
+
+            </div>
+          </div>
+
+    </div>
+
+
+   <footer>
+    <%- include('../../partials/userFooter.ejs')  %>
+   </footer>
+
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+    
+</body>
+</html>

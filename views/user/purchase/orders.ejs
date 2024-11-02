@@ -141,8 +141,16 @@
                                                  <h6>Rating</h6>
                                                 <div data-coreui-read-only="true" data-coreui-precision="0.25" data-coreui-toggle="rating" data-coreui-value=" <%= product.rating%> "></div>
                                             <% } %>
+
+                                            <a href="/orderDetailPage/?orderId=<%= order.orderId %>">
+                                                <button type="button" class="btn w-100 btn-outline-info"  >
+                                                    Order Details
+                                                </button>
+                                            </a>
+
+
+
                                         </div>
-                                        
                                     </div>
 
 

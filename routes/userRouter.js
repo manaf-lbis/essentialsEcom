@@ -72,6 +72,8 @@ router.get('/checkout',userMiddleware.isAuthenticated,checkoutController.getChec
 router.get('/orders',userMiddleware.isAuthenticated,orderController.allOrders);
 router.post('/placeOrder',userMiddleware.isAuthenticated,orderController.placeOrder);
 router.get('/cancelOrder',userMiddleware.isAuthenticated,orderController.cancelOrder);
+router.get('/orderDetailPage',userMiddleware.isAuthenticated,orderController.orderDetails);
+
 
 //comments and rating 
 router.post('/comment',userMiddleware.isAuthenticated,commentRatingController.addComment);

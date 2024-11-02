@@ -186,8 +186,29 @@ const cancelOrder = async (req,res)=>{
 }
 
 
+const orderDetails = async (req,res)=>{
+    try {
+
+        const {orderId} = req.query;
+
+        const orders = await Order.find({ orderId }).populate('orderItems.productId')
+
+        console.log(orders);
+
+        res.render('user/purchase/orderDetails',{orders})
+        
+
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+
 module.exports = {
     placeOrder,
     allOrders,
     cancelOrder,
+    orderDetails
 }
