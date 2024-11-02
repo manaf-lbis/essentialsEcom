@@ -2,29 +2,30 @@ const Product = require('../../models/productSchema');
 const Category = require('../../models/categorySchema');
 const path = require('path');
 const fs = require('fs');
+const { error } = require('console');
 
 
 const products = async (req, res) => {
 
   try {
     const searchQuery = req.query.search ?? '';
-    
+
     let currentPage = Number(req.query.pageReq) || 1;
     const limit = 5;
-  
+
     const count = Math.ceil(await Product.countDocuments({
       $or: [
         { 'productName': { $regex: '.*' + searchQuery + '.*', $options: 'i' } },
         { 'brand': { $regex: '.*' + searchQuery + '.*', $options: 'i' } }
       ]
-    })/limit);
+    }) / limit);
 
 
-    currentPage = currentPage+1 > count  ? count: currentPage;
-    
+    currentPage = currentPage + 1 > count ? count : currentPage;
 
-  
-  const skip = (currentPage - 1) * limit;
+
+
+    const skip = (currentPage - 1) * limit;
 
 
 
@@ -131,18 +132,18 @@ const editProduct = async (req, res) => {
 }
 
 
-const updateProduct = async (req,res)=>{
+const updateProduct = async (req, res) => {
   try {
 
-    const {productName,brand,color,size,quantity,
-      regularPrice,sellingPrice,material,description,_id,status
+    const { productName, brand, color, size, quantity,
+      regularPrice, sellingPrice, material, description, _id, status
     } = req.body;
 
     const imagesArray = req.files.map(file => `/uploads/${file.filename}`);
 
-    const dbResult = await Product.updateOne({_id},
+    const dbResult = await Product.updateOne({ _id },
       {
-        $set:{
+        $set: {
           productName,
           brand,
           color,
@@ -154,15 +155,15 @@ const updateProduct = async (req,res)=>{
           description,
           status,
         },
-        $push:{
-          productImage:{$each:imagesArray}
+        $push: {
+          productImage: { $each: imagesArray }
         }
       }
     );
 
 
-    res.status(200).json({message:'sucessfully updated'})
-  
+    res.status(200).json({ message: 'sucessfully updated' })
+
   } catch (error) {
 
     console.log(error);
@@ -171,20 +172,29 @@ const updateProduct = async (req,res)=>{
 
 
 
-const removeImage = async (req,res)=>{
+const removeImage = async (req, res) => {
   try {
-    const {productId,image}=req.query
-    console.log(image);
-    
-    console.log(await Product.updateOne({_id:productId},{$pull:{productImage:image}}))
+    const { productId, image } = req.query
 
+
+    await Product.updateOne({ _id: productId }, { $pull: { productImage: image } })
+
+    fs.unlink(`public${image}`, (error) => {
+
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('image deleted');
+      }
+
+    })
 
     res.redirect(`/admin/editProduct/${productId}`)
 
   } catch (error) {
     console.log(error);
-    
-    
+
+
   }
 }
 

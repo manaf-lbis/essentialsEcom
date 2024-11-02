@@ -222,7 +222,7 @@ submitBtn.addEventListener('click', (e) => {
         if(response.ok){
            await Swal.fire({
                 title: "Success",
-                text: "Product added sucessfull",
+                text: "Product updated sucessfull",
                 icon: "success"
             });
 
@@ -242,5 +242,47 @@ submitBtn.addEventListener('click', (e) => {
     }
 
 });
+
+
+
+//deletion
+const imageDeleteBtn =  document.querySelectorAll('.imageDeleteBtn');
+
+imageDeleteBtn.forEach((ele)=>{
+    ele.addEventListener('click',deleteImage)
+})
+
+async function deleteImage(event){
+    event.preventDefault();
+
+    const deleteUrl = event.target.closest('a').getAttribute('href')
+    
+
+
+   await Swal.fire({
+        title: "Are tou sure want to remove the image?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, Remove it!"
+      }).then( async (result) => {
+        if (result.isConfirmed) {
+         await Swal.fire({
+            title: "Image Removed!",
+            text: "Your file has been deleted.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1000
+          });
+
+        // continue delete
+          window.location.href = deleteUrl;
+        }
+      });
+
+
+}
 
 

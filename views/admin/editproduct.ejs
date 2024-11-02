@@ -81,8 +81,8 @@
                         <div class="position-relative d-inline-block me-2 mt-2">
                             <img class="rounded-3 border border-dark" height="100" src="<%= ele  %>" alt="">
 
-                            <a href="/admin/removeProductImage/?productId=<%= dbResult._id%>&image=<%= ele%>">
-                                <button type="button" class="btn-close position-absolute bg-danger" style="top: 0; right: 0;" aria-label="Close"></button>
+                            <a class="imageDeleteBtn" href="/admin/removeProductImage/?productId=<%= dbResult._id%>&image=<%= ele%>">
+                                <button type="button" class="btn-close position-absolute bg-danger " style="top: 0; right: 0;" aria-label="Close"></button>
                             </a>
                         </div>
 
