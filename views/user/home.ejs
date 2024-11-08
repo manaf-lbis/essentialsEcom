@@ -1,443 +1,538 @@
 <!DOCTYPE html>
 <html lang="en">
-  <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/css/coreui.min.css" rel="stylesheet" integrity="sha384-/ElSMRaKgsWY7yc9is+yGoOmLb0lEnL0i8BqJoNBrejJNHx8+6ZSD0u13ea6fUn3" crossorigin="anonymous">
-    <%- include('../partials/htmlHeadUser.ejs',{csspath:''})  %>
+<link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/css/coreui.min.css" rel="stylesheet"
+  integrity="sha384-/ElSMRaKgsWY7yc9is+yGoOmLb0lEnL0i8BqJoNBrejJNHx8+6ZSD0u13ea6fUn3" crossorigin="anonymous">
+<%- include('../partials/htmlHeadUser.ejs',{csspath:''}) %>
+
   <body>
 
     <%- include('../partials/userNavbar.ejs') %>
 
-    <!-- -------Banner----- -->
-    <section style="background-image: url('/assets/images/banner.jpg');background-repeat: no-repeat;background-size: cover;">
-      <div class="container-lg">
-        <div class="row">
-          <div class="col-lg-6 pt-5 mt-5">
-            <h2 class="display-1 ls-1 text-white"><span class="fw-bold text-white">Technology</span>  at your <span class="fw-bold">Doorsteps</span></h2>
-            <p class="fs-4 text-white">Smat Choice for Smart living.</p>
-            <div class="d-flex gap-3">
-              <a href="#" class="btn btn-primary text-uppercase fs-6 rounded-pill px-4 py-3 mt-3">Start Shopping</a>
-              <a href="#" class="btn btn-dark text-uppercase fs-6 rounded-pill px-4 py-3 mt-3">Join Now</a>
-            </div>
-            <div class="row my-5">
-              <div class="col">
-                <div class="row text-dark">
-                  <div class="col-auto"><p class="fs-1 fw-bold lh-sm mb-0 text-white">14k+</p></div>
-                  <div class="col"><p class="text-uppercase lh-sm mb-0 text-white">Different Gadgets</p></div>
-                </div>
+      <!-- -------Banner----- -->
+      <section
+        style="background-image: url('/assets/images/banner.jpg');background-repeat: no-repeat;background-size: cover;">
+        <div class="container-lg">
+          <div class="row">
+            <div class="col-lg-6 pt-5 mt-5">
+              <h2 class="display-1 ls-1 text-white"><span class="fw-bold text-white">Technology</span> at your <span
+                  class="fw-bold">Doorsteps</span></h2>
+              <p class="fs-4 text-white">Smat Choice for Smart living.</p>
+              <div class="d-flex gap-3">
+                <a href="#" class="btn btn-primary text-uppercase fs-6 rounded-pill px-4 py-3 mt-3">Start Shopping</a>
+                <a href="#" class="btn btn-dark text-uppercase fs-6 rounded-pill px-4 py-3 mt-3">Join Now</a>
               </div>
-              <div class="col">
-                <div class="row text-dark">
-                  <div class="col-auto"><p class="fs-1 fw-bold lh-sm mb-0 text-white">50k+</p></div>
-                  <div class="col"><p class="text-uppercase lh-sm mb-0 text-white">Happy Customers</p></div>
+              <div class="row my-5">
+                <div class="col">
+                  <div class="row text-dark">
+                    <div class="col-auto">
+                      <p class="fs-1 fw-bold lh-sm mb-0 text-white">14k+</p>
+                    </div>
+                    <div class="col">
+                      <p class="text-uppercase lh-sm mb-0 text-white">Different Gadgets</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="col">
-                <div class="row text-dark">
-                  <div class="col-auto"><p class="fs-1 fw-bold lh-sm mb-0 text-white">10+</p></div>
-                  <div class="col"><p class="text-uppercase lh-sm mb-0 text-white">Store Locations</p></div>
+                <div class="col">
+                  <div class="row text-dark">
+                    <div class="col-auto">
+                      <p class="fs-1 fw-bold lh-sm mb-0 text-white">50k+</p>
+                    </div>
+                    <div class="col">
+                      <p class="text-uppercase lh-sm mb-0 text-white">Happy Customers</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="row row-cols-1 row-cols-sm-3 row-cols-lg-3 g-0 justify-content-center">
-          <div class="col">
-            <div class="card border-0 bg-primary rounded-0 p-4 text-light">
-              <div class="row">
-                <div class="col-md-3 text-center">
-                  <svg width="60" height="60"><use xlink:href="#fresh"></use></svg>
-                </div>
-                <div class="col-md-9">
-                  <div class="card-body p-0">
-                    <h5 class="text-light">Easy Return and Replacement </h5>
-                    <p class="card-text">Fast and free return & replacement in 7 days  .</p>
+                <div class="col">
+                  <div class="row text-dark">
+                    <div class="col-auto">
+                      <p class="fs-1 fw-bold lh-sm mb-0 text-white">10+</p>
+                    </div>
+                    <div class="col">
+                      <p class="text-uppercase lh-sm mb-0 text-white">Store Locations</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="card border-0 bg-secondary rounded-0 p-4 text-light">
-              <div class="row">
-                <div class="col-md-3 text-center">
-                  <svg width="60" height="60"><use xlink:href="#organic"></use></svg>
+
+          <div class="row row-cols-1 row-cols-sm-3 row-cols-lg-3 g-0 justify-content-center">
+            <div class="col">
+              <div class="card border-0 bg-primary rounded-0 p-4 text-light">
+                <div class="row">
+                  <div class="col-md-3 text-center">
+                    <svg width="60" height="60">
+                      <use xlink:href="#fresh"></use>
+                    </svg>
+                  </div>
+                  <div class="col-md-9">
+                    <div class="card-body p-0">
+                      <h5 class="text-light">Easy Return and Replacement </h5>
+                      <p class="card-text">Fast and free return & replacement in 7 days .</p>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-md-9">
-                  <div class="card-body p-0">
-                    <h5 class="text-light">100% Echo Friendly Packing</h5>
-                    <p class="card-text">Our all products are packed using paper bags and paper covers.</p>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card border-0 bg-secondary rounded-0 p-4 text-light">
+                <div class="row">
+                  <div class="col-md-3 text-center">
+                    <svg width="60" height="60">
+                      <use xlink:href="#organic"></use>
+                    </svg>
+                  </div>
+                  <div class="col-md-9">
+                    <div class="card-body p-0">
+                      <h5 class="text-light">100% Echo Friendly Packing</h5>
+                      <p class="card-text">Our all products are packed using paper bags and paper covers.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card border-0 bg-danger rounded-0 p-4 text-light">
+                <div class="row">
+                  <div class="col-md-3 text-center">
+                    <svg width="60" height="60">
+                      <use xlink:href="#delivery"></use>
+                    </svg>
+                  </div>
+                  <div class="col-md-9">
+                    <div class="card-body p-0">
+                      <h5 class="text-light">Free delivery</h5>
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="card border-0 bg-danger rounded-0 p-4 text-light">
-              <div class="row">
-                <div class="col-md-3 text-center">
-                  <svg width="60" height="60"><use xlink:href="#delivery"></use></svg>
-                </div>
-                <div class="col-md-9">
-                  <div class="card-body p-0">
-                    <h5 class="text-light">Free delivery</h5>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+
+        </div>
+      </section>
+
+
+      <section class="py-5 overflow-hidden">
+        <div class="container-lg">
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="section-header d-flex flex-wrap justify-content-between mb-5">
+                <h2 class="section-title">Category</h2>
+
+                <div class="d-flex align-items-center">
+
+                  <div class="swiper-buttons">
+                    <button class="swiper-prev category-carousel-prev btn btn-yellow">❮</button>
+                    <button class="swiper-next category-carousel-next btn btn-yellow">❯</button>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
-        </div>
-      
-      </div>
-    </section>
+          <div class="row">
+            <div class="col-md-12">
 
+              <div class="category-carousel swiper">
+                <div class="swiper-wrapper">
 
-    <section class="py-5 overflow-hidden">
-      <div class="container-lg">
-        <div class="row">
-          <div class="col-md-12">
+                  <% for(let ele of category){ %>
 
-            <div class="section-header d-flex flex-wrap justify-content-between mb-5">
-              <h2 class="section-title">Category</h2>
+                    <a href="category.html" class="nav-link swiper-slide text-center">
+                      <img style="width: 150px;" src="uploads/<%= ele.image[0] %>" class="rounded-circle"
+                        alt="Category Thumbnail">
+                      <h4 class="fs-6 mt-3 fw-normal category-title">
+                        <%= ele.categoryName %>
+                      </h4>
+                    </a>
 
-              <div class="d-flex align-items-center">
-                
-                <div class="swiper-buttons">
-                  <button class="swiper-prev category-carousel-prev btn btn-yellow">❮</button>
-                  <button class="swiper-next category-carousel-next btn btn-yellow">❯</button>
+                    <% } %>
+
                 </div>
               </div>
+
             </div>
-            
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12">
+      </section>
 
-            <div class="category-carousel swiper">
-              <div class="swiper-wrapper">
 
-                <% for(let ele of category){ %>
 
-                <a href="category.html" class="nav-link swiper-slide text-center">
-                  <img style="width: 150px;" src="uploads/<%= ele.image[0] %>" class="rounded-circle" alt="Category Thumbnail">
-                  <h4 class="fs-6 mt-3 fw-normal category-title"><%= ele.categoryName %></h4>
-                </a>
-                
-                <% } %>
+
+
+
+
+
+
+      <!-- best selling products  -->
+      <section class="pb-5">
+        <div class="container-lg">
+
+          <!-- heading  -->
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="section-header d-flex flex-wrap justify-content-between my-4">
+
+                <h2 class="section-title">Best selling products</h2>
 
               </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-
-
-
-
-
-
-
-<!-- best selling products  -->
-    <section class="pb-5">
-      <div class="container-lg">
-
-        <!-- heading  -->
-        <div class="row">
-          <div class="col-md-12">
-
-            <div class="section-header d-flex flex-wrap justify-content-between my-4">
-              
-              <h2 class="section-title">Best selling products</h2>
 
             </div>
-  
           </div>
-        </div>
-        <!-- heading  ends -->
+          <!-- heading  ends -->
 
-        <!-- product list 5*2 rows  -->
-        <div class="row">
-          <div class="col-md-12">
+          <!-- product list 5*2 rows  -->
+          <div class="row">
+            <div class="col-md-12">
 
-            <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+              <div
+                class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
 
 
-              <% for(let product of products){ %>
+
                 <!-- product start -->
-            
-              <div class="col">
-                
-                <div class="product-item">
-                  <figure>
-                    <a href="/product/<%= product._id %>" title="Product Title">
-                      <img src="<%=product.productImage[0] %>" alt="Product Thumbnail" class="tab-image">
-                    </a>
-                  </figure>
-                  <div class="d-flex flex-column text-center">
-                    <h3 class="fs-6 fw-normal"><%=product.productName.substring(0,22)+'...'%></h3>
-                    
-                    <div class="d-flex justify-content-center align-items-center">
-                      <!-- rating -->
-                      <div class="justify-content-center"  data-coreui-read-only="true" data-coreui-size="sm"  data-coreui-toggle="rating"  data-coreui-value="<%= Number(product.averageRating) %>"> </div>
 
-                      <% if( !isNaN(Number(product.averageRating))){ %>
-                        <small>(<%= Number(product.averageRating).toFixed(1) %>) </small>
-                     <% } %>
-                     
-      
-                    </div>
+                <% products.forEach((product,index)=>{ %>
 
-                    <div class="d-flex justify-content-center align-items-center gap-2">
-                      <del>₹<%=product.regularPrice %></del>
-                      <span class="text-dark fw-semibold">₹ <%=product.sellingPrice %> </span>
-                      <span class="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">  <%=(((product.regularPrice - product.sellingPrice)/product.sellingPrice)*100).toFixed(0) %>% OFF</span>
+                  <%if(index===10){ %>
+                    <% return %>
+                      <% } %>
+
+                        <div class="col">
+
+                          <div class="product-item">
+                            <figure>
+                              <a href="/product/<%= product._id %>" title="Product Title">
+                                <img src="<%=product.productImage[0] %>" alt="Product Thumbnail" class="tab-image">
+                              </a>
+                            </figure>
+                            <div class="d-flex flex-column text-center">
+                              <h3 class="fs-6 fw-normal">
+                                <%=product.productName.substring(0,22)+'...'%>
+                              </h3>
+
+                              <div class="d-flex justify-content-center align-items-center">
+                                <!-- rating -->
+                                <div class="justify-content-center" data-coreui-read-only="true" data-coreui-size="sm"
+                                  data-coreui-toggle="rating" data-coreui-value="<%= Number(product.averageRating) %>">
+                                </div>
+
+                                <% if( !isNaN(Number(product.averageRating))){ %>
+                                  <small>(<%= Number(product.averageRating).toFixed(1) %>) </small>
+                                  <% } %>
+
+
+                              </div>
+
+                              <div class="d-flex justify-content-center align-items-center gap-2">
+                                <del>₹<%=product.regularPrice %></del>
+                                <span class="text-dark fw-semibold">₹ <%=product.sellingPrice %> </span>
+                                <span
+                                  class="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">
+                                  <%=(((product.regularPrice -
+                                    product.sellingPrice)/product.sellingPrice)*100).toFixed(0) %>% OFF
+                                </span>
+                              </div>
+                              <div class="button-area p-3 pt-0">
+                                <div class="row g-1 mt-2">
+                                  <div class="col-3 "><input type="number" min="0" max="5"
+                                      productid="<%= product._id %>" name="quantity"
+                                      class="form-control border-dark-subtle input-number quantity quantitySelection"
+                                      value="1" onkeydown="return false;">
+                                    </div>
+                                  <div class="col-7"><a class="btn btn-primary rounded-1 p-2 fs-7 btn-cart"><svg
+                                        width="18" height="18">
+                                        <use xlink:href="#cart"></use>
+                                      </svg> Add to Cart</a>
+                                    </div>
+
+                                  <!-- wishlist Btn -->
+                                  <div class="col-2 wishlistBtn">
+                                    <a class="wishlistToggle" href="/wishlistToggle/?productId=<%= product._id%>">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="<%=wishlistProducts.includes(product._id.toString())?'red':'grey'  %>"
+                                        class="wishlistIcon" viewBox="0 0 16 16">
+                                        <path
+                                          d="M8 3.314C12.438-1.392 23.534 4.733 8 15-7.534 4.733 3.562-1.392 8 3.314z" />
+                                      </svg>
+                                    </a>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <% }) %>
+                          <!-- product ends -->
+
+
+              </div>
+              <!-- / product-grid -->
+
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- color full blocks image -->
+      <section class="py-3">
+        <div class="container-lg">
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="banner-blocks">
+
+                <div class="banner-ad d-flex align-items-center large bg-info block-1"
+                  style="background: url('/assets/images/headphone.png') no-repeat; background-size: cover;">
+                  <div class="banner-content p-5">
+                    <div class="content-wrapper text-light">
+                      <h3 class="banner-title text-light">Items on SALE</h3>
+                      <p>Discounts up to 30%</p>
+                      <a href="#" class="btn-link text-white">Shop Now</a>
                     </div>
-                    <div class="button-area p-3 pt-0">
-                      <div class="row g-1 mt-2">
-                        <div class="col-3"><input type="number" min="0" max="5"  productid="<%= product._id %>" name="quantity" class="form-control border-dark-subtle input-number quantity" value="1" onkeydown="return false;" ></div>
-                        <div class="col-7"><a  class="btn btn-primary rounded-1 p-2 fs-7 btn-cart"><svg width="18" height="18"><use xlink:href="#cart"></use></svg> Add to Cart</a></div>
-                        <div class="col-2"><a  class="btn btn-outline-danger btn-danger rounded-1 p-2 fs-6 "><svg width="18" height="18"><use xlink:href="#heart"></use></svg></a></div>
+                  </div>
+                </div>
+
+                <div class="banner-ad bg-success-subtle block-2"
+                  style="background:url('/assets/images/laptop.webp') no-repeat;background-size: cover">
+                  <div class="banner-content align-items-center p-5">
+                    <div class="content-wrapper text-light">
+                      <h3 class="banner-title text-secondary">Combo offers</h3>
+                      <p class="text-secondary">Discounts up to 50%</p>
+                      <a href="#" class="btn-link text-white">Shop Now</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="banner-ad bg-danger block-3"
+                  style="background:url('/assets/images/watchoffer.jpg') no-repeat;background-size: cover">
+                  <div class="banner-content align-items-center p-5">
+                    <div class="content-wrapper text-light">
+                      <h3 class="banner-title text-secondary">Discount Coupons</h3>
+                      <p>Discounts up to 40%</p>
+                      <a href="#" class="btn-link text-white">Shop Now</a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <!-- / Banner Blocks -->
+
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- color full blocks image ends-->
+
+
+      <!-- featured products -->
+      <section id="featured-products" class="products-carousel">
+        <div class="container-lg overflow-hidden py-5">
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="section-header d-flex flex-wrap justify-content-between my-4">
+
+                <h2 class="section-title">Featured products</h2>
+
+                <div class="d-flex align-items-center">
+                  <div class="swiper-buttons">
+                    <button class="swiper-prev products-carousel-prev btn btn-primary">❮</button>
+                    <button class="swiper-next products-carousel-next btn btn-primary">❯</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+
+              <div class="swiper">
+                <div class="swiper-wrapper">
+
+                  <!-- product slider  -->
+                  <% for(let product of products){ %>
+
+                    <div class="product-item swiper-slide">
+                      <figure>
+                        <a href="/product/<%= product._id %>" title="Product Title">
+                          <img src="<%= product.productImage[0] %>" alt="Product Thumbnail" class="tab-image">
+                        </a>
+                      </figure>
+                      <div class="d-flex flex-column text-center">
+                        <h3 class="fs-6 fw-normal">
+                          <%= product.productName.substring(0,18)+'...' %>
+                        </h3>
+
+                        <div class="d-flex justify-content-center align-items-center gap-2">
+                          <del>₹<%= product.regularPrice %></del>
+                          <span class="text-dark fw-semibold">₹<%= product.sellingPrice %></span>
+                          <span
+                            class="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">
+                            <%=(((product.regularPrice - product.sellingPrice)/product.sellingPrice)*100).toFixed(0) %>%
+                              OFF
+                          </span>
+
+                        </div>
+                        <div class="button-area p-3 pt-0">
+                          <div class="row g-1 mt-2">
+                            <div class="col-3"><input type="number" productid="<%= product._id %>" name="quantity"
+                                class="form-control border-dark-subtle input-number quantity quantitySelection"
+                                value="1" onkeydown="return false;" min="0" max="5"></div>
+                            <div class="col-7"><a href="#" class="btn btn-primary rounded-1 p-2 fs-7 btn-cart"><svg
+                                  width="18" height="18">
+                                  <use xlink:href="#cart"></use>
+                                </svg> Add to Cart</a></div>
+                              <!-- wishlist Btn -->
+                              <div class="col-2 wishlistBtn">
+                                <a class="wishlistToggle" href="/wishlistToggle/?productId=<%= product._id%>">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="<%=wishlistProducts.includes(product._id.toString())?'red':'grey'%>"
+                                    class="wishlistIcon" viewBox="0 0 16 16">
+                                    <path
+                                      d="M8 3.314C12.438-1.392 23.534 4.733 8 15-7.534 4.733 3.562-1.392 8 3.314z" />
+                                  </svg>
+                                </a>
+                              </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                    <% } %>
+                      <!-- product ends -->
+
+
                 </div>
               </div>
-           
-               <% } %>
-              <!-- product ends -->
+              <!-- / products-carousel -->
 
-             
             </div>
-            <!-- / product-grid -->
-
-
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
 
-    <!-- color full blocks image -->
-    <section class="py-3">
-      <div class="container-lg">
-        <div class="row">
-          <div class="col-md-12">
 
-            <div class="banner-blocks">
-            
-              <div class="banner-ad d-flex align-items-center large bg-info block-1" style="background: url('/assets/images/headphone.png') no-repeat; background-size: cover;">
-                <div class="banner-content p-5">
-                  <div class="content-wrapper text-light">
-                    <h3 class="banner-title text-light">Items on SALE</h3>
-                    <p>Discounts up to 30%</p>
-                    <a href="#" class="btn-link text-white">Shop Now</a>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="banner-ad bg-success-subtle block-2" style="background:url('/assets/images/laptop.webp') no-repeat;background-size: cover">
-                <div class="banner-content align-items-center p-5">
-                  <div class="content-wrapper text-light">
-                    <h3 class="banner-title text-secondary">Combo offers</h3>
-                    <p class="text-secondary">Discounts up to 50%</p>
-                    <a href="#" class="btn-link text-white">Shop Now</a>
-                  </div>
-                </div>
-              </div>
 
-              <div class="banner-ad bg-danger block-3" style="background:url('/assets/images/watchoffer.jpg') no-repeat;background-size: cover">
-                <div class="banner-content align-items-center p-5">
-                  <div class="content-wrapper text-light">
-                    <h3 class="banner-title text-secondary">Discount Coupons</h3>
-                    <p>Discounts up to 40%</p>
-                    <a href="#" class="btn-link text-white">Shop Now</a>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            <!-- / Banner Blocks -->
-              
-          </div>
+      <!-- also looking for buttons -->
+      <section class="py-4">
+        <div class="container-lg">
+          <h2 class="my-4">People are also looking for</h2>
+          <a href="#" class="btn btn-warning me-2 mb-2">Blue diamon almonds</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Angie’s Boomchickapop Corn</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Salty kettle Corn</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Chobani Greek Yogurt</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Sweet Vanilla Yogurt</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Foster Farms Takeout Crispy wings</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Warrior Blend Organic</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Chao Cheese Creamy</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Chicken meatballs</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Blue diamon almonds</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Angie’s Boomchickapop Corn</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Salty kettle Corn</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Chobani Greek Yogurt</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Sweet Vanilla Yogurt</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Foster Farms Takeout Crispy wings</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Warrior Blend Organic</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Chao Cheese Creamy</a>
+          <a href="#" class="btn btn-warning me-2 mb-2">Chicken meatballs</a>
         </div>
-      </div>
-    </section>
-    <!-- color full blocks image ends-->  
+      </section>
+      <!-- also looking for buttons ends -->
 
-
-<!-- featured products -->
-    <section id="featured-products" class="products-carousel">
-      <div class="container-lg overflow-hidden py-5">
-        <div class="row">
-          <div class="col-md-12">
-
-            <div class="section-header d-flex flex-wrap justify-content-between my-4">
-              
-              <h2 class="section-title">Featured products</h2>
-
-              <div class="d-flex align-items-center">
-                <div class="swiper-buttons">
-                  <button class="swiper-prev products-carousel-prev btn btn-primary">❮</button>
-                  <button class="swiper-next products-carousel-next btn btn-primary">❯</button>
-                </div>  
-              </div>
-            </div>
-            
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-
-            <div class="swiper">
-              <div class="swiper-wrapper">
-                                
-                <!-- product slider  -->
-                <% for(let product of products){ %>
-
-                <div class="product-item swiper-slide">
-                  <figure>
-                    <a href="/product/<%= product._id %>" title="Product Title">
-                      <img src="<%= product.productImage[0] %>" alt="Product Thumbnail" class="tab-image">
-                    </a>
-                  </figure>
-                  <div class="d-flex flex-column text-center">
-                    <h3 class="fs-6 fw-normal"><%= product.productName.substring(0,18)+'...' %></h3>
-                   
-                    <div class="d-flex justify-content-center align-items-center gap-2">
-                      <del>₹<%= product.regularPrice %></del>
-                      <span class="text-dark fw-semibold">₹<%= product.sellingPrice %></span>
-                      <span class="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">  <%=(((product.regularPrice - product.sellingPrice)/product.sellingPrice)*100).toFixed(0) %>% OFF</span>
-
-                    </div>
-                    <div class="button-area p-3 pt-0">
-                      <div class="row g-1 mt-2">
-                        <div class="col-3"><input type="number" productid="<%= product._id %>" name="quantity" class="form-control border-dark-subtle input-number quantity" value="1" onkeydown="return false;" min="0" max="5"></div>
-                        <div class="col-7"><a href="#" class="btn btn-primary rounded-1 p-2 fs-7 btn-cart"><svg width="18" height="18"><use xlink:href="#cart"></use></svg> Add to Cart</a></div>
-                        <div class="col-2"><a href="#" class="btn btn-outline-dark rounded-1 p-2 fs-6"><svg width="18" height="18"><use xlink:href="#heart"></use></svg></a></div>
-                      </div>
-                    </div>
-                  </div>
+      <section class="py-5">
+        <div class="container-lg">
+          <div class="row row-cols-1 row-cols-sm-3 row-cols-lg-5">
+            <div class="col">
+              <div class="card mb-3 border border-dark-subtle p-3">
+                <div class="text-dark mb-3">
+                  <svg width="32" height="32">
+                    <use xlink:href="#package"></use>
+                  </svg>
                 </div>
-              <% } %>
-               <!-- product ends -->
-
-                  
+                <div class="card-body p-0">
+                  <h5>Free delivery</h5>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+                </div>
               </div>
             </div>
-            <!-- / products-carousel -->
-
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-   
-
-<!-- also looking for buttons -->
-    <section class="py-4">
-      <div class="container-lg">
-        <h2 class="my-4">People are also looking for</h2>
-        <a href="#" class="btn btn-warning me-2 mb-2">Blue diamon almonds</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Angie’s Boomchickapop Corn</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Salty kettle Corn</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Chobani Greek Yogurt</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Sweet Vanilla Yogurt</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Foster Farms Takeout Crispy wings</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Warrior Blend Organic</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Chao Cheese Creamy</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Chicken meatballs</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Blue diamon almonds</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Angie’s Boomchickapop Corn</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Salty kettle Corn</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Chobani Greek Yogurt</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Sweet Vanilla Yogurt</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Foster Farms Takeout Crispy wings</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Warrior Blend Organic</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Chao Cheese Creamy</a>
-        <a href="#" class="btn btn-warning me-2 mb-2">Chicken meatballs</a>
-      </div>
-    </section>
-    <!-- also looking for buttons ends -->
-
-    <section class="py-5">
-      <div class="container-lg">
-        <div class="row row-cols-1 row-cols-sm-3 row-cols-lg-5">
-          <div class="col">
-            <div class="card mb-3 border border-dark-subtle p-3">
-              <div class="text-dark mb-3">
-                <svg width="32" height="32"><use xlink:href="#package"></use></svg>
-              </div>
-              <div class="card-body p-0">
-                <h5>Free delivery</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+            <div class="col">
+              <div class="card mb-3 border border-dark-subtle p-3">
+                <div class="text-dark mb-3">
+                  <svg width="32" height="32">
+                    <use xlink:href="#secure"></use>
+                  </svg>
+                </div>
+                <div class="card-body p-0">
+                  <h5>100% secure payment</h5>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col">
-            <div class="card mb-3 border border-dark-subtle p-3">
-              <div class="text-dark mb-3">
-                <svg width="32" height="32"><use xlink:href="#secure"></use></svg>
-              </div>
-              <div class="card-body p-0">
-                <h5>100% secure payment</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card mb-3 border border-dark-subtle p-3">
-              <div class="text-dark mb-3">
-                <svg width="32" height="32"><use xlink:href="#quality"></use></svg>
-              </div>
-              <div class="card-body p-0">
-                <h5>Quality guarantee</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+            <div class="col">
+              <div class="card mb-3 border border-dark-subtle p-3">
+                <div class="text-dark mb-3">
+                  <svg width="32" height="32">
+                    <use xlink:href="#quality"></use>
+                  </svg>
+                </div>
+                <div class="card-body p-0">
+                  <h5>Quality guarantee</h5>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col">
-            <div class="card mb-3 border border-dark-subtle p-3">
-              <div class="text-dark mb-3">
-                <svg width="32" height="32"><use xlink:href="#savings"></use></svg>
-              </div>
-              <div class="card-body p-0">
-                <h5>guaranteed savings</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+            <div class="col">
+              <div class="card mb-3 border border-dark-subtle p-3">
+                <div class="text-dark mb-3">
+                  <svg width="32" height="32">
+                    <use xlink:href="#savings"></use>
+                  </svg>
+                </div>
+                <div class="card-body p-0">
+                  <h5>guaranteed savings</h5>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col">
-            <div class="card mb-3 border border-dark-subtle p-3">
-              <div class="text-dark mb-3">
-                <svg width="32" height="32"><use xlink:href="#offers"></use></svg>
-              </div>
-              <div class="card-body p-0">
-                <h5>Daily offers</h5>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+            <div class="col">
+              <div class="card mb-3 border border-dark-subtle p-3">
+                <div class="text-dark mb-3">
+                  <svg width="32" height="32">
+                    <use xlink:href="#offers"></use>
+                  </svg>
+                </div>
+                <div class="card-body p-0">
+                  <h5>Daily offers</h5>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipi elit.</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
 
-    <%- include('../partials/userFooter.ejs')  %>
+      <%- include('../partials/userFooter.ejs') %>
 
-    <!-- rating -->
-    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/js/coreui.bundle.min.js" integrity="sha384-mLGa1g62d9QzDXVGjvdUasvKUjkIoq7kjvKJsQifgQdr9x+4Ge3SZuGRTHYwvAl/" crossorigin="anonymous"></script>
+        <!-- rating -->
+        <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/js/coreui.bundle.min.js"
+          integrity="sha384-mLGa1g62d9QzDXVGjvdUasvKUjkIoq7kjvKJsQifgQdr9x+4Ge3SZuGRTHYwvAl/"
+          crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/js/userjs/home.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/js/userjs/home.js"></script>
 
 
 
-  
+
   </body>
+
 </html>

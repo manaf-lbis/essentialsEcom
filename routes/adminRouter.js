@@ -7,7 +7,7 @@ const categoryController = require('../controllers/admin/categoryController');
 const productController = require('../controllers/admin/productControllers');
 const ordersController = require('../controllers/admin/ordersController');
 // const offerController = require('../controllers/admin/offerController');
-// const couponController = require('../controllers/admin/couponController');
+const couponController = require('../controllers/admin/couponController');
 const auth = require('../middlewares/usersMiddleware');
 
 
@@ -57,6 +57,11 @@ router.get('/updateOrderStatus', auth.adminAuth,ordersController.orderStatusUpda
 router.get('/offers');
 
 //coupon
-router.get('/coupon');
+router.get('/coupons',couponController.coupons);
+router.get('/addCoupons',couponController.createCouponPage);
+router.post('/createCoupon',couponController.newCoupon);
+router.get('/disableCoupon',couponController.disableCoupon);
+
+
 
 module.exports = router;

@@ -152,8 +152,6 @@ const allOrders = async (req,res)=>{
           const skip = limit * (currentpage - 1);
           
 
-      
-
        const orders = await Order.find({ userId }).populate('orderItems.productId').sort({orderDate:-1}).skip(skip).limit(limit)
 
        res.render('user/purchase/orders',{orders,currentpage})
@@ -177,7 +175,7 @@ const cancelOrder = async (req,res)=>{
 
         res.redirect('/orders')
          
-        
+    
     } catch (error) {
         console.log(error);
 

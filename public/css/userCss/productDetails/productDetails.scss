@@ -1,6 +1,6 @@
 
 body{
-    // background-color: #f1f8fe;
+    // background-color: #0088ff;
     font-family: "Inter", sans-serif;
 }
 .line{
@@ -110,71 +110,76 @@ body{
     }
 }
 
-// ======= Best selling section / product may also like  ============
-.bestSellingSec{
-    background-color: #fff;
-    margin-top: 15px;
-    padding: 15px 0 15px 15px;
+// // ======= Best selling section / product may also like  ============
+// .bestSellingSec{
+//     background-color: #fff;
+//     margin-top: 15px;
+//     padding: 15px 0 15px 15px;
     
 
-    h3{
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 20px;
-    }
+//     h3{
+//         font-size: 18px;
+//         font-weight: 600;
+//         margin-bottom: 20px;
+//     }
 
-   .bestProducts{
-       display: flex;
-       overflow: hidden;
-       gap: 15px;
+//    .bestProducts{
+//        display: flex;
+//        overflow: hidden;
+//        gap: 15px;
        
     
-        .productCard{
-            align-items: center;
-            width:240px;
-            border: 1px solid #DFE1E7;
-            border-radius: 6px;
-    
-            img{
-                width: 240px;
-                height: 170px;
-                border: 1px solid #DFE1E7;
-                border-radius: 6px 0px;
+//         .productCard{
+//             align-items: center;
+//             width:240px;
+//             border: 1px solid #DFE1E7;
+//             border-radius: 6px;
 
-            }
+//             img{
+//                 width: 240px;
+//                 height: 170px;
+//                 border: 1px solid #DFE1E7;
+//                 border-radius: 6px 0px;
+
+//             }
            
-            .cardBody{
-                padding: 16px 10px;
+//             .cardBody{
+//                 padding: 16px 10px;
 
-                .title{
-                    display: flex;
-                    justify-content: space-between;
-                    h6{
-                        font-weight: 600;
-                        font-size: 18px;
-                    }
-                }
-                .description{
-                    font-size: 15px; 
-                }
-                .price-buynow{
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding-left: 10px;
-                    span{
-                        font-size:19px ;
-                        font-weight: 600;
-                    }
-                    button{
-                        width: 92px;
-                        height: 35px;
-                        padding: 0;
-                    }
-                }
+//                 .title{
+//                     display: flex;
+//                     justify-content: space-between;
+//                     h6{
+//                         font-weight: 600;
+//                         font-size: 18px;
+//                     }
+//                 }
+//                 .description{
+//                     font-size: 15px; 
+//                 }
+//                 .price-buynow{
+//                     display: flex;
+//                     justify-content: space-between;
+//                     align-items: center;
+//                     padding-left: 10px;
+//                     span{
+//                         font-size:19px ;
+//                         font-weight: 600;
+//                     }
+//                     button{
+//                         width: 92px;
+//                         height: 35px;
+//                         padding: 0;
+//                     }
+//                 }
 
-            }
+//             }
             
-        }
-   }
+//         }
+//    }
+// }
+
+.product-item{
+    width: 276px;
+
 }

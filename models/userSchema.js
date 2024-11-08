@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
+
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -49,6 +51,14 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  referralCode:{
+    type:String,
+    default:() => uuidv4().replace(/-/g, '').substring(0, 6).toUpperCase(),
+    unique:true
+  }
+},
+{
+  timestamps:true
 });
 
 const User = mongoose.model('User', userSchema);

@@ -525,7 +525,36 @@ a.btn-link.text-light:after {
   background-color: var(--bs-light);
 }
 
+.wishlistIcon{
+  width: 20px;
+  margin-top: 5px;
+ 
 
+}
+
+.wishlistBtn{
+  border: 1px solid grey;
+ border-radius: 6px;
+ cursor: pointer;
+
+
+}
+
+@keyframes growShrink {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2); /* Grow */
+  }
+  100% {
+    transform: scale(1); /* Shrink back to normal */
+  }
+}
+
+.grow-shrink {
+  animation: growShrink 0.3s ease-in-out;
+}
 
 
 

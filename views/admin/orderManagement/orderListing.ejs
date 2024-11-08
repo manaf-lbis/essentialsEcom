@@ -23,10 +23,7 @@
                                             placeholder="Search" aria-label="Search">
                                         <button class="btn btn-outline-success" type="submit">Search</button>
                                     </form>
-                                    <a href="/admin/addProduct">
-                                        <button class="btn btn-outline-primary ms-3" type="button">Add Product</button>
-                                    </a>
-
+                                   
                                 </div>
                             </div>
                         </nav>
@@ -57,7 +54,7 @@
                                                 <li><%= order.orderId %></li>
                                                 <li> <%= item.productId.productName.substring(0,15)+'..'%> </li>
                                                 <li> <%= item.quantity %></li>
-                                                <li> <%= item.price * item.quantity %></li>
+                                                <li>₹ <%= item.price * item.quantity %></li>
 
                                                 <li class="text-success"> <%= order.paymentMethod %> </li>
 

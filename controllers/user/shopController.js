@@ -1,11 +1,16 @@
 const Product = require('../../models/productSchema');
 const { options } = require('../../routes/userRouter');
+const Category = require('../../models/categorySchema')
 
 
 
 
 const search = async (req, res) => {
     try {
+
+        const categories =await Category.find({isBlocked:false})
+        console.log(categories);
+        
         
         
         const searchQuery  = req.query.searchQuery ?? '';
@@ -14,7 +19,6 @@ const search = async (req, res) => {
 
 
         
-
 
         if (sort === 'ace'){
             sort = { sellingPrice : 1 }
@@ -52,7 +56,7 @@ const search = async (req, res) => {
     //    console.log(products);//=================================
        
 
-        res.render('user/shop',{products,searchQuery})
+        res.render('user/shop',{products,searchQuery,categories})
 
 
     } catch (error) {

@@ -21,14 +21,8 @@ const products = async (req, res) => {
     }) / limit);
 
 
-    currentPage = currentPage + 1 > count ? count : currentPage;
-
-
-
-    const skip = (currentPage - 1) * limit;
-
-
-
+   
+  
     const products = await Product.find({
       $or: [
         { 'productName': { $regex: '.*' + searchQuery + '.*', $options: 'i' } },

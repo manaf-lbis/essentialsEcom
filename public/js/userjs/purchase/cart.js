@@ -32,7 +32,7 @@ if (removeBtn) {
 }
 
 
-//checking cart is empti or not and prevent proceed to checkout page
+//checking cart is empty or not and prevent proceed to checkout page
 const checkoutBtn = document.getElementById('checkoutBtn');
 
 checkoutBtn.addEventListener('click', (event) => {
@@ -66,8 +66,6 @@ async function qtyChangeRqst(event) {
     
     
 
-
-    
 
     // if the cart qty reached 
     if (Number(input) >= 5) {
@@ -106,7 +104,7 @@ async function qtyChangeRqst(event) {
     if (responseData.message === 'Out of Quantity') {
 
       // quantity is setting back to older
-      event.target.closest('div').querySelector('input[type="number"]').value = input - 1 === 0 ? input : input - 1;
+      event.target.closest('div').querySelector('input[type="number"]').value = input - 1 === 0 ? input : input-1;
 
       Swal.fire({
         position: "top-end",

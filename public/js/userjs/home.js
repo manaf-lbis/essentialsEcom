@@ -49,7 +49,7 @@ async function addToCart(quantity, _id) {
     body: JSON.stringify({ quantity, _id })
   });
 
-  if(response.ok){
+  if (response.ok) {
 
     Swal.fire({
       position: "top-end",
@@ -58,12 +58,12 @@ async function addToCart(quantity, _id) {
       showConfirmButton: false,
       timer: 1000,
       width: '200px',
-      padding: '0.2rem',  
-      backdrop: false  
+      padding: '0.2rem',
+      backdrop: false
     });
-    
 
-  }else{
+
+  } else {
     Swal.fire({
       position: "top-end",
       icon: "error",
@@ -71,12 +71,127 @@ async function addToCart(quantity, _id) {
       showConfirmButton: false,
       timer: 1000,
       width: '200px',
-      padding: '0.2rem',  
-      backdrop: false  
+      padding: '0.2rem',
+      backdrop: false
     });
-    
-    
-  }
-  
 
+
+  }
+
+}
+
+// checking the qty of this product is availabel or not 
+const quantitySelection = document.querySelectorAll('.quantitySelection');
+
+
+quantitySelection.forEach((ele) => {
+  ele.addEventListener('change', checkQuantity)
+})
+
+
+async function checkQuantity(event) {
+
+  const qty = event.target.value
+
+  const _id = event.target.getAttribute('productid');
+
+  if (qty >= 5) {
+
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: "Max qty reached",
+      showConfirmButton: false,
+      timer: 1000,
+      width: '200px',
+      padding: '0.2rem',
+      backdrop: false
+    });
+    qty = 5;
+  }
+
+
+  //checking stock is the product qty is avilable(when qty incrementing)
+  const response = await fetch(`/checkProductQty/?qty=${qty}&_id=${_id}`, {
+    method: 'GET',
+    headers: {
+      'content-Type': 'appllication/json'
+    }
+  })
+
+  const json = await response.json()
+
+  if (!response.ok) {
+    event.target.value = json.availableQty
+
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: "out Of stock",
+      showConfirmButton: false,
+      timer: 1000,
+      width: '200px',
+      padding: '0.2rem',
+      backdrop: false
+    });
+
+  }
+
+}
+
+
+//wishlist
+const wishlistToggle = document.querySelectorAll('.wishlistToggle');
+wishlistToggle.forEach((wishlist) => {
+  wishlist.addEventListener('click', wishlistFunc)
+})
+
+async function wishlistFunc(event) {
+  try {
+    event.preventDefault()
+    const href = event.target.closest('a').getAttribute('href');
+
+    const response = await fetch(href, {
+      method: 'GET',
+      headers: {
+        'content-type': 'aaplication/json'
+      }
+    });
+
+    const json = await response.json();
+
+    const svg = event.target.closest('.wishlistBtn').querySelector('svg');
+
+    
+
+    //if item is added change heart color to red
+    if (json.message === 'Item Removed') {
+
+      svg.style.fill =  'grey';
+
+      svg.classList.add('grow-shrink');
+
+      // Remove bounce class after animation ends
+      svg.addEventListener('animationend', () => {
+        svg.classList.remove('grow-shrink');
+      }, { once: true });
+
+    } else if(json.message === 'Added To Wishlist') {
+
+      svg.style.fill = 'red';
+
+      svg.classList.add('grow-shrink');
+
+      // Remove bounce class after animation ends
+      svg.addEventListener('animationend', () => {
+        svg.classList.remove('grow-shrink');
+      }, { once: true });
+
+    }
+
+
+  } catch (error) {
+    console.log(error);
+
+  }
 }

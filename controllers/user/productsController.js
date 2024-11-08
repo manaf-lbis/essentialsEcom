@@ -32,9 +32,34 @@ const getDetailedPage = async (req,res)=>{
 
 
 
+const checkQty =async (req,res)=>{
+
+    try {
+     const {_id,qty} = req.query
+     const product=  await Product.findOne({_id});
+
+
+     if( Number(qty) >= product.quantity){
+
+        res.status(400).json({message:'out of stock',availableQty: product.quantity});
+
+
+     }else{
+        res.status(200).json({mesage:'ok'})
+     }
+
+
+    } catch (error) {
+        console.log(error); 
+    }
+}
+
+
+
 
 
 
 module.exports ={
     getDetailedPage,
+    checkQty
 }

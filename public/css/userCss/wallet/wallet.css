@@ -1,0 +1,112 @@
+/* Custom Styles */
+body {
+  background-color: #f4f7fc;
+  font-family: "Arial", sans-serif;
+}
+
+.wallet-card {
+  background: linear-gradient(to bottom, #007bff, #0056b3);
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.wallet-card h4 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+.wallet-card h2 {
+  font-size: 3.5rem;
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.wallet-card .btn {
+  margin: 10px 5px;
+}
+
+.wallet-card .btn-light {
+  background-color: #fff;
+  border: 2px solid #fff;
+}
+
+.wallet-card .btn-light:hover {
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+
+.transaction-table th,
+.transaction-table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.transaction-table th {
+  background-color: #343a40;
+  color: white;
+  font-weight: 600;
+}
+
+.transaction-table td.amount-positive {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.transaction-table td.amount-negative {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.transaction-table tr {
+  transition: background-color 0.3s ease;
+}
+
+.transaction-table tr:hover {
+  background-color: #e9ecef;
+}
+
+.transaction-table .no-border-bottom td {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-align: center;
+  color: #343a40;
+  margin-top: 30px;
+}
+
+.tooltip-inner {
+  background-color: #007bff;
+  color: white;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 4px solid transparent;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .wallet-card h2 {
+    font-size: 2.5rem;
+  }
+  .wallet-card h4 {
+    font-size: 1.2rem;
+  }
+}/*# sourceMappingURL=wallet.css.map */

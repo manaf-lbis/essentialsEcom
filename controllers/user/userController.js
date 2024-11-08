@@ -6,8 +6,16 @@ const session = require('express-session');
 const passport = require('../../config/passport');
 const Product = require('../../models/productSchema');
 const Category = require('../../models/categorySchema');
-const Comments = require('../../models/commentsSchema')
+const Wishlist = require('../../models/wishlistSchema')
 const mongoose = require('mongoose');
+const  refferalsController  = require('./referralsController');
+
+
+// getting user id from session 
+function getUserIdFromSession(req) {
+  return req.session?._id ?? req.session.passport?.user;
+}
+
 
 // <<<====Signup page rendering===>>>
 const loadSignupPage = (req, res) => {
@@ -32,10 +40,20 @@ const loadLoginpage = (req, res) => {
 // <<<====login page rendering===>>>
 const loadHome = async (req, res) => {
   try {
+
+    const userId = getUserIdFromSession(req);
+
     const products = await Product.find({ isBlocked: false });
     const category = await Category.find({ isBlocked: false });
+    const wishlist = await Wishlist.findOne({ userId }, { 'products.productId': 1 })
 
-    return res.render('user/home', { products, category });
+    let wishlistProducts = [];
+    if (wishlist) {
+      wishlistProducts = wishlist.products.map((ele) => ele.productId.toString());
+    }
+
+
+    return res.render('user/home', { products, category, wishlistProducts });
 
   } catch (error) {
     console.log(error);
@@ -91,15 +109,17 @@ const sendverification = async (email, otp) => {
   }
 };
 
+
+
+
 // <====!!! Add New user request from user !!!=====>
 const addNewUser = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, referralCode } = req.body;
     const userExist = await User.findOne({ email: email });
 
     //  <===checkin db user is already exist====>
     if (userExist) {
-      console.log('user exist');
       return res.render('user/signup', {
         message: 'Entred Email Already Exist',
       });
@@ -110,28 +130,39 @@ const addNewUser = async (req, res) => {
 
     if (sentInfo.accepted.length > 0) {
       req.session.userOtp = otp;
-      req.session.userData = { name, email, phone, password };
+      req.session.userData = { name, email, phone, password, referralCode};
       console.log('first otp:', otp);
       return res.render('user/otp', { message: '' });
+
     }
 
-    // res.render('user/otp');
   } catch (error) {
-    return res.render('user/signup', { message: 'Error while sending OTP' });
+
     console.log(error);
+    return res.render('user/signup', { message: 'Error while sending OTP' });
+    
   }
 };
 
-//===== verify otp and and creating db  =============>
+//===== verify otp and and creating user  =============>
 const verifyOtp = async (req, res) => {
   try {
-    const { name, phone, email, password } = req.session.userData;
+    const { name, phone, email, password ,referralCode} = req.session.userData;
     const { enteredOtp } = req.body;
 
     if (enteredOtp === req.session.userOtp) {
+
+      //new user creating
       const hashPassword = await bcrypt.hash(password, 10);
       const user = new User({ name, phone, email, password: hashPassword });
-      await user.save();
+      await user.save()
+      
+      
+      //refferal code 
+      if(referralCode){
+       await refferalsController.createRefferal(referralCode, user._id)
+      }
+
 
       res.status(200).json({ message: 'otp verified Sucessfully' });
     } else {

@@ -13,12 +13,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
   
     if (!selectedAddress) {
-      alert("Please select a delivery address.");
+    
+    Swal.fire({
+        icon: "error",
+        title: "Please Choose an Address",
+        text: "Select an address to Procedd!",
+        timer: 1000,
+        showConfirmButton: false,
+        });
+
       return false; // Validation failed
     }
   
     if (!selectedPaymentMethod) {
-      alert("Please select a payment method.");
+        Swal.fire({
+            icon: "error",
+            title: "Please Choose a Payment Method",
+            text: "Select a payment Methord to proceed!",
+            timer: 1000,
+            showConfirmButton: false,
+        });
+
       return false; // Validation failed
     }
   
@@ -253,3 +268,61 @@ async function editBtnClicked(event) {
 }
 
 
+// checking the qty of this product is availabel or not 
+const quantitySelection = document.querySelectorAll('.quantitySelection');
+
+
+quantitySelection.forEach((ele)=>{
+  ele.addEventListener('change',checkQuantity)
+})
+
+
+async function checkQuantity(event){
+  
+  const qty = event.target.value
+
+  const _id = event.target.getAttribute('productid');
+
+  if(qty >=5){
+
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: "Max qty reached",
+      showConfirmButton: false,
+      timer: 1000,
+      width: '200px',
+      padding: '0.2rem',  
+      backdrop: false  
+    });
+    qty = 5;
+  }
+
+
+  //checking stock is the product qty is avilable
+  const response = await fetch(`/checkProductQty/?qty=${qty}&_id=${_id}`,{
+    method:'GET',
+    headers:{
+      'content-Type':'appllication/json'
+    }
+  })
+
+  const json = await response.json()
+
+  if(!response.ok){
+    event.target.value = json.availableQty
+
+    Swal.fire({
+      position: "top-end",
+      icon: "error",
+      title: "out Of stock",
+      showConfirmButton: false,
+      timer: 1000,
+      width: '200px',
+      padding: '0.2rem',  
+      backdrop: false  
+    });
+    
+  }
+
+}

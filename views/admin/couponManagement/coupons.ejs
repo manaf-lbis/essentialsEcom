@@ -1,0 +1,100 @@
+<html lang="en">
+<%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/productmanagement/productmanagement.css" }) %>
+
+    <body>
+        <%- include('../../partials/adminNavbar.ejs') %>
+
+            <div class="container-fluid wrapper">
+                <%- include("../../partials/adminLeftsidebar.ejs") %>
+
+                <div class="mainpanel">
+                    <nav class="navbar rounded-3 bg-body-tertiary">
+                        <div class="container-fluid">
+                            <h4>Coupon Management</h4>
+                            <div class="d-flex">
+                                <a href="/admin/addCoupons">
+                                    <button class="btn btn-outline-primary ms-3" type="button">Add Coupon</button>
+                                </a>
+
+                            </div>
+                        </div>
+                    </nav>
+                    <!-- nav ends -->
+
+                    <div class="userListing">
+                        <div class="header">
+                            <ul>
+                                <li>Coupon Code</li>
+                                <li>Discount <br> <small>(min pur - discount)</small></li>
+                                <li>Usage Count </li>
+                                <li>Expiry Date</li>
+                                <li>Status</li>
+                                <li></li>
+                            </ul>
+                        </div>
+                        <!-- user listing -->
+                        <div class=" userListing list">
+
+
+                            <% for(let coupon of coupons){  %>
+
+                                <div class=" header user">
+                                    <ul>
+                                        <li><%=coupon.couponCode  %></li>
+                                        <li>  <%= '₹'+ coupon.minPurchaseValue + ' - ' +'₹'+  coupon.discount  %> </li>
+                                        <li> <%=coupon.usedCount  %></li>
+                                        <li class="text-danger"><%=coupon.expiryDate.toString().substring(4,15)  %> </li>
+                                        
+                                        <% if(coupon.expiryDate < Date.now() ){ %>
+                                          <li class="text-danger"> Expired </li>
+                                        <% }else if(coupon.isActive === false){ %>
+                                          <li class="text-danger"> inActive </li>
+                                        <% }else{ %>
+                                          <li class="text-success"> Active </li>
+                                        <% } %>
+                                     
+
+                                        <li>
+                                            <% if(coupon.expiryDate > Date.now() && coupon.isActive === true ){ %>
+                                            <a class="couponDeleteBtn" href="/admin/disableCoupon/?_id=<%=coupon._id %>">
+                                              <img src="/assets/images/delete1.png" couponId alt="">
+                                            </a>
+                                            <% } %>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <% } %>
+                        </div>
+
+                        
+                        <section class="d-flex justify-content-center mt-3 " aria-label="Page navigation example">
+                            <ul class="pagination">
+                              <li class="page-item">
+                                <a class="page-link" href="/admin/coupons/?pageReq=<%=currentPage-1 %>" aria-label="Previous">
+                                  <span aria-hidden="true">&laquo;</span>
+                                  <span class="sr-only">Previous</span>
+                                </a>
+                              </li>
+                               <li class="page-item"><a class="page-link" href=""> <%=currentPage %></a></li>
+                              <li class="page-item">
+                                <a class="page-link" href="/admin/coupons/?pageReq=<%=currentPage+1 %>" aria-label="Next">
+                                  <span aria-hidden="true">&raquo;</span>
+                                  <span class="sr-only">Next</span>
+                                </a>
+                              </li>
+                            </ul>
+                        </section>
+
+
+                    </div>
+
+                </div>
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="/js/adminjs/coupon/coupons.js"></script>
+
+    </body>
+
+</html>

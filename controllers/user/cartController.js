@@ -191,37 +191,31 @@ const changeCartQty = async (req, res) => {
 
         const { productId, count } = req.query;
 
-       const quantity =  await Product.findOne({_id:productId},{quantity:1});
+        const quantity = await Product.findOne({ _id: productId }, { quantity: 1 });
 
-       
 
-      if( count < quantity.quantity){
+
+        if (count <= quantity.quantity) {
 
             const response = await Cart.findOneAndUpdate(
                 { userId, "products.productId": productId },
                 { $set: { 'products.$.quantity': Number(count) } },
-                {new:true}
+                { new: true }
             )
 
 
             //getiing cart data for updating the page
             const { totalAmount, totalItems, cartitems } = await getCartDetails(req);
 
-        
-            res.status(200).json({ totalAmount, totalItems, cartitems});
 
-      }else{
-        res.status(400).json({message:'Out of Quantity'})
-      }
+            res.status(200).json({ totalAmount, totalItems, cartitems });
 
-
-
-       
+        } else {
+            res.status(400).json({ message: 'Out of Quantity' })
+        }
 
 
 
-
-        
 
     } catch (error) {
         console.log(error);

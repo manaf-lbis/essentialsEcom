@@ -1,0 +1,80 @@
+<html lang="en">
+<%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/productmanagement/productmanagement.css" }) %>
+
+    <body>
+        <%- include('../../partials/adminNavbar.ejs') %>
+
+            <div class="container-fluid wrapper">
+                <%- include("../../partials/adminLeftsidebar.ejs") %>
+
+                    <div class="mainpanel">
+                        <nav class="navbar rounded-3 bg-body-tertiary">
+                            <div class="container-fluid">
+                                <h4>Coupon Management</h4>
+                                <div class="d-flex">
+
+                                </div>
+                            </div>
+                        </nav>
+                        <!-- nav ends -->
+
+                        <div class="container my-4">
+                            <div class="row justify-content-center">
+                              <div class="col-md-6">
+                                <div class="card shadow coupon-card">
+                                  <div class="card-body">
+                                    <h4 class="card-title text-center mb-4">Generate a Coupon</h4>
+                                    
+                                    <form id="couponForm">
+                                        <div class="mb-3">
+                                          <label for="couponCode" class="form-label">Coupon Code</label>
+                                          <input type="text" name="couponCode" id="couponCode" class="form-control" placeholder="Enter coupon code" >
+                                          <div id="couponCodeError" class="text-danger"></div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                          <label for="discountAmount" class="form-label">Discount Amount</label>
+                                          <input type="number" name="discount" id="discountAmount" class="form-control" placeholder="Enter discount Amount" >
+                                          <div id="discountAmountError" class="text-danger"></div>
+                                        </div>
+                                      
+                                        <div class="mb-3">
+                                          <label for="minPurchase" class="form-label">Minimum Purchase Value</label>
+                                          <input type="number" name="minPurchaseValue" id="minPurchase" class="form-control" placeholder="Enter minimum purchase amount" >
+                                          <div id="minPurchaseError" class="text-danger"></div>
+                                        </div>
+                                      
+                                        <div class="mb-3">
+                                          <label for="expiryDate" class="form-label">Expiry Date</label>
+                                          <input type="date" name="expiryDate" id="expiryDate" class="form-control" >
+                                          <div id="expiryDateError" class="text-danger"></div>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary w-100">Generate Coupon</button>
+                                      </form>
+
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+
+
+
+
+
+
+                    </div>
+
+            </div>
+
+            </div>
+            </div>
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script src="/js/adminjs/coupon/createCoupon.js"></script>
+
+    </body>
+
+</html>

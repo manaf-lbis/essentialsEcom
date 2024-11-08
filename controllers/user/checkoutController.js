@@ -1,6 +1,7 @@
 const Address = require('../../models/addressSchema');
 const Cart = require('../../models/cartSchema')
 const User = require('../../models/userSchema')
+const Product = require('../../models/productSchema')
 
 
 //requiring cart details function from controller
@@ -22,7 +23,7 @@ const getCheckutPage = async (req,res)=>{
         if(cart.products.length <=0){
             return res.redirect('/cart')
         }
-        
+
         
         let userAddress = await Address.findOne(
             {userId}
