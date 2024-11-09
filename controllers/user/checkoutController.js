@@ -29,14 +29,17 @@ const getCheckutPage = async (req,res)=>{
             {userId}
         ) ?? [] ;
 
+ 
+        console.log( userAddress);
         
-
-        userAddress = userAddress.address.filter((ele)=> !ele.isBlocked );
+        if( userAddress.address){
+           userAddress = userAddress.address.filter((ele)=> !ele.isBlocked ); 
+        }
         
+        
+        const {totalAmount,totalItems,amountAfterDiscount,discount} = await cartController.getCartDetails(req);
 
-        const {totalAmount,totalItems} = await cartController.getCartDetails(req);
-
-        res.render('user/purchase/checkout',{totalAmount,totalItems,userAddress});
+        res.render('user/purchase/checkout',{totalAmount,totalItems,userAddress, amountAfterDiscount,discount});
         
         
     } catch (error) {

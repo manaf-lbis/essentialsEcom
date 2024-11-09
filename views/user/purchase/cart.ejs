@@ -72,7 +72,7 @@
 
                         <button id="decCounter" productId="<%= item.allProducts[0]._id %>"   data-mdb-button-init data-mdb-ripple-init  class="btn btn-primary px-3 me-2 countBtn "
                           onclick="this.parentNode.querySelector('input[type=number]').stepDown()" >
-                          <i class="fas fa-minus"></i>
+                          <i class="fas fa-minus "></i>
                         </button>
       
                         <div data-mdb-input-init class="form-outline">
@@ -82,7 +82,7 @@
       
                         <button data-mdb-button-init data-mdb-ripple-init id="incCounter" productId="<%= item.allProducts[0]._id %>" class="btn btn-primary px-3 ms-2 countBtn"
                           onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                          <i class="fas fa-plus"></i>
+                          <i class="fas fa-plus "></i>
                         </button>
                       </div>
                       <!-- Quantity -->
@@ -106,6 +106,37 @@
             </div>
 
             <div class="col-md-4">
+
+              <!-- apply coupon -->
+              <div class="card mb-4">
+                <div class="card-header py-3">
+                  <h5 class="mb-0">Apply Coupon</h5>
+                </div>
+                <div class="card-body">
+
+                  <ul class="list-group list-group-flush">
+                      <div class="input-group mb-3">
+
+                        <input type="text" id="couponCode" 
+                        <% if(coupon?.coupon?.couponCode) {%>
+                         value="<%= coupon.coupon.couponCode %>" disabled
+                        <% }else{ %>
+                          value=""
+                         <% } %>
+                        class="form-control border-right-0 border-primary" placeholder="Coupon Code" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        
+                        <div class="input-group-append">
+                          <button class="btn btn-primary" id="couponBtn" type="button">Apply Coupon</button>
+                        </div>
+                      </div>
+                      <div  id="couponCodeMsg"></div>
+                  </ul>
+                </div>
+              </div>
+
+
+
+              <!-- summarry portion -->
               <div class="card mb-4">
                 <div class="card-header py-3">
                   <h5 class="mb-0">Summary</h5>
@@ -117,10 +148,22 @@
                       Price
                       <span id="price">₹ <%= totalAmount  %></span>
                     </li>
+                    <li
+                      class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                      Coupon Discount(-)
+                      <span id="couponDiscount">₹ 
+                        <% if(coupon?.coupon?.couponCode) {%>
+                          <%= coupon.coupon.discount %>
+                         <% }else{ %>
+                           0
+                          <% } %>
+                        </span>
+                    </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                       Shipping
                       <span>0</span>
                     </li>
+                    
                     <li
                       class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                       <div>
@@ -129,7 +172,7 @@
                           <p class="mb-0">(Including all taxes)</p>
                         </strong>
                       </div>
-                      <span><strong id="totalAmount">₹ <%= totalAmount  %></strong></span>
+                      <span><strong totalAmount=" <%= totalAmount %>" id="totalAmount">₹ <%= amountAfterDiscount %></strong></span>
                     </li>
                   </ul>
       

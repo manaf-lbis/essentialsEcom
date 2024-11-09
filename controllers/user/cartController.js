@@ -26,9 +26,23 @@ async function getCartDetails(req) {
                     as: 'allProducts'
                 }
             },
+            {
+                $lookup: {
+                    from: 'coupons',           
+                    localField: 'coupon',       
+                    foreignField: '_id',  
+                    as: 'couponDetails'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$couponDetails',
+                    preserveNullAndEmptyArrays: true 
+                }
+            }
 
         ]);
-
+        
         let totalAmount = 0;
         let totalItems = 0;
 
@@ -42,7 +56,17 @@ async function getCartDetails(req) {
             })
         }
 
-        return { totalAmount, totalItems, cartitems }
+        let amountAfterDiscount = totalAmount;
+        let discount = 0;
+
+        if(cartitems[0]?.couponDetails?.discount){
+            discount = cartitems[0]?.couponDetails?.discount;
+            amountAfterDiscount = totalAmount - cartitems[0]?.couponDetails?.discount
+        }
+
+
+    
+        return { totalAmount, totalItems, cartitems, discount, amountAfterDiscount }
 
     } catch (error) {
         console.log(error);
@@ -55,10 +79,14 @@ async function getCartDetails(req) {
 //cart requiring 
 const getCartPage = async (req, res) => {
     try {
+        const userId = getUserIdFromSession(req)
 
-        const { totalAmount, totalItems, cartitems } = await getCartDetails(req);
+        const { totalAmount, totalItems, cartitems,amountAfterDiscount } = await getCartDetails(req);
 
-        res.render('user/purchase/cart', { cartitems, totalAmount, totalItems })
+        const coupon = await Cart.findOne({userId}).populate('coupon');
+        
+
+        res.render('user/purchase/cart', { cartitems, totalAmount, totalItems ,coupon, amountAfterDiscount})
 
     } catch (error) {
         console.log(error);
@@ -205,10 +233,10 @@ const changeCartQty = async (req, res) => {
 
 
             //getiing cart data for updating the page
-            const { totalAmount, totalItems, cartitems } = await getCartDetails(req);
+            const { totalAmount, totalItems, cartitems, discount,amountAfterDiscount} = await getCartDetails(req);
 
 
-            res.status(200).json({ totalAmount, totalItems, cartitems });
+            res.status(200).json({ totalAmount, totalItems, cartitems, discount ,amountAfterDiscount});
 
         } else {
             res.status(400).json({ message: 'Out of Quantity' })

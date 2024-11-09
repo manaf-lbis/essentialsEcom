@@ -63,8 +63,8 @@ async function qtyChangeRqst(event) {
     const input = event.target.closest('div').querySelector('input[type="number"]').value;
     const priceOfItem = event.target.closest('.row').querySelector('.price').innerHTML;
     const totalPriceTag = event.target.closest('.row').querySelector('.totalPrice');
-    
-    
+
+
 
 
     // if the cart qty reached 
@@ -84,6 +84,9 @@ async function qtyChangeRqst(event) {
 
     }
 
+    //checking coupon 
+    const couponCode = document.getElementById('couponCode')
+
     // qty change req to server
     const response = await fetch(`/cartQtyChange/?productId=${productId}&count=${input}`, {
       method: 'GET',
@@ -94,8 +97,14 @@ async function qtyChangeRqst(event) {
 
     //if quantity is changed 
     if (response.ok) {
+      
+       //check coupon is valid  //disable means there is a coupon available
+      if(couponCode.hasAttribute('disabled')){
+       priceChangeListner(); 
+      }
+      
       const data = await response.json()
-      return updatePage(data,totalPriceTag,input,priceOfItem)
+      return updatePage(data, totalPriceTag, input, priceOfItem)
     }
 
 
@@ -104,7 +113,7 @@ async function qtyChangeRqst(event) {
     if (responseData.message === 'Out of Quantity') {
 
       // quantity is setting back to older
-      event.target.closest('div').querySelector('input[type="number"]').value = input - 1 === 0 ? input : input-1;
+      event.target.closest('div').querySelector('input[type="number"]').value = input - 1 === 0 ? input : input - 1;
 
       Swal.fire({
         position: "top-end",
@@ -120,7 +129,7 @@ async function qtyChangeRqst(event) {
     }
 
   } catch (error) {
-    
+
     console.log(error);
 
   }
@@ -128,17 +137,98 @@ async function qtyChangeRqst(event) {
 
 
 // page updating
-function updatePage (data,totalPriceTag,qty,priceOfItem){
-
-
+function updatePage(data, totalPriceTag, qty, priceOfItem) {
 
   document.getElementById('totalItems').innerHTML = `Items (${data.totalItems})`;
-  document.getElementById('totalAmount').innerHTML = `₹ ${data.totalAmount}` ;
+  document.getElementById('totalAmount').innerHTML = `₹ ${data.amountAfterDiscount}`;
   //total amout of summarry
   document.getElementById('price').innerHTML = `₹ ${data.totalAmount}`;
+
+  console.log(`₹ ${data.discount}`);
   
+  if(data.discount){
+    document.getElementById('couponDiscount').innerHTML = `₹ ${data.discount}`;
+  }
+ 
   // total price of individual item 
-  totalPriceTag.innerHTML = qty * priceOfItem 
-  
+  totalPriceTag.innerHTML = qty * priceOfItem
+
 }
 
+
+// coupon code checking
+const couponBtn = document.getElementById('couponBtn');
+
+couponBtn.addEventListener('click', async () => {
+  const couponCode = document.getElementById('couponCode').value;
+
+  const response = await fetch(`/checkCouponCode/?couponCode=${couponCode}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+
+  const json = await response.json()
+
+  if (response.ok) {
+
+    const couponCodeMsg = document.getElementById('couponCodeMsg');
+    couponCodeMsg.innerHTML = 'Coupon Applied Sucessfully';
+    couponCodeMsg.classList.add('text-success')
+    document.getElementById('couponCode').setAttribute('disabled', true);
+
+    document.getElementById('couponDiscount').innerHTML = `₹ ${json.discount}`
+
+    window.location.href = '/cart'
+
+  } else {
+
+    document.getElementById('couponDiscount').innerHTML = `₹ 0`
+    const couponCodeMsg = document.getElementById('couponCodeMsg');
+    couponCodeMsg.innerHTML = json.message ;
+    couponCodeMsg.classList.add('text-danger')
+    
+
+  }
+
+})
+
+
+
+
+//checking coupon after changing cart value
+//listening price change 
+const couponCode = document.getElementById('couponCode')
+
+async function priceChangeListner() {  //calling when cart updated 
+
+    const response = await fetch(`/couponAfterChange/?couponCode=${couponCode.value}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+
+    if (response.ok) {
+
+      const couponCodeMsg = document.getElementById('couponCodeMsg');
+      couponCodeMsg.innerHTML = 'Coupon Applied Sucessfully';
+      couponCodeMsg.classList.remove('text-danger')
+      couponCodeMsg.classList.add('text-success')
+      document.getElementById('couponCode').setAttribute('disabled', true) 
+
+
+    }else{
+
+      const json = await response.json()
+      const couponCodeMsg = document.getElementById('couponCodeMsg');
+      couponCodeMsg.innerHTML = json.message;
+      couponCodeMsg.classList.add('text-danger')
+      document.getElementById('couponCode').removeAttribute('disabled');
+      document.getElementById('couponCode').value = ''
+      document.getElementById('couponDiscount').innerHTML = `₹ 0`
+    }
+
+}

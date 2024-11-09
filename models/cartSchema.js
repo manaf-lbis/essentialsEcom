@@ -7,6 +7,10 @@ const cartSchema = new Schema({
     ref: 'user',
     required: true,
   },
+  coupon:{
+    type: Schema.Types.ObjectId,
+    ref: 'Coupon'
+  },
   products: [
     {
       productId: {
@@ -32,3 +36,4 @@ const cartSchema = new Schema({
 
 const Cart = mongoose.model('Cart', cartSchema);
 module.exports = Cart;
+

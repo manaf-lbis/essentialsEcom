@@ -8,6 +8,12 @@
 
     <%- include('../../partials/userNavbar.ejs') %>
 
+    <section class=" container rounded-2 bg-light">
+        <ol class="d-flex align-items-center list-unstyled m-0 ">
+            <li><a class="text-decoration-none" href="/home">Home /</a></li>
+            <li><a class="text-decoration-none"  > Wallet</a></li>
+        </ol>
+    </section>
 
 <div class="container my-5">
     <!-- Wallet Balance Section -->
@@ -15,7 +21,7 @@
         <div class="col-lg-6 col-md-8 mx-auto position-relative">
             <div class="wallet-card">
                 <h4 class="text-white">Wallet Balance</h4>
-                <h2 class="text-white">₹1250</h2>
+                <h2 class="text-white">₹<%= wallet.balance %></h2>
                
             </div>
 
@@ -41,26 +47,22 @@
             </thead>
             <tbody>
                 <!-- Transaction 1 -->
+                 <% wallet.transactions.forEach((transaction,index)=>{%>
                 <tr>
-                    <td>1</td>
-                    <td>Payment Received</td>
-                    <td>2024-11-08</td>
-                    <td class="amount-positive">+ $150.00</td>
+                    <td><%= index+1 %></td>
+                    <td><%= transaction.description %></td>
+                    <td><%= transaction.date.toLocaleDateString() %></td>
+
+                    <% if(transaction.type ==='credit' ){  %>
+                    <td class="amount-positive">+  ₹<%= transaction.amount %></td>
+                    <% } else{%>
+                    <td class="amount-negative">-  ₹<%= transaction.amount %></td>
+                    <% } %>
+
                 </tr>
-                <!-- Transaction 2 -->
-                <tr>
-                    <td>2</td>
-                    <td>Groceries</td>
-                    <td>2024-11-07</td>
-                    <td class="amount-negative">- $45.00</td>
-                </tr>
-                <!-- Transaction 3 -->
-                <tr>
-                    <td>3</td>
-                    <td>Online Shopping</td>
-                    <td>2024-11-06</td>
-                    <td class="amount-negative">- $120.00</td>
-                </tr>
+
+                <% }) %>
+               
                 <!-- Example No Border Row -->
                 <tr class="no-border-bottom">
                     <td colspan="4" class="text-center">No More Transactions</td>

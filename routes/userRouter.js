@@ -13,7 +13,8 @@ const commentRatingController = require('../controllers/user/commentRatingContro
 const shopController = require('../controllers/user/shopController')
 const wishlistController = require('../controllers/user/wishlistController')
 const referralsController = require('../controllers/user/referralsController')
-const wallerController = require('../controllers/user/walletController')
+const wallerController = require('../controllers/user/walletController');
+const couponController = require('../controllers/user/couponController')
 
 
 // google auth 
@@ -97,8 +98,9 @@ router.get('/removeFromWishlist', userMiddleware.isAuthenticated, wishlistContro
 router.get('/walletLedger', userMiddleware.isAuthenticated, wallerController.getWallet)
 
 
-
-
+//coupon
+router.get('/checkCouponCode',userMiddleware.isAuthenticated,couponController.checkCouponCode )
+router.get('/couponAfterChange',userMiddleware.isAuthenticated,couponController.couponAfterChange )
 
 
 

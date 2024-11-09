@@ -85,7 +85,7 @@
               <!-- card Starts -->
               <div class="card mb-4">
                 <div class="card-header py-3 bg-white">
-                  <h5 class="mb-0">Payment Methord </h5>
+                  <h5 class="mb-0">Payment Method </h5>
                 </div>
 
                 <div class="card-body">
@@ -123,6 +123,10 @@
                       </span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                      Coupon Discount(-)
+                      <span><%=discount  %></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                       Shipping charge
                       <span>0</span>
                     </li>
@@ -133,7 +137,7 @@
                           <p class="mb-0">(including all taxes)</p>
                         </strong>
                       </div>
-                      <span><strong>₹<%= totalAmount %></strong></span>
+                      <span><strong>₹<%= amountAfterDiscount %></strong></span>
                     </li>
                   </ul>
 

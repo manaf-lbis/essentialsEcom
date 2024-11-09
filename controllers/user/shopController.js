@@ -9,10 +9,7 @@ const search = async (req, res) => {
     try {
 
         const categories =await Category.find({isBlocked:false})
-        console.log(categories);
-        
-        
-        
+
         const searchQuery  = req.query.searchQuery ?? '';
         const priceRange = req.query.priceRange ?? 1000000;
         let sort = req.query.sort ?? {};

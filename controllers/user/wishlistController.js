@@ -20,11 +20,8 @@ const wishlist = async (req, res) => {
     const totalProducts = wishlist.products.length;
     const totalPages = Math.ceil(totalProducts / limit);
 
-
     currentpage = Math.min(Math.max(currentpage, 1), totalPages);
-    
     const skip = (currentpage - 1) * limit;
-
     const paginatedProducts = wishlist.products.slice(skip, skip + limit);
 
   
@@ -33,6 +30,7 @@ const wishlist = async (req, res) => {
         currentpage,
         totalPages
     });
+
     } else {
 
 
