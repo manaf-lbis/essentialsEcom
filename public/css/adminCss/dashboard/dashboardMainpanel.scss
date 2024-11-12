@@ -1,0 +1,97 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f1f9fc;
+    color: #343a40;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #007bff;
+    margin-bottom: 0;
+}
+
+.sales-report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    color: #007bff;
+}
+
+.report-card {
+    border: none;
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: #343a40;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 8px solid transparent;
+}
+
+.report-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.icon-sales {
+    color: #28a745; /* Green */
+}
+
+.icon-order {
+    color: #ffc107; /* Yellow */
+}
+
+.icon-discount {
+    color: #17a2b8; /* Cyan */
+}
+
+.icon-coupons {
+    color: #e83e8c; /* Pink */
+}
+
+.report-card h5 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.report-value {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.download-buttons {
+    margin-top: 30px;
+}
+
+.download-buttons button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.download-buttons button:hover {
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .sales-report-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .report-card {
+        margin-bottom: 20px;
+    }
+}

@@ -14,12 +14,14 @@ const shopController = require('../controllers/user/shopController')
 const wishlistController = require('../controllers/user/wishlistController')
 const referralsController = require('../controllers/user/referralsController')
 const wallerController = require('../controllers/user/walletController');
-const couponController = require('../controllers/user/couponController')
+const couponController = require('../controllers/user/couponController');
+const paymentController = require('../controllers/user/paymentController.js')
 
 
 // google auth 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/user' }), userController.googleAuth)
+
 
 //user route
 router.get('/', userMiddleware.isNotAuthenticated, userController.loadLoginpage);
@@ -104,8 +106,8 @@ router.get('/walletLedger', userMiddleware.isAuthenticated, wallerController.get
 router.get('/checkCouponCode',userMiddleware.isAuthenticated,couponController.checkCouponCode )
 router.get('/couponAfterChange',userMiddleware.isAuthenticated,couponController.couponAfterChange )
 
-
-
+//payment
+router.post('/payment/callback',userMiddleware.isAuthenticated,paymentController.paymentResponse)
 
 
 

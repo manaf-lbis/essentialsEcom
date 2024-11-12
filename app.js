@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const db = require('./config/db');
 const userRouter = require('./routes/userRouter');
 const adminRouter = require('./routes/adminRouter');
+const razorpay = require('./config/razorpay');
 
 
 // Connect to the database
@@ -44,6 +45,7 @@ app.use(passport.session());
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
 
 
 

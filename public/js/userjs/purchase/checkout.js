@@ -1,30 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
     const checkoutForm = document.getElementById("checkoutForm");
-  
+
     checkoutForm.addEventListener("submit", (event) => {
-      if (!validateCheckoutForm()) {
-        event.preventDefault(); // Stop form submission if validation fails
-      }
+        if (!validateCheckoutForm()) {
+            event.preventDefault(); // Stop form submission if validation fails
+        }
     });
-  });
-  
-  function validateCheckoutForm() {
+});
+
+function validateCheckoutForm() {
     const selectedAddress = document.querySelector('input[name="deliveryAddress"]:checked');
     const selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-  
+
     if (!selectedAddress) {
-    
-    Swal.fire({
-        icon: "error",
-        title: "Please Choose an Address",
-        text: "Select an address to Procedd!",
-        timer: 1000,
-        showConfirmButton: false,
+
+        Swal.fire({
+            icon: "error",
+            title: "Please Choose an Address",
+            text: "Select an address to Proced!",
+            timer: 1000,
+            showConfirmButton: false,
         });
 
-      return false; // Validation failed
+        return false; // Validation failed
     }
-  
+
     if (!selectedPaymentMethod) {
         Swal.fire({
             icon: "error",
@@ -34,20 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
             showConfirmButton: false,
         });
 
-      return false; // Validation failed
+        return false; // Validation failed
     }
-  
+
     return true; // Validation passed
-  }
-  
+}
 
 
-
-
-
-  // address
-  
-
+// address
 const newAddressSubmit = document.getElementById('newAddressSubmit');
 const addressAddingForm = document.getElementById('addressAddingForm');
 
@@ -272,57 +266,57 @@ async function editBtnClicked(event) {
 const quantitySelection = document.querySelectorAll('.quantitySelection');
 
 
-quantitySelection.forEach((ele)=>{
-  ele.addEventListener('change',checkQuantity)
+quantitySelection.forEach((ele) => {
+    ele.addEventListener('change', checkQuantity)
 })
 
 
-async function checkQuantity(event){
-  
-  const qty = event.target.value
+async function checkQuantity(event) {
 
-  const _id = event.target.getAttribute('productid');
+    const qty = event.target.value
 
-  if(qty >=5){
+    const _id = event.target.getAttribute('productid');
 
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: "Max qty reached",
-      showConfirmButton: false,
-      timer: 1000,
-      width: '200px',
-      padding: '0.2rem',  
-      backdrop: false  
-    });
-    qty = 5;
-  }
+    if (qty >= 5) {
 
-
-  //checking stock is the product qty is avilable
-  const response = await fetch(`/checkProductQty/?qty=${qty}&_id=${_id}`,{
-    method:'GET',
-    headers:{
-      'content-Type':'appllication/json'
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Max qty reached",
+            showConfirmButton: false,
+            timer: 1000,
+            width: '200px',
+            padding: '0.2rem',
+            backdrop: false
+        });
+        qty = 5;
     }
-  })
 
-  const json = await response.json()
 
-  if(!response.ok){
-    event.target.value = json.availableQty
+    //checking stock is the product qty is avilable
+    const response = await fetch(`/checkProductQty/?qty=${qty}&_id=${_id}`, {
+        method: 'GET',
+        headers: {
+            'content-Type': 'appllication/json'
+        }
+    })
 
-    Swal.fire({
-      position: "top-end",
-      icon: "error",
-      title: "out Of stock",
-      showConfirmButton: false,
-      timer: 1000,
-      width: '200px',
-      padding: '0.2rem',  
-      backdrop: false  
-    });
-    
-  }
+    const json = await response.json()
+
+    if (!response.ok) {
+        event.target.value = json.availableQty
+
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "out Of stock",
+            showConfirmButton: false,
+            timer: 1000,
+            width: '200px',
+            padding: '0.2rem',
+            backdrop: false
+        });
+
+    }
 
 }

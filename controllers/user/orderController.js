@@ -4,13 +4,48 @@ const mongoose = require('mongoose');
 const { products } = require('../admin/productControllers');
 const Address = require('../../models/addressSchema');
 const Product = require('../../models/productSchema');
-const Coupon = require('../../models/couponSchema')
+const Coupon = require('../../models/couponSchema');
+const razorpayInstance = require('../../config/razorpay');
 
 
 
 function getUserIdFromSession(req) {
     return req.session?._id ?? req.session.passport?.user;
 }
+
+
+// Calculate Total Amount After Discount
+async function calculateTotalAmountAfterDiscount(userId) {
+
+    const cartItems = await Cart.aggregate([
+        { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+        { $project: { products: 1 } },
+        {
+            $lookup: {
+                from: 'products',
+                foreignField: '_id',
+                localField: 'products.productId',
+                as: 'productDetails',
+            },
+        },
+    ]);
+
+    const cartCoupon = await Cart.findOne({ userId }).select('coupon').populate('coupon');
+    const orderItems = cartItems[0].products.map((item, index) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: cartItems[0].productDetails[index].sellingPrice,
+    }));
+
+    // Calculate total price
+    const totalPrice = orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
+
+    // Apply discount if available
+    const finalAmount = cartCoupon?.coupon ? totalPrice - cartCoupon.coupon.discount : totalPrice;
+    return { finalAmount, orderItems, coupon: cartCoupon?.coupon };
+};
+
+
 
 
 async function createOrder(orderInfo) {
@@ -45,8 +80,6 @@ async function createOrder(orderInfo) {
         }
 
         const cartCoupon = await Cart.findOne({ userId }).select('coupon').populate('coupon');
-
-
 
 
         const orderItems = [];
@@ -105,8 +138,6 @@ async function createOrder(orderInfo) {
             : null;
 
 
-
-
         //creating order
         const order = new Order({
             userId: userId,
@@ -119,7 +150,6 @@ async function createOrder(orderInfo) {
             coupon,
 
         })
-
 
         await order.save();
         return true;
@@ -147,17 +177,53 @@ const placeOrder = async (req, res) => {
             userId
         }
 
-        //create new Order
-        const order = await createOrder(orderInfo);
+        if (paymentMethod === 'COD') {
 
-        if (order) {
-            await Cart.deleteOne({ userId: userId })
+            //create new Order
+            const order = await createOrder(orderInfo);
 
-            const orderDetails = await Order.findOne({ userId }).sort({ orderDate: -1 }).limit(1)
+            if (order) {
+                await Cart.deleteOne({ userId: userId })
 
-            res.render('user/purchase/orderSuccessPage', { orderDetails });
-        } else {
-            res.render('user/pageNotFound')
+                const orderDetails = await Order.findOne({ userId }).sort({ orderDate: -1 }).limit(1)
+
+                res.render('user/purchase/orderSuccessPage', { orderDetails });
+
+            } else {
+                res.render('user/purchase/orderFailedPage')
+            }
+
+
+        } else if (paymentMethod === 'Online Payment') {
+
+            const { finalAmount, orderItems, coupon } = await calculateTotalAmountAfterDiscount(userId)
+
+            // Create Razorpay order
+            const razorpayOrder = await razorpayInstance.orders.create({
+
+                amount: finalAmount * 100,//converting to paise
+                currency: 'INR',
+                receipt: `rcptid_${userId.toString().substring(0,5) + Date.now().toString().substring(0,5)}`,
+            });
+
+            if (razorpayOrder) {
+                // Store order details in session for later use
+                req.session.pendingOrder = {
+                    userId,
+                    orderItems,
+                    totalPrice: finalAmount,
+                    deliveryAddress,
+                    paymentMethod,
+                    coupon,
+                    razorpayOrderId: razorpayOrder.id,
+                };
+
+                res.render('user/purchase/paymentPage', { razorpayOrder, finalAmount ,razorpayKey : process.env.RAZORPAY_KEY_ID });
+
+            } else {
+                res.render('user/purchase/orderFailedPage')
+            }
+
         }
 
 
@@ -202,7 +268,7 @@ const cancelOrder = async (req, res) => {
         const { orderId, productId } = req.query;
 
         // Find the order
-        const order = await Order.findOne({orderId });
+        const order = await Order.findOne({ orderId });
 
         // Locate the item to cancel within the order
         const orderItem = order.orderItems.find(item => item.productId.toString() === productId);
@@ -215,11 +281,11 @@ const cancelOrder = async (req, res) => {
 
         // If a coupon is applied
         if (order.coupon) {
-            
+
             const coupon = await Coupon.findById(order.coupon.couponId);
-            
+
             if (coupon) {
-                
+
                 if (order.totalPrice < coupon.minPurchaseValue) {
                     order.couponApplied = false;
                     order.discount = 0;
@@ -232,7 +298,7 @@ const cancelOrder = async (req, res) => {
                 order.discount = 0;
             }
         }
-        
+
         order.finalPrice = order.totalPrice - order.discount;
 
         // Increment the stock
@@ -269,9 +335,9 @@ const orderDetails = async (req, res) => {
     }
 }
 
-const retunOrder = async (req,res)=>{
+const retunOrder = async (req, res) => {
     try {
-       const {orderId,productId} = req.query
+        const { orderId, productId } = req.query
 
         response = await Order.updateOne(
             { orderId, 'orderItems.productId': productId },
@@ -282,7 +348,7 @@ const retunOrder = async (req,res)=>{
 
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
@@ -292,5 +358,6 @@ module.exports = {
     allOrders,
     cancelOrder,
     orderDetails,
-    retunOrder
+    retunOrder,
+    createOrder
 }

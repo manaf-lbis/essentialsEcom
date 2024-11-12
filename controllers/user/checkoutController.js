@@ -29,6 +29,7 @@ const getCheckutPage = async (req,res)=>{
             {userId}
         ) ?? [] ;
 
+    
         
         if( userAddress.address){
            userAddress = userAddress.address.filter((ele)=> !ele.isBlocked ); 
