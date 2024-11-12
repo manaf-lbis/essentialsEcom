@@ -73,10 +73,16 @@
                                                         <a href="/admin/updateOrderStatus/?status=Delivered&orderId=<%= order.orderId %>&productId=<%=item.productId._id%>">
                                                             <button type="button" class="btn btn-success slim-btn">delivered</button>
                                                         </a>
+                                                     <% } else if(item.status === 'ReturnRequested'){ %>
+                                                        <a href="/admin/updateOrderStatus/?status=Returned&orderId=<%= order.orderId %>&productId=<%=item.productId._id%>">
+                                                            <button type="button" class="btn btn-success slim-btn">Product Collected</button>
+                                                        </a>
                                                      <% } %>
-                                        
+
+
+
                                                     <!-- after delivery no need to reject the order -->
-                                                    <% if(item.status !== 'Delivered' && item.status !== 'Rejected' && item.status !== 'Cancelled'  ){ %>
+                                                    <% if(item.status !== 'Delivered' && item.status !== 'Rejected' && item.status !== 'Cancelled' && item.status !== 'Returned' && item.status !== 'ReturnRequested'  ){ %>
                                                         <a href="/admin/updateOrderStatus/?status=Rejected&orderId=<%= order.orderId %>&productId=<%=item.productId._id%>">
                                                             <button type="button" class="btn btn-danger slim-btn">Reject</button>
                                                         </a>
@@ -95,6 +101,11 @@
                                                      <!-- if the order is cancelled by user -->
                                                      <% if(item.status === 'Delivered' ){ %>
                                                         <p class="text-success">Delivered</p>
+                                                    <% } %>
+
+                                                      <!-- if the order is cancelled by user -->
+                                                      <% if(item.status === 'Returned' ){ %>
+                                                        <p class="text-danger">Returned</p>
                                                     <% } %>
 
 
@@ -119,6 +130,24 @@
 
 
                         <!-- main panel ends -->
+                          
+                        <section class="d-flex justify-content-center mt-3 " aria-label="Page navigation example">
+                            <ul class="pagination">
+                              <li class="page-item">
+                                <a class="page-link" href="/admin/orders/?pageReq = <%=currentPage-1%>" aria-label="Previous">
+                                  <span aria-hidden="true">&laquo;</span>
+                                  <span class="sr-only">Previous</span>
+                                </a>
+                              </li>
+                               <li class="page-item"><a class="page-link" href=""><%=currentPage%></a></li>
+                              <li class="page-item">
+                                <a class="page-link" href="/admin/orders/?pageReq=<%=currentPage+1%>" aria-label="Next">
+                                  <span aria-hidden="true">&raquo;</span>
+                                  <span class="sr-only">Next</span>
+                                </a>
+                              </li>
+                            </ul>
+                        </section>
 
                     </div>
 

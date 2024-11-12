@@ -34,7 +34,7 @@ const orderSchema = new Schema({
         type: String,
         required: true,
         default:'Pending',
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered','Cancelled','Rejected'],
+        enum: ['Pending', 'Processing', 'Shipped', 'Delivered','Cancelled','Rejected','ReturnRequested','Returned'],
       },
       deliveryDate: {
         type: Date,
@@ -106,9 +106,10 @@ const orderSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  couponApplied: {
-    type: Boolean,
-    default: false,
+  coupon: {
+    couponId: { type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' },
+    code: String,
+    discountAmount: Number
   },
   paymentMethod:{
     type:String,

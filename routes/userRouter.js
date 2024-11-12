@@ -83,6 +83,8 @@ router.get('/orders', userMiddleware.isAuthenticated, orderController.allOrders)
 router.post('/placeOrder', userMiddleware.isAuthenticated, orderController.placeOrder);
 router.get('/cancelOrder', userMiddleware.isAuthenticated, orderController.cancelOrder);
 router.get('/orderDetailPage', userMiddleware.isAuthenticated, orderController.orderDetails);
+router.get('/returnOrder', userMiddleware.isAuthenticated, orderController.retunOrder);
+
 
 
 //comments and rating 

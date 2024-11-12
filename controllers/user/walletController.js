@@ -13,6 +13,10 @@ const getWallet = async (req, res) => {
 
         const wallet = await Wallet.findOne({ userId })
 
+        if (wallet && wallet.transactions) {
+            wallet.transactions.sort((a, b) =>  new Date(b.date) - new Date(a.date)) ;
+        }
+
         res.render('user/wallet/wallet', { wallet })
 
     } catch (error) {
@@ -24,7 +28,7 @@ const getWallet = async (req, res) => {
 
 
 
-const updateUserWallet = async (userId, amount, transationType, description) => {
+const updateUserWallet = async (userId, amount, transationType, description) => { //type 'credit'/debit
     try {
 
         const walletExist = await Wallet.findOne({ userId });

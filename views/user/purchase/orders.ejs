@@ -97,7 +97,7 @@
                                                 
                                                 
                                             <% if(product.status === 'Pending'){ %>
-                                                <span>Order Status : </span><span class="pe-5 text-warning fw-bold">Pending</span>
+                                                <span>Order Status : </span><span class="pe-5 text-warning fw-bold">Order Placed</span>
                                             <% }else if(product.status === 'Processing'){ %>
                                                 <span>Order Status : </span><span class="pe-5 text-info fw-bold">Processing</span>
                                             <% }else if(product.status === 'Shipped'){ %>
@@ -108,10 +108,14 @@
                                                 <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Order Cancelled By user</span>
                                             <% } else if(product.status === 'Rejected'){ %>
                                                 <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Order Rejected by admin</span>
+                                            <% }else if(product.status === 'ReturnRequested'){ %>
+                                                <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Return Requested</span>
+                                            <% } else if(product.status === 'Returned'){ %>
+                                                <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Returned</span>
                                             <% } %>
 
                                             <div>
-                                                <% if(product?.deliveryDate){ %>
+                                                <% if(product?.deliveryDate && !product?.returnedDate){ %>
                                                 <span>Delivered on : </span><small class="pe-5 text-info fw-bold"><%=product?.deliveryDate.toString().substring(0,24)  %></small>
                                                 <% } %>
                                             </div>
@@ -121,8 +125,21 @@
                                         </div>
 
                                         <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-                                            <% if(product.status !== 'Cancelled' && product.status !== 'Delivered' && product.status !== 'Rejected' ){ %>
-                                            <a id="cancelOrderBtn" href="/cancelOrder/?orderId=<%= order.orderId%>&productId=<%= product.productId._id %> ">
+
+                                               <!-- product return before 7 days of delivery  -->
+                                            <% if((Date.now() - product?.deliveryDate) / (1000 * 60 * 60 * 24) <= 7 && product.status !== 'ReturnRequested' && product.status !== 'Returned' ){ %>
+
+                                                <a class="orderReturnBtn" href="/returnOrder/?orderId=<%= order.orderId%>&productId=<%= product.productId._id %>">
+                                                    <button  type="button"  class="btn w-100 btn-outline-danger mb-2 ">
+                                                        Return Product
+                                                    </button>
+                                               </a>
+
+                                            <% } %>
+
+
+                                            <% if(product.status !== 'Cancelled' && product.status !== 'Delivered' && product.status !== 'Rejected' && product.status !== 'ReturnRequested' && product.status !== 'Returned'  ){ %>
+                                            <a class="cancelOrderBtn" href="/cancelOrder/?orderId=<%= order.orderId%>&productId=<%= product.productId._id %> ">
                                                 <button type="button"  class="btn btn-outline-danger mb-2 w-100">Cancel Order</button>
                                                
                                             </a>
@@ -130,11 +147,14 @@
                                                 <!-- Button trigger modal -->
 
                                                  <input class="productId" hidden productId="<%= product.productId._id %>" >
-                                                <button type="button" class="btn w-100 btn-outline-warning ratingBtn" data-toggle="modal" data-target="#exampleModalCenter">
+                                                <button type="button" class="btn w-100 btn-outline-warning ratingBtn mb-2" data-toggle="modal" data-target="#exampleModalCenter">
                                                     Rate the Product
                                                 </button>
                                                 
                                             <% } %>
+
+                                           
+
 
                                             <% if(product.isRated === true){%>
                                                  <!-- rating -->
@@ -142,6 +162,7 @@
                                                 <div data-coreui-read-only="true" data-coreui-precision="0.25" data-coreui-toggle="rating" data-coreui-value=" <%= product.rating%> "></div>
                                             <% } %>
 
+                                          
                                             <a href="/orderDetailPage/?orderId=<%= order.orderId %>">
                                                 <button type="button" class="btn w-100 btn-outline-info"  >
                                                     Order Details

@@ -52,7 +52,7 @@
                       <p>Brand: <%= item.allProducts[0].brand %></p>
                       <p >Price: ₹ <span class="price"><%= item.allProducts[0].sellingPrice %></span>/-</p>
 
-                      <a id="removeBtn" href="/removeCartItem/?_id=<%= item.allProducts[0]._id %>">
+                      <a id="removeBtn" class="removeBtn" href="/removeCartItem/?_id=<%= item.allProducts[0]._id %>">
                         <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-sm me-1 mb-2" data-mdb-tooltip-init
                           title="Remove item">
                             <i class="fas fa-trash  text-danger "></i>

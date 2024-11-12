@@ -1,35 +1,51 @@
 
 //confirm before removing the item from cart
-const removeBtn = document.getElementById('removeBtn');
-if (removeBtn) {
+const removeBtn = document.querySelectorAll('.removeBtn');
 
-  removeBtn.addEventListener('click', async (event) => {
 
-    event.preventDefault();
+removeBtn.forEach((ele) => {
+  ele.addEventListener('click', removeItem)
+})
 
-    await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Remove it!"
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        await Swal.fire({
-          title: "Item Removed!",
-          text: "Cart Item Removed Sucessfully",
-          icon: "success"
-        });
-        window.location.href = event.target.closest('a').href;
+async function removeItem(event) {
+
+  event.preventDefault();
+
+  await Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, Remove it!"
+
+  }).then(async (result) => {
+
+    if (result.isConfirmed) {
+      await Swal.fire({
+        title: "Item Removed!",
+        text: "Cart Item Removed Sucessfully",
+        icon: "success"
+      });
+
+      window.location.href = event.target.closest('a').href;
+
+      //checking coupon 
+      const couponCode = document.getElementById('couponCode');
+
+      //check coupon is valid  //disable means there is a coupon available
+      if (couponCode.hasAttribute('disabled')) {
+        priceChangeListner();
       }
 
-    });
+
+    }
 
   });
 
-}
+};
+
 
 
 //checking cart is empty or not and prevent proceed to checkout page
@@ -97,12 +113,12 @@ async function qtyChangeRqst(event) {
 
     //if quantity is changed 
     if (response.ok) {
-      
-       //check coupon is valid  //disable means there is a coupon available
-      if(couponCode.hasAttribute('disabled')){
-       priceChangeListner(); 
+
+      //check coupon is valid  //disable means there is a coupon available
+      if (couponCode.hasAttribute('disabled')) {
+        priceChangeListner();
       }
-      
+
       const data = await response.json()
       return updatePage(data, totalPriceTag, input, priceOfItem)
     }
@@ -145,11 +161,11 @@ function updatePage(data, totalPriceTag, qty, priceOfItem) {
   document.getElementById('price').innerHTML = `₹ ${data.totalAmount}`;
 
   console.log(`₹ ${data.discount}`);
-  
-  if(data.discount){
+
+  if (data.discount) {
     document.getElementById('couponDiscount').innerHTML = `₹ ${data.discount}`;
   }
- 
+
   // total price of individual item 
   totalPriceTag.innerHTML = qty * priceOfItem
 
@@ -186,9 +202,9 @@ couponBtn.addEventListener('click', async () => {
 
     document.getElementById('couponDiscount').innerHTML = `₹ 0`
     const couponCodeMsg = document.getElementById('couponCodeMsg');
-    couponCodeMsg.innerHTML = json.message ;
+    couponCodeMsg.innerHTML = json.message;
     couponCodeMsg.classList.add('text-danger')
-    
+
 
   }
 
@@ -203,32 +219,33 @@ const couponCode = document.getElementById('couponCode')
 
 async function priceChangeListner() {  //calling when cart updated 
 
-    const response = await fetch(`/couponAfterChange/?couponCode=${couponCode.value}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
 
-
-    if (response.ok) {
-
-      const couponCodeMsg = document.getElementById('couponCodeMsg');
-      couponCodeMsg.innerHTML = 'Coupon Applied Sucessfully';
-      couponCodeMsg.classList.remove('text-danger')
-      couponCodeMsg.classList.add('text-success')
-      document.getElementById('couponCode').setAttribute('disabled', true) 
-
-
-    }else{
-
-      const json = await response.json()
-      const couponCodeMsg = document.getElementById('couponCodeMsg');
-      couponCodeMsg.innerHTML = json.message;
-      couponCodeMsg.classList.add('text-danger')
-      document.getElementById('couponCode').removeAttribute('disabled');
-      document.getElementById('couponCode').value = ''
-      document.getElementById('couponDiscount').innerHTML = `₹ 0`
+  const response = await fetch(`/couponAfterChange/?couponCode=${couponCode.value}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
     }
+  });
+
+
+  if (response.ok) {
+
+    const couponCodeMsg = document.getElementById('couponCodeMsg');
+    couponCodeMsg.innerHTML = 'Coupon Applied Sucessfully';
+    couponCodeMsg.classList.remove('text-danger')
+    couponCodeMsg.classList.add('text-success')
+    document.getElementById('couponCode').setAttribute('disabled', true)
+
+
+  } else {
+
+    const json = await response.json()
+    const couponCodeMsg = document.getElementById('couponCodeMsg');
+    couponCodeMsg.innerHTML = json.message;
+    couponCodeMsg.classList.add('text-danger')
+    document.getElementById('couponCode').removeAttribute('disabled');
+    document.getElementById('couponCode').value = ''
+    document.getElementById('couponDiscount').innerHTML = `₹ 0`
+  }
 
 }

@@ -21,7 +21,8 @@
         <div class="col-lg-6 col-md-8 mx-auto position-relative">
             <div class="wallet-card">
                 <h4 class="text-white">Wallet Balance</h4>
-                <h2 class="text-white">₹<%= wallet.balance %></h2>
+                <h2 class="text-white">₹<%= wallet.balance.toFixed(2) %></h2>
+                <small class="text-light"> ( Last Updated At : <%= wallet.updatedAt.toLocaleString()  %>)</small>
                
             </div>
 
