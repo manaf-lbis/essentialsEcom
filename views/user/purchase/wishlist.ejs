@@ -36,6 +36,8 @@
                     <div class="row d-flex justify-content-center my-4">
                         <div class="col-md-10">
 
+                            
+                        <% if(wishlist.products.length > 0){ %>
 
                             <% for(let items of wishlist.products){ %>
                                 <!-- card -->
@@ -120,6 +122,14 @@
                                             </li>
                                         </ul>
                                     </section>
+
+                             <% }else{ %>
+                                <div class="d-flex flex-column align-items-center">
+                                    <h4>Your Wishlist is Empty</h4>
+                                    <img class=" w-50" src="https://static.oxinis.com/healthmug/image/healthmug/empty-wishlist.webp" alt="">
+                                </div>
+                             <% } %>
+
 
                         </div>
 

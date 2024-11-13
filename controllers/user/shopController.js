@@ -13,10 +13,10 @@ const search = async (req, res) => {
         const searchQuery  = req.query.searchQuery ?? '';
         const priceRange = req.query.priceRange ?? 1000000;
         let sort = req.query.sort ?? {};
+        const categoryQuery  = req.query.category ?? '';
 
 
-        
-
+    
         if (sort === 'ace'){
             sort = { sellingPrice : 1 }
 
@@ -38,7 +38,7 @@ const search = async (req, res) => {
 
 
 
-        const products = await Product.find({
+        let products = await Product.find({
             isBlocked: false,
             $or: [
                 { productName: { $regex: '.*' + searchQuery + '.*', $options: 'i' } },
@@ -50,10 +50,16 @@ const search = async (req, res) => {
         ).sort(sort).limit(15);
 
 
-    //    console.log(products);//=================================
+
+        if(categoryQuery){
+            products = products.filter((ele)=>{
+               return ele.category.toString() ===  categoryQuery
+            })
+        }
        
 
-        res.render('user/shop',{products,searchQuery,categories})
+
+        res.render('user/shop',{products,searchQuery,categories,categoryQuery})
 
 
     } catch (error) {

@@ -41,15 +41,15 @@
 
                                 <!-- filter options start-->
                                 <!-- Category Filter -->
-                                <!-- <div class="form-group">
+                                <div class="form-group">
                                     <label for="category"><strong>Category: </strong></label>
                                     <select name="category" class="form-control border border-primary " id="category">
                                         <option value="">All Categories</option>
                                         <% for(let category of categories){  %>
-                                        <option value="electronics"><%= category.categoryName %> </option>
+                                        <option value="<%=category._id %>"><%= category.categoryName %> </option>
                                         <% }  %>
                                     </select>
-                                </div> -->
+                                </div>
 
                                 <!-- Price Range Filter -->
                                 <div class="form-group mt-3">
@@ -100,11 +100,11 @@
                 <div class="row">
                     <div class="col-md-12">
 
-                        <div
-                            class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
+                        <% if(products.length >0 ){ %>
+
+                        <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
 
                             <!-- product start -->
-
 
                             <% products.forEach((product)=> {%>
                                 <div class="col">
@@ -157,6 +157,12 @@
 
                         </div>
                         <!-- / product-grid -->
+                         <% }else{ %>
+                            <div class="d-flex flex-column align-items-center">
+                                <h4>No product found</h4>
+                                <img src="https://cdni.iconscout.com/illustration/premium/thumb/product-is-empty-illustration-download-in-svg-png-gif-file-formats--no-records-list-record-emply-data-user-interface-pack-design-development-illustrations-6430781.png?f=webp" alt="">
+                            </div>
+                         <% } %>    
 
                     </div>
                 </div>
