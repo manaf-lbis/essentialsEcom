@@ -120,6 +120,9 @@
                         <p>Brand : <%= product.productId.brand%></p>
                         <p>Quantity : <%= product.quantity%></p>
                         <p >Price: ₹ <span class="price"><%= product.productId.sellingPrice%></span>/-</p>
+                        <% if(product.status === 'Cancelled'){ %>
+                          <p class="text-danger"> Cancellation Reason : <%= product.cancellationReason  %> </p> 
+                         <% } %>
   
                       </div>
 
@@ -131,7 +134,7 @@
                             <span class="text-start text-md-center a">
 
                               <% if(product.status === 'Cancelled'){ %>
-                               <p class="text-danger"> <strong>Order Cancelled</strong>  </p> 
+                               <p class="text-danger mb-0"> <strong>Order Cancelled</strong>  </p> 
                               <% } %>
 
                                 <p>Total Amount per item</p>

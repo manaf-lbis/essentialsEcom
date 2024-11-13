@@ -47,7 +47,10 @@ const orderSchema = new Schema({
         type:Number,
         min:[0],
         max:[5]
-      }
+      },
+      cancellationReason:{
+        type:String,
+      },
     },
   ],
   totalPrice: {

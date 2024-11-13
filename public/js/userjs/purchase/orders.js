@@ -1,10 +1,10 @@
 const cancelOrderBtn = document.querySelectorAll('.cancelOrderBtn');
 
 cancelOrderBtn.forEach((ele) => {
-    ele.addEventListener('click',cancelOrder)
+    ele.addEventListener('click', cancelOrder)
 })
 
-async function cancelOrder(event){
+async function cancelOrder(event) {
 
     // stop a tag submission 
     event.preventDefault();
@@ -20,14 +20,31 @@ async function cancelOrder(event){
     }).then(async (result) => {
 
         if (result.isConfirmed) {
-            // Redirecting to the href of the a tag after confirmation
-            window.location.href = event.target.closest('a').getAttribute('href');
 
+            //asking the reson for cancellation 
+            const { value: text } = await Swal.fire({
+                input: "textarea",
+                inputLabel: "Message",
+                inputPlaceholder: "Type your message here...",
+                inputAttributes: {
+                    "aria-label": "Type your message here"
+                },
+                showCancelButton: true
+            });
+            if (text.trim()) {
+            // Redirecting to the href of the a tag after confirmation
+            window.location.href = event.target.closest('a').getAttribute('href').trim() + `&cancellationReason=${text}`
+           
+            
             await Swal.fire({
                 title: "Cancelled!",
                 text: "Order Cancelled.",
                 icon: "success"
             });
+
+            }
+
+
         }
     });
 };
@@ -91,12 +108,12 @@ function rateProduct(event) {
 
 }
 
-document.querySelectorAll('.orderReturnBtn').forEach((ele)=>{
-    ele.addEventListener('click',returnProduct)
+document.querySelectorAll('.orderReturnBtn').forEach((ele) => {
+    ele.addEventListener('click', returnProduct)
 
 })
 
-async function returnProduct(event){
+async function returnProduct(event) {
     event.preventDefault()
 
 
@@ -122,5 +139,5 @@ async function returnProduct(event){
         }
     });
 
-    
+
 }

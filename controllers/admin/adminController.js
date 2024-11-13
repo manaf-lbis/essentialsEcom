@@ -44,14 +44,6 @@ const verifyLogin = async (req, res) => {
   }
 };
 
-const loadDashboard = (req, res) => {
-  if (req.session.user) {
-    return res.render('admin/dashboard');
-  }
-  return res.redirect('/admin');
-};
-
-
 
 const logout = (req, res) => {
   try {
@@ -78,7 +70,7 @@ const pagenotFound = (req, res) => {
 module.exports = {
   loadLogin,
   verifyLogin,
-  loadDashboard,
+
   pagenotFound,
   logout,
 };

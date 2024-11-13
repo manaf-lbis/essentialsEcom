@@ -9,6 +9,7 @@ const ordersController = require('../controllers/admin/ordersController');
 // const offerController = require('../controllers/admin/offerController');
 const couponController = require('../controllers/admin/couponController');
 const auth = require('../middlewares/usersMiddleware');
+const dashboardController = require('../controllers/admin/dashboardController')
 
 
 
@@ -18,7 +19,7 @@ router.get('/pagenotFound', adminController.pagenotFound);
 
 router.get('/', adminController.loadLogin);
 router.post('/', adminController.verifyLogin);
-router.get('/dashboard', auth.adminAuth, adminController.loadDashboard);
+router.get('/dashboard', auth.adminAuth, dashboardController.loadDashboard);
 router.get('/logout', adminController.logout);
 
 //user management
@@ -51,7 +52,8 @@ router.get('/removeProductImage',auth.adminAuth,productController.removeImage)
 router.get('/orders', auth.adminAuth,ordersController.getOrders);
 router.get('/updateOrderStatus', auth.adminAuth,ordersController.orderStatusUpdate);
 
-
+//report
+router.get('/getReport', auth.adminAuth,dashboardController.getReport);
 
 //offers
 router.get('/offers');

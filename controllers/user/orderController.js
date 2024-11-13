@@ -265,21 +265,22 @@ const allOrders = async (req, res) => {
 
 const cancelOrder = async (req, res) => {
     try {
-        const { orderId, productId } = req.query;
-
+        const { orderId, productId, cancellationReason } = req.query;
+  
         // Find the order
         const order = await Order.findOne({ orderId });
 
         // Locate the item to cancel within the order
         const orderItem = order.orderItems.find(item => item.productId.toString() === productId);
 
+    
         // Calculate the total price after cancelling the item
         const itemTotalPrice = orderItem.price * orderItem.quantity;
         order.totalPrice -= itemTotalPrice;
         orderItem.status = "Cancelled";
+        orderItem.cancellationReason = cancellationReason;
 
 
-        // If a coupon is applied
         if (order.coupon) {
 
             const coupon = await Coupon.findById(order.coupon.couponId);
@@ -293,7 +294,6 @@ const cancelOrder = async (req, res) => {
                     order.discount = coupon.discount;
                 }
             } else {
-                console.log("Coupon not found ");
                 order.couponApplied = false;
                 order.discount = 0;
             }
