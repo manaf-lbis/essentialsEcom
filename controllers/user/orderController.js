@@ -5,6 +5,7 @@ const { products } = require('../admin/productControllers');
 const Address = require('../../models/addressSchema');
 const Product = require('../../models/productSchema');
 const Coupon = require('../../models/couponSchema');
+const walletController = require('../../controllers/user/walletController')
 const razorpayInstance = require('../../config/razorpay');
 
 
@@ -265,6 +266,8 @@ const allOrders = async (req, res) => {
 
 const cancelOrder = async (req, res) => {
     try {
+        const userId = getUserIdFromSession(req);
+
         const { orderId, productId, cancellationReason } = req.query;
   
         // Find the order
@@ -300,6 +303,9 @@ const cancelOrder = async (req, res) => {
         }
 
         order.finalPrice = order.totalPrice - order.discount;
+
+        //refund the order amount
+        await walletController.updateUserWallet(userId, itemTotalPrice - order.discount , 'credit', 'Cancellation Refund');
 
         // Increment the stock
         await Product.findOneAndUpdate(

@@ -88,16 +88,16 @@ function clearErr() {
 }
 
 submitBtn.addEventListener('click', (e) => {
-    const productName = document.getElementById('productName').value;
-    const brandName = document.getElementById('brandName').value;
-    const color = document.getElementById('color').value;
-    const size = document.getElementById('size').value;
+    const productName = document.getElementById('productName').value.trim();
+    const brandName = document.getElementById('brandName').value.trim();
+    const color = document.getElementById('color').value.trim();
+    const size = document.getElementById('size').value.trim();
     const category = document.getElementById('category').value;
-    const regularPrice = document.getElementById('regularPrice').value;
-    const sellingPrice = document.getElementById('sellingPrice').value;
-    const material = document.getElementById('material').value;
-    const description = document.getElementById('description').value;
-    const quantity = document.getElementById('quantity').value;
+    const regularPrice = document.getElementById('regularPrice').value.trim();
+    const sellingPrice = document.getElementById('sellingPrice').value.trim();
+    const material = document.getElementById('material').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const quantity = document.getElementById('quantity').value.trim();
     const image1 = document.getElementById('imagePreview1').src;
     const image2 = document.getElementById('imagePreview2').src;
     const image3 = document.getElementById('imagePreview3').src;

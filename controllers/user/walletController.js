@@ -55,8 +55,7 @@ const updateUserWallet = async (userId, amount, transationType, description) => 
                 )
 
             }
-
-
+            
         } else {
             const newWallet = new Wallet(
                 { userId, balance: amount, transactions: [{ type: transationType, amount, description }] }
@@ -67,8 +66,6 @@ const updateUserWallet = async (userId, amount, transationType, description) => 
 
     } catch (error) {
         console.log(error);
-
-
     }
 
 }
