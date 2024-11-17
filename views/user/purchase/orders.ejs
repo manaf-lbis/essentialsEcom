@@ -6,7 +6,7 @@
 
     <%-include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/purchase/cart.css'}) %>
     
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
             integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
             crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -112,7 +112,10 @@
                                                 <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Return Requested</span>
                                             <% } else if(product.status === 'Returned'){ %>
                                                 <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Returned</span>
+                                            <% } else if(product.status === 'Pending for Payment'){ %>
+                                                <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Payment not completed</span>
                                             <% } %>
+
 
                                             <div>
                                                 <% if(product?.deliveryDate && !product?.returnedDate){ %>
@@ -144,8 +147,8 @@
                                                
                                             </a>
                                             <% } else if(product.status === 'Delivered' &&  product.isRated === false){%>
-                                                <!-- Button trigger modal -->
 
+                                                <!-- Button trigger modal -->
                                                  <input class="productId" hidden productId="<%= product.productId._id %>" >
                                                 <button type="button" class="btn w-100 btn-outline-warning ratingBtn mb-2" data-toggle="modal" data-target="#exampleModalCenter">
                                                     Rate the Product
@@ -168,6 +171,25 @@
                                                     Order Details
                                                 </button>
                                             </a>
+
+                                            <% if(product.status === 'Pending for Payment'){%>
+                                                <a  href="/retryPayment/?orderId=<%= order.orderId %>">
+                                                    <button type="button"  class="btn btn-primary mt-2 w-100">Complete your Payment</button>
+                                                </a>
+                                               
+                                           <% } %>
+
+
+                                           <!-- Download invoice -->
+                                           <% if(product.status === 'Delivered' ){%>
+                                            <a href="/invoice/?orderId=<%= order.orderId %>">
+                                                <button id="downloadBtn" style="background-color: rgb(122 122 144);" class="btn btn-primary w-100 mt-2">
+                                                    <i class="bi bi-file-earmark-arrow-down"></i> Download Invoice
+                                                </button>
+                                            </a>
+                                            
+                                        <% } %>
+                                            
 
 
 

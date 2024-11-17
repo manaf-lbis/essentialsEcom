@@ -28,21 +28,21 @@ async function getCartDetails(req) {
             },
             {
                 $lookup: {
-                    from: 'coupons',           
-                    localField: 'coupon',       
-                    foreignField: '_id',  
+                    from: 'coupons',
+                    localField: 'coupon',
+                    foreignField: '_id',
                     as: 'couponDetails'
                 }
             },
             {
                 $unwind: {
                     path: '$couponDetails',
-                    preserveNullAndEmptyArrays: true 
+                    preserveNullAndEmptyArrays: true
                 }
             }
 
         ]);
-        
+
         let totalAmount = 0;
         let totalItems = 0;
 
@@ -59,13 +59,13 @@ async function getCartDetails(req) {
         let amountAfterDiscount = totalAmount;
         let discount = 0;
 
-        if(cartitems[0]?.couponDetails?.discount){
+        if (cartitems[0]?.couponDetails?.discount) {
             discount = cartitems[0]?.couponDetails?.discount;
             amountAfterDiscount = totalAmount - cartitems[0]?.couponDetails?.discount
         }
 
 
-    
+
         return { totalAmount, totalItems, cartitems, discount, amountAfterDiscount }
 
     } catch (error) {
@@ -81,12 +81,12 @@ const getCartPage = async (req, res) => {
     try {
         const userId = getUserIdFromSession(req)
 
-        const { totalAmount, totalItems, cartitems,amountAfterDiscount } = await getCartDetails(req);
+        const { totalAmount, totalItems, cartitems, amountAfterDiscount } = await getCartDetails(req);
 
-        const coupon = await Cart.findOne({userId}).populate('coupon');
-        
+        const coupon = await Cart.findOne({ userId }).populate('coupon');
 
-        res.render('user/purchase/cart', { cartitems, totalAmount, totalItems ,coupon, amountAfterDiscount})
+
+        res.render('user/purchase/cart', { cartitems, totalAmount, totalItems, coupon, amountAfterDiscount })
 
     } catch (error) {
         console.log(error);
@@ -233,10 +233,10 @@ const changeCartQty = async (req, res) => {
 
 
             //getiing cart data for updating the page
-            const { totalAmount, totalItems, cartitems, discount,amountAfterDiscount} = await getCartDetails(req);
+            const { totalAmount, totalItems, cartitems, discount, amountAfterDiscount } = await getCartDetails(req);
 
 
-            res.status(200).json({ totalAmount, totalItems, cartitems, discount ,amountAfterDiscount});
+            res.status(200).json({ totalAmount, totalItems, cartitems, discount, amountAfterDiscount });
 
         } else {
             res.status(400).json({ message: 'Out of Quantity' })
@@ -251,6 +251,25 @@ const changeCartQty = async (req, res) => {
 
     }
 
+};
+
+
+const cartQuantity = async (req, res) => {
+    try {
+
+        const userId = getUserIdFromSession(req);
+
+        const cartQty = await Cart.findOne({ userId }, { products: 1 })
+
+        res.status(200).json({ cartQty: cartQty?.products?.length ?? 0 })
+
+
+    } catch (error) {
+
+        console.log(error);
+        res.status(200).json({ cartQty: cartQty.products.length })
+
+    }
 }
 
 
@@ -259,7 +278,8 @@ module.exports = {
     getCartPage,
     removeCartItem,
     getCartDetails,
-    changeCartQty
+    changeCartQty,
+    cartQuantity
 };
 
 

@@ -79,7 +79,11 @@
                                                         </a>
                                                      <% } %>
 
-
+                                                      <!-- if the order is cancelled by user -->
+                                                    <% if(item.status === 'Pending for Payment' ){ %>
+                                                        <p class="text-warning mb-1">payment Pending</p>
+                                                        <% } %>
+    
 
                                                     <!-- after delivery no need to reject the order -->
                                                     <% if(item.status !== 'Delivered' && item.status !== 'Rejected' && item.status !== 'Cancelled' && item.status !== 'Returned' && item.status !== 'ReturnRequested'  ){ %>
@@ -104,9 +108,12 @@
                                                     <% } %>
 
                                                       <!-- if the order is cancelled by user -->
-                                                      <% if(item.status === 'Returned' ){ %>
-                                                        <p class="text-danger">Returned</p>
+                                                    <% if(item.status === 'Returned' ){ %>
+                                                    <p class="text-danger">Returned</p>
                                                     <% } %>
+
+                                                   
+                                                  
 
 
   

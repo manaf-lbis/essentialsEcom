@@ -17,12 +17,13 @@
 
 <div class="container my-5">
     <!-- Wallet Balance Section -->
+
     <div class="row mb-4">
         <div class="col-lg-6 col-md-8 mx-auto position-relative">
             <div class="wallet-card">
                 <h4 class="text-white">Wallet Balance</h4>
-                <h2 class="text-white">₹<%= wallet.balance.toFixed(2) %></h2>
-                <small class="text-light"> ( Last Updated At : <%= wallet.updatedAt.toLocaleString()  %>)</small>
+                <h2 class="text-white">₹<%= wallet?.balance?.toFixed(2) ?? ' 0' %></h2>
+                <small class="text-light"> ( Last Updated At : <%= wallet?.updatedAt?.toLocaleString() ?? '--------------'  %>)</small>
                
             </div>
 
@@ -48,11 +49,11 @@
             </thead>
             <tbody>
                 <!-- Transaction 1 -->
-                 <% wallet.transactions.forEach((transaction,index)=>{%>
+                 <% wallet?.transactions?.forEach((transaction,index)=>{%>
                 <tr>
                     <td><%= index+1 %></td>
-                    <td><%= transaction.description %></td>
-                    <td><%= transaction.date.toLocaleDateString() %></td>
+                    <td><%= transaction?.description %></td>
+                    <td><%= transaction?.date.toLocaleDateString() %></td>
 
                     <% if(transaction.type ==='credit' ){  %>
                     <td class="amount-positive">+  ₹<%= transaction.amount %></td>

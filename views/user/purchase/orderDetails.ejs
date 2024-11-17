@@ -54,6 +54,11 @@
                             <p> <strong>order Id :</strong> #<%=orders[0].orderId  %></p>
                             <p> <strong>Ordered Date:</strong>  <%=orders[0].orderDate.toString().substring(0,15) %></p>
                             <p> <strong>Payment Methord:</strong>   <%= orders[0].paymentMethod=== 'COD' ? 'Cash on Delivery' :orders[0].paymentMethod %></p>
+                           
+                            <% if(orders[0].orderItems[0].status === 'Pending for Payment'){ %>
+                              <p  class="text-Danger"><strong>Payment Status: </strong> Failed (complete payment) </p>
+                             <% } %>
+                           
                             <p><strong>Sub Total:</strong> ₹<%= orders[0].totalPrice.toFixed(2)%></p>
 
                             <% if(orders[0].coupon){ %>

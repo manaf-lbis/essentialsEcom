@@ -1,21 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('../config/passport')
+const passport = require('../config/passport');
 const userController = require('../controllers/user/userController');
-const userMiddleware = require('../middlewares/usersMiddleware')
-const productsController = require('../controllers/user/productsController')
+const userMiddleware = require('../middlewares/usersMiddleware');
+const productsController = require('../controllers/user/productsController');
 const forgotPassword = require('../controllers/user/forgotPasswordController');
 const profileController = require('../controllers/user/profileController');
-const cartController = require('../controllers/user/cartController')
-const checkoutController = require('../controllers/user/checkoutController')
+const cartController = require('../controllers/user/cartController');
+const checkoutController = require('../controllers/user/checkoutController');
 const orderController = require('../controllers/user/orderController');
 const commentRatingController = require('../controllers/user/commentRatingController');
-const shopController = require('../controllers/user/shopController')
-const wishlistController = require('../controllers/user/wishlistController')
-const referralsController = require('../controllers/user/referralsController')
+const shopController = require('../controllers/user/shopController');
+const wishlistController = require('../controllers/user/wishlistController');
+const referralsController = require('../controllers/user/referralsController');
 const wallerController = require('../controllers/user/walletController');
 const couponController = require('../controllers/user/couponController');
-const paymentController = require('../controllers/user/paymentController.js')
+const paymentController = require('../controllers/user/paymentController.js');
+const invoiceController = require('../controllers/user/invoiceController.js');
 
 
 // google auth 
@@ -75,7 +76,7 @@ router.get('/cart', userMiddleware.isAuthenticated, cartController.getCartPage);
 router.post('/addToCart', userMiddleware.isAuthenticated, cartController.addToCart);
 router.get('/removeCartItem', userMiddleware.isAuthenticated, cartController.removeCartItem)
 router.get('/cartQtyChange', userMiddleware.isAuthenticated, cartController.changeCartQty)
-
+router.get('/cartQuantity', userMiddleware.isAuthenticated, cartController.cartQuantity)
 
 // checkout
 router.get('/checkout', userMiddleware.isAuthenticated, checkoutController.getCheckutPage)
@@ -108,8 +109,10 @@ router.get('/couponAfterChange',userMiddleware.isAuthenticated,couponController.
 
 //payment
 router.post('/payment/callback',userMiddleware.isAuthenticated,paymentController.paymentResponse)
+router.get('/retryPayment',userMiddleware.isAuthenticated,paymentController.retryPayment)
 
-
+//invoice
+router.get('/invoice',userMiddleware.isAuthenticated,invoiceController.generateInvoice)
 
 module.exports = router;
 

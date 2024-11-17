@@ -19,6 +19,7 @@ function getUserIdFromSession(req) {
 async function calculateTotalAmountAfterDiscount(userId) {
 
     const cartItems = await Cart.aggregate([
+
         { $match: { userId: new mongoose.Types.ObjectId(userId) } },
         { $project: { products: 1 } },
         {
@@ -29,9 +30,11 @@ async function calculateTotalAmountAfterDiscount(userId) {
                 as: 'productDetails',
             },
         },
+
     ]);
 
     const cartCoupon = await Cart.findOne({ userId }).select('coupon').populate('coupon');
+
     const orderItems = cartItems[0].products.map((item, index) => ({
         productId: item.productId,
         quantity: item.quantity,
@@ -43,9 +46,10 @@ async function calculateTotalAmountAfterDiscount(userId) {
 
     // Apply discount if available
     const finalAmount = cartCoupon?.coupon ? totalPrice - cartCoupon.coupon.discount : totalPrice;
-    return { finalAmount, orderItems, coupon: cartCoupon?.coupon };
-};
 
+    return { finalAmount };
+
+};
 
 
 
@@ -54,9 +58,11 @@ async function createOrder(orderInfo) {
     try {
 
         const {
+
             paymentMethod,
             deliveryAddress,
             userId
+
         } = orderInfo;
 
         // finding the cart of user and proceeding with cart data and quantity
@@ -77,33 +83,41 @@ async function createOrder(orderInfo) {
 
         // Checking cart is empty
         if (!cartItems.length || !cartItems[0].products.length) {
+
             throw new Error("Cart is empty. Cannot create an order.");
+
         }
 
-        const cartCoupon = await Cart.findOne({ userId }).select('coupon').populate('coupon');
+        const cartCoupon = await Cart.findOne({ userId })
+            .select('coupon')
+            .populate('coupon');
 
 
         const orderItems = [];
+
         for (const [index, ele] of cartItems[0].products.entries()) {
+
             orderItems.push({
                 productId: ele.productId,
                 quantity: ele.quantity,
-                price: cartItems[0].productDetails[index].sellingPrice
+                price: cartItems[0].productDetails[index].sellingPrice,
+                status: paymentMethod !== 'COD' ? 'Pending for Payment' : 'Pending',
             });
 
             // Reduce quantity in the Product collection
             const updatedProduct = await Product.findOneAndUpdate(
                 { _id: ele.productId, quantity: { $gte: ele.quantity } },
-                { $inc: { quantity: -ele.quantity } },
+                { $inc: { quantity: - ele.quantity } },
                 { new: true }
             );
 
 
             if (!updatedProduct) {
+
                 throw new Error(`Insufficient stock for product ${ele.productId}`);
+
             }
         }
-
 
 
         //calculationg total price
@@ -114,7 +128,9 @@ async function createOrder(orderInfo) {
         //final price after discount
         let finalPrice = totalPrice;
         if (cartCoupon?.coupon) {
+
             finalPrice = totalPrice - cartCoupon.coupon.discount;
+            
         }
 
 
@@ -149,8 +165,12 @@ async function createOrder(orderInfo) {
             paymentMethod: paymentMethod,
             discount: cartCoupon?.coupon?.discount ?? 0,
             coupon,
+            paymentId: paymentMethod !== 'COD' ? orderInfo.razorpayOrder : '', //initalise payment id with order id after order sucess change to payment id 
 
         })
+
+        //clearing the cart
+        await Cart.deleteOne({ userId: userId })
 
         await order.save();
         return true;
@@ -166,6 +186,7 @@ async function createOrder(orderInfo) {
 
 
 const placeOrder = async (req, res) => {
+
     try {
 
         const userId = getUserIdFromSession(req);
@@ -184,10 +205,8 @@ const placeOrder = async (req, res) => {
             const order = await createOrder(orderInfo);
 
             if (order) {
-                await Cart.deleteOne({ userId: userId })
 
                 const orderDetails = await Order.findOne({ userId }).sort({ orderDate: -1 }).limit(1)
-
                 res.render('user/purchase/orderSuccessPage', { orderDetails });
 
             } else {
@@ -197,43 +216,60 @@ const placeOrder = async (req, res) => {
 
         } else if (paymentMethod === 'Online Payment') {
 
-            const { finalAmount, orderItems, coupon } = await calculateTotalAmountAfterDiscount(userId)
+
+            const { finalAmount } = await calculateTotalAmountAfterDiscount(userId)
 
             // Create Razorpay order
-            const razorpayOrder = await razorpayInstance.orders.create({
+            const razorpayOrder = await razorpayInstance.orders.create(
+                {
+                    amount: finalAmount * 100,//converting to paise
+                    currency: 'INR',
+                    receipt: `rcptid_${userId.toString().substring(0, 5) + Date.now().toString().substring(0, 5)}`,
+                }
+            );
 
-                amount: finalAmount * 100,//converting to paise
-                currency: 'INR',
-                receipt: `rcptid_${userId.toString().substring(0,5) + Date.now().toString().substring(0,5)}`,
-            });
 
             if (razorpayOrder) {
+
+                orderInfo.razorpayOrder = razorpayOrder.id
+
+                //creating new order with status pending
+                await createOrder(orderInfo);
+
                 // Store order details in session for later use
                 req.session.pendingOrder = {
                     userId,
-                    orderItems,
-                    totalPrice: finalAmount,
-                    deliveryAddress,
-                    paymentMethod,
-                    coupon,
                     razorpayOrderId: razorpayOrder.id,
                 };
 
-                res.render('user/purchase/paymentPage', { razorpayOrder, finalAmount ,razorpayKey : process.env.RAZORPAY_KEY_ID });
+            };
+
+
+            if (razorpayOrder) {
+
+                res.render('user/purchase/paymentPage',
+                    { razorpayOrder, finalAmount, razorpayKey: process.env.RAZORPAY_KEY_ID }
+                );
 
             } else {
+
                 res.render('user/purchase/orderFailedPage')
             }
 
+
+
         }
 
-
     } catch (error) {
+
         console.log(error);
-        res.render('user/pagenotFound')
+        res.render('user/pagenotFound');
+
     }
 
 }
+
+
 
 const allOrders = async (req, res) => {
     try {
@@ -252,15 +288,23 @@ const allOrders = async (req, res) => {
         const skip = limit * (currentpage - 1);
 
 
-        const orders = await Order.find({ userId }).populate('orderItems.productId').sort({ orderDate: -1 }).skip(skip).limit(limit)
+        const orders = await Order.find({ userId })
+            .populate('orderItems.productId')
+            .sort({ orderDate: -1 })
+            .skip(skip)
+            .limit(limit)
+
 
         res.render('user/purchase/orders', { orders, currentpage })
 
 
     } catch (error) {
+
         console.log(error);
         res.render('user/pageNotFound');
+
     }
+
 }
 
 
@@ -269,14 +313,14 @@ const cancelOrder = async (req, res) => {
         const userId = getUserIdFromSession(req);
 
         const { orderId, productId, cancellationReason } = req.query;
-  
+
         // Find the order
         const order = await Order.findOne({ orderId });
 
         // Locate the item to cancel within the order
         const orderItem = order.orderItems.find(item => item.productId.toString() === productId);
 
-    
+
         // Calculate the total price after cancelling the item
         const itemTotalPrice = orderItem.price * orderItem.quantity;
         order.totalPrice -= itemTotalPrice;
@@ -291,26 +335,40 @@ const cancelOrder = async (req, res) => {
             if (coupon) {
 
                 if (order.totalPrice < coupon.minPurchaseValue) {
+
                     order.couponApplied = false;
                     order.discount = 0;
+
                 } else {
+
                     order.discount = coupon.discount;
+
                 }
+
             } else {
+
                 order.couponApplied = false;
                 order.discount = 0;
+
             }
+
         }
 
         order.finalPrice = order.totalPrice - order.discount;
 
-        //refund the order amount
-        await walletController.updateUserWallet(userId, itemTotalPrice - order.discount , 'credit', 'Cancellation Refund');
+        if(order.paymentMethod === 'Online Payment'){
+            //refund the order amount
+            await walletController.updateUserWallet(userId, itemTotalPrice - order.discount, 'credit', 'Cancellation Refund');
+        }
 
+       
         // Increment the stock
         await Product.findOneAndUpdate(
+
             { _id: productId },
+
             { $inc: { quantity: orderItem.quantity } }
+
         );
 
         await order.save();
@@ -318,8 +376,11 @@ const cancelOrder = async (req, res) => {
         res.redirect('/orders');
 
     } catch (error) {
+
         console.log(error);
-        res.status(500).json({ message: "An error occurred while processing the order cancellation." });
+        res.status(500)
+            .json({ message: "An error occurred while processing the order cancellation." });
+
     }
 };
 
@@ -330,8 +391,8 @@ const orderDetails = async (req, res) => {
 
         const { orderId } = req.query;
 
-        const orders = await Order.find({ orderId }).populate('orderItems.productId')
-
+        const orders = await Order.find({ orderId })
+            .populate('orderItems.productId')
 
         res.render('user/purchase/orderDetails', { orders })
 
@@ -342,17 +403,22 @@ const orderDetails = async (req, res) => {
 }
 
 const retunOrder = async (req, res) => {
+
     try {
+
         const { orderId, productId } = req.query
 
         response = await Order.updateOne(
+
             { orderId, 'orderItems.productId': productId },
             { $set: { 'orderItems.$.status': 'ReturnRequested' } }
+
         );
 
         res.redirect('/orders');
 
     } catch (error) {
+
         console.log(error);
 
     }

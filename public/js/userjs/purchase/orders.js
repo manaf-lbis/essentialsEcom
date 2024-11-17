@@ -32,15 +32,15 @@ async function cancelOrder(event) {
                 showCancelButton: true
             });
             if (text.trim()) {
-            // Redirecting to the href of the a tag after confirmation
-            window.location.href = event.target.closest('a').getAttribute('href').trim() + `&cancellationReason=${text}`
-           
-            
-            await Swal.fire({
-                title: "Cancelled!",
-                text: "Order Cancelled.",
-                icon: "success"
-            });
+
+                await Swal.fire({
+                    title: "Cancelled!",
+                    text: "Order Cancelled.",
+                    icon: "success"
+                });
+
+                // Redirecting to the href of the a tag after confirmation
+                window.location.href = event.target.closest('a').getAttribute('href').trim() + `&cancellationReason=${text}`
 
             }
 

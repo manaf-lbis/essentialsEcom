@@ -34,7 +34,7 @@ const orderSchema = new Schema({
         type: String,
         required: true,
         default:'Pending',
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered','Cancelled','Rejected','ReturnRequested','Returned'],
+        enum: ['Pending', 'Processing', 'Shipped', 'Delivered','Cancelled','Rejected','ReturnRequested','Returned','Pending for Payment'],
       },
       deliveryDate: {
         type: Date,
@@ -117,9 +117,16 @@ const orderSchema = new Schema({
   paymentMethod:{
     type:String,
     required:true
+  },
+  paymentId:{
+    type:String
   }
 
-});
+},
+{
+  timestamps:true
+}
+);
 
 const Order = mongoose.model('Order', orderSchema);
 module.exports = Order;

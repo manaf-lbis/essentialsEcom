@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <!-- Invoice Header -->
+        <div class="d-flex align-items-center bg-success text-white py-3 rounded">
+            <img src="/assets/images/logo.png" alt="Company Logo" class="me-3" style="height: 70px;">
+            <h1 class="m-0">Invoice</h1>
+        </div>
+
+        <!-- Company and Customer Details -->
+        <div class="row mt-4">
+            <!-- Company Details -->
+            <div class="col-md-6">
+                <h5>Company Details</h5>
+                <p>
+                    <strong>Company Name:</strong> Essentials.<br>
+                    <strong>Address:</strong> 381/Essential Tower, City Anagalapura, Main Road, 691723.<br>
+                    <strong>Phone:</strong> +123 456 7890<br>
+                    <strong>Email:</strong> support@essentials.com
+                </p>
+            </div>
+            <!-- Invoice Details -->
+            <div class="col-md-6 text-md-end">
+                <h5>Invoice Details</h5>
+                <p>
+                    <strong>Invoice Date:</strong> 16-Nov-2024<br>
+                    <strong>Invoice Number:</strong> INV-20241116<br>
+                    <strong>Order Date:</strong> 30-Nov-2024<br>
+                    <strong>order ID:</strong> Net 30 days
+                </p>
+            </div>
+        </div>
+
+        <!-- Customer Details -->
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <h5>Billing Address</h5>
+                <p>
+                    <strong>Name:</strong> <%= orders.address.fullName %><br>
+                    <strong>Address:</strong> <%= orders.address.houseName, orders.address.area, orders.address.city, orders.address.pincode%><br>
+                    <strong>Phone:</strong><%= orders.address.phone %><br>
+                    <strong>GSTID:</strong> AAAAXXXX9313
+                </p>
+            </div>
+        </div>
+
+        <!-- Invoice Items -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h5>Invoice Items</h5>
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    
+                <% orders.orderItems.forEach((ele,index)=>{ %>
+                  <tbody>
+                        <tr>
+                            <td><%= index+1  %></td>
+                            <td><%= ele.productId.productName.substring(0,15) %></td>
+                            <td><%= ele.quantity %></td>
+                            <td><%= ele.price %></td>
+                            <td><%= (ele.quantity*ele.price).toFixed(2) %></td>
+                        </tr>
+                       
+                    </tbody>
+                <% }) %>
+                </table>
+            </div>
+        </div>
+
+        <!-- Total Section -->
+        <div class="row mt-3">
+            <div class="col-md-12 text-end">
+                <h6 class="fw-bold">Discound(-):₹ <%= orders.discount.toFixed(2)%> </h6>
+                <h5 class="fw-bold">Grand Total:₹ <%= orders.finalPrice.toFixed(2)%></h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
