@@ -11,7 +11,7 @@
     <div class="container my-5">
         <!-- Invoice Header -->
         <div class="d-flex align-items-center bg-success text-white py-3 rounded">
-            <img src="/assets/images/logo.png" alt="Company Logo" class="me-3" style="height: 70px;">
+            <!-- <img src="/assets/images/apple.png" alt="Company Logo" class="me-3" style="height: 70px;"> -->
             <h1 class="m-0">Invoice</h1>
         </div>
 
@@ -31,10 +31,9 @@
             <div class="col-md-6 text-md-end">
                 <h5>Invoice Details</h5>
                 <p>
-                    <strong>Invoice Date:</strong> 16-Nov-2024<br>
-                    <strong>Invoice Number:</strong> INV-20241116<br>
-                    <strong>Order Date:</strong> 30-Nov-2024<br>
-                    <strong>order ID:</strong> Net 30 days
+                    <strong>Invoice Date:</strong> <%= orders.updatedAt.toString().substring(4,15) %><br>
+                    <strong>Order Date:</strong> <%= orders.createdAt.toString().substring(4,15) %>  <br>
+                    <strong>order ID:</strong> <%= orders.orderId %>
                 </p>
             </div>
         </div>
@@ -45,7 +44,7 @@
                 <h5>Billing Address</h5>
                 <p>
                     <strong>Name:</strong> <%= orders.address.fullName %><br>
-                    <strong>Address:</strong> <%= orders.address.houseName, orders.address.area, orders.address.city, orders.address.pincode%><br>
+                    <strong>Address:</strong> <%= orders.address.houseName +','+ orders.address.area+','+ orders.address.city+','+orders.address.pincode%><br>
                     <strong>Phone:</strong><%= orders.address.phone %><br>
                     <strong>GSTID:</strong> AAAAXXXX9313
                 </p>
