@@ -1,5 +1,6 @@
 const Order = require('../../models/orderSchema');
 const Products = require('../../models/productSchema')
+const Category = require('../../models/categorySchema')
 
 
 const stringToDate = (duration)=> {
@@ -18,7 +19,6 @@ const stringToDate = (duration)=> {
     }
 
 };
-
 
 
 const generateReport = async (duration) => {
@@ -63,10 +63,6 @@ const generateReport = async (duration) => {
 }
 
 
-
-
-
-
 const getReport = async (req, res) => {
     try {
         const duration = req.query.duration;
@@ -84,7 +80,6 @@ const getReport = async (req, res) => {
 
 
 
-
 const generateGraphReport =async (req,res)=>{
     try {
 
@@ -93,21 +88,18 @@ const generateGraphReport =async (req,res)=>{
         const date = stringToDate(duration);
 
         const topSellingProducts = await Products.find().sort({sellingCount:-1}).limit(10).populate('category');
+        const topSellingCategorys = await Category.find().sort({categorySalesCount:-1}).limit(10)
 
-
-
-        console.log(topSellingProducts);
+        // console.log(topSellingProducts,'dfgdfgdfgdfg',topSellingCategorys);
         
 
-
-
-
-        res.status(200).json({message:'good'})
+        res.status(200).json({topSellingProducts,topSellingCategorys})
         
 
 
     } catch (error) {
         console.log(error);
+        res.status(500).json({message:'something went wrong'})
         
         
     }

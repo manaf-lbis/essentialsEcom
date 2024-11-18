@@ -1,5 +1,5 @@
 <html lang="en">
-  <link rel="stylesheet" href="/css/adminCss/dashboard/dashboardMainpanel.css">
+<link rel="stylesheet" href="/css/adminCss/dashboard/dashboardMainpanel.css">
 <%- include('../partials/htmlHead.ejs',{csspath:"/css/adminCss/dashboard/dashboard.css"}) %>
 
 
@@ -46,7 +46,9 @@
                         <i class="fas fa-cogs fa-3x me-3 icon-sales"></i>
                         <div>
                           <h5>Overall Sales Count</h5>
-                          <p id="salesCount" class="report-value"><%= salesCount  %></p>
+                          <p id="salesCount" class="report-value">
+                            <%= salesCount %>
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -61,7 +63,8 @@
                         <i class="fas fa-dollar-sign fa-3x me-3 icon-order"></i>
                         <div>
                           <h5>Overall Order Amount</h5>
-                          <p id="orderAmount" class="report-value">₹ <%= totalAmount.toFixed(2)  %></p>
+                          <p id="orderAmount" class="report-value">₹ <%= totalAmount.toFixed(2) %>
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -76,7 +79,8 @@
                         <i class="fas fa-tags fa-3x me-3 icon-discount"></i>
                         <div>
                           <h5>Overall Discount Amount</h5>
-                          <p id="discount" class="report-value">₹ <%= totalDiscount.toFixed(2)  %></p>
+                          <p id="discount" class="report-value">₹ <%= totalDiscount.toFixed(2) %>
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -91,7 +95,8 @@
                         <i class="fas fa-gift fa-3x me-3 icon-coupons"></i>
                         <div>
                           <h5>Coupons Deduction</h5>
-                          <p id="coupons" class="report-value">₹ <%= couponDeduction.toFixed(2)  %></p>
+                          <p id="coupons" class="report-value">₹ <%= couponDeduction.toFixed(2) %>
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -109,7 +114,7 @@
 
             <!-- Graph ==== -->
             <div class="graph px-4">
-              
+
               <div class="row g-4">
                 <!-- Graph Card 1 -->
                 <div class="col-lg-4 col-md-6">
@@ -120,7 +125,7 @@
                     </div>
                   </div>
                 </div>
-              
+
                 <!-- Graph Card 2 -->
                 <div class="col-lg-4 col-md-6">
                   <div class="card shadow rounded">
@@ -130,7 +135,7 @@
                     </div>
                   </div>
                 </div>
-              
+
                 <!-- Graph Card 3 -->
                 <div class="col-lg-4 col-md-6">
                   <div class="card shadow rounded">
@@ -152,6 +157,8 @@
 
 
 
+      <!-- chart js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
@@ -161,11 +168,13 @@
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-        <script src="/js/adminjs/dashboard.js"></script>
-        <script src="/js/adminjs/dashboardGraph.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+      <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+      <!-- external js -->
+      <script src="/js/adminjs/dashboard.js"></script>
+      <script src="/js/adminjs/dashboardGraph.js"></script>
   </body>
 
 </html>
