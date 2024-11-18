@@ -1,6 +1,7 @@
 const Order = require('../../models/orderSchema');
 const walletController = require('../../controllers/user/walletController');
-const Product = require('../../models/productSchema')
+const Product = require('../../models/productSchema');
+const Category= require('../../models/categorySchema')
 
 
 const getOrders = async (req, res) => {
@@ -69,7 +70,8 @@ const orderStatusUpdate = async (req, res) => {
                 {$inc:{quantity:1,sellingCount:-1}}
             )
 
-
+            // update category selling count
+            await Category.updateOne({_id:orderItem.category},{$inc:{categorySalesCount: -orderItem.quantity}})
 
             //update wallet 
             await walletController.updateUserWallet(order.userId,itemTotalPrice,'credit','Product Return')

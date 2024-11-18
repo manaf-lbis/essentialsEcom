@@ -385,6 +385,13 @@ const cancelOrder = async (req, res) => {
 
         );
 
+
+        //finding the product category for decrementing the categoy sales count
+        const category = await Product.findOne({ _id:productId}, { category: 1 });
+
+        // update category selling count
+        await Category.updateOne({_id:category.category},{$inc:{categorySalesCount: -orderItem.quantity}})
+
         await order.save();
 
         res.redirect('/orders');
