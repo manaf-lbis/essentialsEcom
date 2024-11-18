@@ -63,6 +63,10 @@ const producSchema = new Schema({
     min:[0],
     max:[5]
   },
+  sellingCount:{
+    type: Number,
+    default: 0,
+  },
   createdAt:{
     type:Date,
     default:Date.now

@@ -1,19 +1,31 @@
-const Order = require('../../models/orderSchema')
+const Order = require('../../models/orderSchema');
+const Products = require('../../models/productSchema')
+
+
+const stringToDate = (duration)=> {
+
+    if (duration === '1day') {
+
+      return new Date(Date.now() - (1000 * 60 * 60 * 24));
+
+    } else if (duration === '1week') {
+
+        return new Date(Date.now() - (1000 * 60 * 60 * 24 * 7));
+
+    } else if (duration === '1month') {
+
+        return new Date(Date.now() - (1000 * 60 * 60 * 24 * 31));
+    }
+
+};
+
+
 
 const generateReport = async (duration) => {
     try {
-        let date = Date.now();
 
-        if (duration === '1day') {
-            date = new Date(Date.now() - (1000 * 60 * 60 * 24))
+        const date = stringToDate(duration)
 
-        } else if (duration === '1week') {
-            date = new Date(Date.now() - (1000 * 60 * 60 * 24 * 7))
-
-        } else if (duration === '1month') {
-            date = new Date(Date.now() - (1000 * 60 * 60 * 24 * 31))
-
-        }
 
         const orders = await Order.find({ orderDate: { $gte: date } }).populate('orderItems.productId')
 
@@ -59,7 +71,7 @@ const getReport = async (req, res) => {
     try {
         const duration = req.query.duration;
 
-       const {totalDiscount,totalAmount,salesCount,couponDeduction} = await generateReport(duration)
+       const {totalDiscount,totalAmount,salesCount,couponDeduction} = await generateReport(duration);
 
        return res.status(200).json({totalDiscount,totalAmount,salesCount,couponDeduction})
 
@@ -67,9 +79,44 @@ const getReport = async (req, res) => {
     } catch (error) {
         console.log(error);
 
-
     }
 }
+
+
+
+
+const generateGraphReport =async (req,res)=>{
+    try {
+
+        const {duration}= req.query;
+
+        const date = stringToDate(duration);
+
+        const topSellingProducts = await Products.find().sort({sellingCount:-1}).limit(10).populate('category');
+
+
+
+        console.log(topSellingProducts);
+        
+
+
+
+
+        res.status(200).json({message:'good'})
+        
+
+
+    } catch (error) {
+        console.log(error);
+        
+        
+    }
+}
+
+
+
+
+
 
 
 
@@ -83,5 +130,6 @@ const loadDashboard = async (req, res) => {
 
 module.exports = {
     loadDashboard,
-    getReport
+    getReport,
+    generateGraphReport
 }

@@ -8,49 +8,57 @@ const Product = require('../../models/productSchema')
 const cartController = require('../../controllers/user/cartController')
 
 
-function getUserIdFromSession(req){
+function getUserIdFromSession(req) {
     return req.session?._id ?? req.session.passport?.user;
 }
 
 
-const getCheckutPage = async (req,res)=>{
+const getCheckutPage = async (req, res) => {
     try {
 
         const userId = getUserIdFromSession(req);
-        const cart = await Cart.findOne({userId});
+        const cart = await Cart.findOne({ userId });
 
         //checking the cart is empty or not 
-        if(cart.products.length <=0){
+        if (cart.products.length <= 0) {
             return res.redirect('/cart')
         }
 
-        
+
         let userAddress = await Address.findOne(
-            {userId}
-        ) ?? [] ;
+            { userId }
+        ) ?? [];
 
-    
-        
-        if( userAddress.address){
-           userAddress = userAddress.address.filter((ele)=> !ele.isBlocked ); 
+
+
+        if (userAddress.address) {
+            userAddress = userAddress.address.filter((ele) => !ele.isBlocked);
         }
-        
-        
-        const {totalAmount,totalItems,amountAfterDiscount,discount} = await cartController.getCartDetails(req);
 
-        res.render('user/purchase/checkout',{totalAmount,totalItems,userAddress, amountAfterDiscount,discount});
-        
-        
+        const { totalAmount, totalItems, amountAfterDiscount, discount } = await cartController.getCartDetails(req);
+
+        //calculating shipping charge
+        const deliveryCharge = amountAfterDiscount < 500 ? 40 : 0;
+
+        res.render('user/purchase/checkout', {
+            totalAmount,
+            totalItems,
+            userAddress,
+            amountAfterDiscount: (amountAfterDiscount + deliveryCharge),
+            discount, deliveryCharge
+        }
+        );
+
     } catch (error) {
 
         console.log(error);
-        
-        
+
+
     }
 }
 
 
 
-module.exports ={
+module.exports = {
     getCheckutPage,
 }

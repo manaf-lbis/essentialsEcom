@@ -9,16 +9,21 @@ const orderSchema = new Schema({
     default: () => uuidv4().slice(-12),
     unique: true,
   },
-  userId:{
-    type:Schema.Types.ObjectId,
-    ref:'User',
-    required:true
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   orderItems: [
     {
       productId: {
         type: Schema.Types.ObjectId,
         ref: 'Product',
+        required: true,
+      },
+      category:{
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
         required: true,
       },
       quantity: {
@@ -33,23 +38,23 @@ const orderSchema = new Schema({
       status: {
         type: String,
         required: true,
-        default:'Pending',
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered','Cancelled','Rejected','ReturnRequested','Returned','Pending for Payment'],
+        default: 'Pending',
+        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Rejected', 'ReturnRequested', 'Returned', 'Pending for Payment'],
       },
       deliveryDate: {
         type: Date,
       },
-      isRated:{
-        type:Boolean,
-        default:false
+      isRated: {
+        type: Boolean,
+        default: false
       },
-      rating:{
-        type:Number,
-        min:[0],
-        max:[5]
+      rating: {
+        type: Number,
+        min: [0],
+        max: [5]
       },
-      cancellationReason:{
-        type:String,
+      cancellationReason: {
+        type: String,
       },
     },
   ],
@@ -100,10 +105,9 @@ const orderSchema = new Schema({
       type: String,
       required: true,
     },
-    isBlocked:{
-      type:Boolean
+    isBlocked: {
+      type: Boolean
     }
-
   },
   orderDate: {
     type: Date,
@@ -114,18 +118,22 @@ const orderSchema = new Schema({
     code: String,
     discountAmount: Number
   },
-  paymentMethod:{
-    type:String,
-    required:true
+  deliveryCharge: {
+    type: Number,
+    max: 40,
+    default: 0
   },
-  paymentId:{
-    type:String
-  }
-
+  paymentMethod: {
+    type: String,
+    required: true
+  },
+  paymentId: {
+    type: String
+  },
 },
-{
-  timestamps:true
-}
+  {
+    timestamps: true
+  }
 );
 
 const Order = mongoose.model('Order', orderSchema);

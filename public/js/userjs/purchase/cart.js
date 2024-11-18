@@ -155,11 +155,19 @@ async function qtyChangeRqst(event) {
 // page updating
 function updatePage(data, totalPriceTag, qty, priceOfItem) {
 
+  if(data.amountAfterDiscount < 500){
+    document.getElementById('shippingCharge').innerHTML = 40;
+    data.amountAfterDiscount += 40
+  }else{
+    document.getElementById('shippingCharge').innerHTML = 0;
+  }
+
   document.getElementById('totalItems').innerHTML = `Items (${data.totalItems})`;
   document.getElementById('totalAmount').innerHTML = `₹ ${data.amountAfterDiscount}`;
   //total amout of summarry
   document.getElementById('price').innerHTML = `₹ ${data.totalAmount}`;
 
+  
   console.log(`₹ ${data.discount}`);
 
   if (data.discount) {

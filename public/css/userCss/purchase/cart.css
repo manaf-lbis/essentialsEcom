@@ -22,4 +22,12 @@ p {
 
 .fa-heart {
   color: red;
+}
+
+.cartEmptyDiv {
+  display: flex;
+  justify-content: center;
+}
+.cartEmptyDiv img {
+  width: 50%;
 }/*# sourceMappingURL=cart.css.map */

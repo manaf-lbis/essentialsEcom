@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Category = require('./categorySchema');
 const { Schema } = mongoose;
 
 const cartSchema = new Schema({
@@ -22,6 +23,11 @@ const cartSchema = new Schema({
         type: Number,
         required: true,
         min:[1]
+      },
+      category:{
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true,
       },
       addedOn: {
         type: Date,

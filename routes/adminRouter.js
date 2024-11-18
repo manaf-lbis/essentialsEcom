@@ -54,6 +54,7 @@ router.get('/updateOrderStatus', auth.adminAuth,ordersController.orderStatusUpda
 
 //report
 router.get('/getReport', auth.adminAuth,dashboardController.getReport);
+router.get('/graphReport', auth.adminAuth,dashboardController.generateGraphReport)
 
 //offers
 router.get('/offers');

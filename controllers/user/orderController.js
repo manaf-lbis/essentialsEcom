@@ -7,7 +7,7 @@ const Product = require('../../models/productSchema');
 const Coupon = require('../../models/couponSchema');
 const walletController = require('../../controllers/user/walletController')
 const razorpayInstance = require('../../config/razorpay');
-
+const Category = require('../../models/categorySchema')
 
 
 function getUserIdFromSession(req) {
@@ -97,17 +97,22 @@ async function createOrder(orderInfo) {
 
         for (const [index, ele] of cartItems[0].products.entries()) {
 
+            // update category selling count
+           await Category.updateOne({_id:ele.category},{$inc:{categorySalesCount:ele.quantity}})
+             
+
             orderItems.push({
                 productId: ele.productId,
                 quantity: ele.quantity,
                 price: cartItems[0].productDetails[index].sellingPrice,
                 status: paymentMethod !== 'COD' ? 'Pending for Payment' : 'Pending',
+                category:ele.category
             });
 
             // Reduce quantity in the Product collection
             const updatedProduct = await Product.findOneAndUpdate(
                 { _id: ele.productId, quantity: { $gte: ele.quantity } },
-                { $inc: { quantity: - ele.quantity } },
+                { $inc: { quantity: - ele.quantity, sellingCount: ele.quantity } },
                 { new: true }
             );
 
@@ -117,6 +122,8 @@ async function createOrder(orderInfo) {
                 throw new Error(`Insufficient stock for product ${ele.productId}`);
 
             }
+
+           
         }
 
 
@@ -130,7 +137,7 @@ async function createOrder(orderInfo) {
         if (cartCoupon?.coupon) {
 
             finalPrice = totalPrice - cartCoupon.coupon.discount;
-            
+
         }
 
 
@@ -160,7 +167,8 @@ async function createOrder(orderInfo) {
             userId: userId,
             orderItems: orderItems,
             totalPrice: totalPrice,
-            finalPrice: finalPrice,
+            deliveryCharge: finalPrice < 500 ? 40 : 0,
+            finalPrice: finalPrice += finalPrice < 500 ? 40 : 0,
             address: address.address[0],// query of of mongo is an nested array of object
             paymentMethod: paymentMethod,
             discount: cartCoupon?.coupon?.discount ?? 0,
@@ -354,20 +362,26 @@ const cancelOrder = async (req, res) => {
 
         }
 
+
+
         order.finalPrice = order.totalPrice - order.discount;
 
-        if(order.paymentMethod === 'Online Payment'){
+        if (order.paymentMethod === 'Online Payment') {
             //refund the order amount
             await walletController.updateUserWallet(userId, itemTotalPrice - order.discount, 'credit', 'Cancellation Refund');
         }
 
-       
+        if (order.deliveryCharge && order.finalPrice < 500) {
+            order.deliveryCharge = 40;
+            order.finalPrice += 40
+        }
+
+
         // Increment the stock
         await Product.findOneAndUpdate(
 
             { _id: productId },
-
-            { $inc: { quantity: orderItem.quantity } }
+            { $inc: { quantity: orderItem.quantity ,sellingCount: -orderItem.quantity} }
 
         );
 

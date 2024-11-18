@@ -120,10 +120,12 @@ const checkAndAdd = async (user_id, _id, quantity) => {
 
         } else {
 
+            const category = await Product.findOne({ _id }, { category: 1 });
+
             //product not exist adding the product to array
             await Cart.updateOne(
                 { userId: user_id },
-                { $push: { products: { productId: _id, quantity } } }
+                { $push: { products: { productId: _id, quantity, category: category.category } } }
             );
         }
 
@@ -131,11 +133,13 @@ const checkAndAdd = async (user_id, _id, quantity) => {
 
     } else {
 
-        //creating new cart
+        //find the category
+        const category = await Product.findOne({ _id }, { category: 1 });
 
+        //creating new cart
         const Item = new Cart({
             userId: user_id,
-            products: [{ productId: _id, quantity }],
+            products: [{ productId: _id, quantity, category: category.category }],
         });
         Item.save();
 

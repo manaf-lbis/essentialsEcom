@@ -8,6 +8,8 @@ async function loadReport(value) {
         }
     })
 
+    
+    
    const data = await response.json();
 
     if (response.ok) {
@@ -90,8 +92,10 @@ function animateCount(elementId, endValue, duration) {
 
 // Call the animation functions for each element when the page loads
 function animate(data) {
-  animateCount("salesCount", data.totalAmount, 1000);
+  animateCount("salesCount", data.salesCount, 1000);
   animateCount("orderAmount", data.totalAmount.toFixed(2), 500);
   animateCount("discount", data.totalDiscount.toFixed(2) , 500);
   animateCount("coupons", data.couponDeduction.toFixed(2) , 500);
 };
+
+

@@ -64,6 +64,7 @@
                             <% if(orders[0].coupon){ %>
                               <p><strong>Discount:</strong> ₹<%= orders[0].discount.toFixed(2)%></p>
                              <% } %>
+                             <p><strong>Shipping Charge (-):</strong> ₹<%= orders[0].deliveryCharge ?? 0  %></p>
 
                             <p class="text-danger"><strong>Grand Total:  ₹<%= orders[0].finalPrice.toFixed(2)%> </strong></p>
 

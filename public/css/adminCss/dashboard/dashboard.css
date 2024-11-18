@@ -23,9 +23,9 @@ body {
 }
 .wrapper .mainpanel {
   flex-grow: 1;
-  height: 500px;
   border-radius: 8px;
   background-color: #fff;
+  padding-bottom: 80px;
 }
 .wrapper .mainpanel h4 {
   padding: 15px 0 5px 15px;

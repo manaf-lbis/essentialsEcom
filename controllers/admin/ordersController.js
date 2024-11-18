@@ -1,5 +1,6 @@
 const Order = require('../../models/orderSchema');
-const walletController = require('../../controllers/user/walletController')
+const walletController = require('../../controllers/user/walletController');
+const Product = require('../../models/productSchema')
 
 
 const getOrders = async (req, res) => {
@@ -20,7 +21,6 @@ const getOrders = async (req, res) => {
         const skip = limit * (currentPage - 1);
         //pagenation logic end
     
-
         const allOrders = await Order.find({}).populate({
             path: 'orderItems.productId',
             model: 'Product',
@@ -28,7 +28,6 @@ const getOrders = async (req, res) => {
         }).sort({ orderDate: -1 }).skip(skip).limit(limit)
 
         res.render('admin/orderManagement/orderListing', { allOrders,currentPage });
-
 
 
 
@@ -64,6 +63,13 @@ const orderStatusUpdate = async (req, res) => {
                     }
                 }
             );
+
+            await Product.updateOne(
+                {_id:productId},
+                {$inc:{quantity:1,sellingCount:-1}}
+            )
+
+
 
             //update wallet 
             await walletController.updateUserWallet(order.userId,itemTotalPrice,'credit','Product Return')

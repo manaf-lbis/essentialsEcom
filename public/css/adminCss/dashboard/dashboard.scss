@@ -23,9 +23,10 @@ body{
     gap: 15px;
     .mainpanel{
         flex-grow: 1;
-        height: 500px;
+        // height: 500px;
         border-radius: 8px;
         background-color: #fff;
+        padding-bottom: 80px;
         h4{
             padding: 15px 0 5px 15px;
         }
