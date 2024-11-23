@@ -33,36 +33,34 @@ app.use(
   })
 );
 
-
-// Middleware to prevent caching
+//prevet caching
 app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store');
     next();
 });
 
+
+//initialize passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
+//setting viewengine 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
-
 
 
 // user router
 app.use('/', userRouter);
 
+
 // admin Router
 app.use('/admin', adminRouter);
 
 
-
-
-// <========= Google authentication routes
+//Google authentication routes
 app.use('/auth',userRouter)
 
-
-
+//listening to the port 
 app.listen(process.env.PORT, () =>
   console.log(`running on port ${process.env.PORT}`)
 );

@@ -1,108 +1,115 @@
 const Order = require('../../models/orderSchema');
 const walletController = require('../../controllers/user/walletController');
 const Product = require('../../models/productSchema');
-const Category= require('../../models/categorySchema')
+const Category = require('../../models/categorySchema')
 
 
+//fetching all orders for listing
 const getOrders = async (req, res) => {
     try {
+        //pagenation implimentation
         const searchQuery = req.query.search ?? '';
-
         let currentPage = Number(req.query.pageReq) || 1;
-
         const limit = 5;
-    
+
+        //counting the doucoments
         const count = Math.ceil(await Order.countDocuments({}) / limit);
 
-    
-        currentPage = currentPage >= count ? count : currentPage ;  
+        currentPage = currentPage >= count ? count : currentPage;
         currentPage = currentPage <= 0 ? 1 : currentPage
-    
-    
         const skip = limit * (currentPage - 1);
-        //pagenation logic end
-    
+
+
+        //fetching all orders
         const allOrders = await Order.find({}).populate({
             path: 'orderItems.productId',
             model: 'Product',
             select: 'productName'
         }).sort({ orderDate: -1 }).skip(skip).limit(limit)
 
-        res.render('admin/orderManagement/orderListing', { allOrders,currentPage });
-
-
+        //render the orderlisting page with orders
+        res.render('admin/orderManagement/orderListing', { allOrders, currentPage });
 
     } catch (error) {
-
+        // logging error and render page not found
         console.log(error);
-    }
-}
+        res.render('admin/pagenotFound');
+    };
+};
 
 
 
+//changing order status
 const orderStatusUpdate = async (req, res) => {
     try {
-
+        //extracting order details form query 
         const { status, orderId, productId } = req.query;
 
-        // need to return the amount to wallet
+        // if order returned refund order amount to the wallet
         if (status === 'Returned') {
-
+            //find the items from the order
             const order = await Order.findOne({ orderId });
 
+            //find the targeted product from the order items for 'Returning'
             const orderItem = order.orderItems.find(item => item.productId.toString() === productId);
 
+            //calculating the total price of item that returning
             const itemTotalPrice = orderItem.price * orderItem.quantity;
 
-            // update the status and total price 
+            // update the status and total price of order
             await Order.updateOne(
                 { orderId, 'orderItems.productId': productId },
                 {
                     $set: {
                         'orderItems.$.status': status,
-                        totalPrice: order.totalPrice - itemTotalPrice  
+                        totalPrice: order.totalPrice - itemTotalPrice
                     }
                 }
             );
 
+            //increase the product qty in stock  and decreasin the selling count
             await Product.updateOne(
-                {_id:productId},
-                {$inc:{quantity:1,sellingCount:-1}}
+                { _id: productId },
+                { $inc: { quantity: orderItem.quantity, sellingCount: -orderItem.quantity } }
             )
 
             // update category selling count
-            await Category.updateOne({_id:orderItem.category},{$inc:{categorySalesCount: -orderItem.quantity}})
+            await Category.updateOne(
+                { _id: orderItem.category },
+                { $inc: { categorySalesCount: -orderItem.quantity } }
+            )
 
             //update wallet 
-            await walletController.updateUserWallet(order.userId,itemTotalPrice,'credit','Product Return')
+            await walletController.updateUserWallet(order.userId, itemTotalPrice, 'credit', 'Product Return')
 
             return res.redirect('/admin/orders');
         }
 
-        
-        let response
+
+        //if the item is delivered updating the delivery statu to delivered wit date
         if (status === 'Delivered') {
-            response = await Order.updateOne(
+            await Order.updateOne(
                 { orderId, 'orderItems.productId': productId },
                 {
-                     $set: { 'orderItems.$.status': status, 'orderItems.$.deliveryDate': Date.now() } 
+                    $set: { 'orderItems.$.status': status, 'orderItems.$.deliveryDate': Date.now() }
                 }
             );
 
         } else {
-            response = await Order.updateOne(
+            //updaing deliverry status from query
+            await Order.updateOne(
                 { orderId, 'orderItems.productId': productId },
                 {
-                     $set: { 'orderItems.$.status': status } 
+                    $set: { 'orderItems.$.status': status }
                 }
             );
-        }
+        };
 
-
-
+        //redirect to order listing page
         res.redirect('/admin/orders');
 
     } catch (error) {
+        //logging error and render error page
         console.log(error);
         res.render('admin/pagenotFound')
     }
@@ -111,6 +118,6 @@ const orderStatusUpdate = async (req, res) => {
 
 
 module.exports = {
-    getOrders,
-    orderStatusUpdate
+    getOrders, //fetching all orders for listing
+    orderStatusUpdate //changing order status
 } 

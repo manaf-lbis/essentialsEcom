@@ -8,7 +8,7 @@ const Product = require('../../models/productSchema');
 const Category = require('../../models/categorySchema');
 const Wishlist = require('../../models/wishlistSchema')
 const mongoose = require('mongoose');
-const  refferalsController  = require('./referralsController');
+const refferalsController = require('./referralsController');
 
 
 // getting user id from session 
@@ -17,32 +17,41 @@ function getUserIdFromSession(req) {
 }
 
 
-// <<<====Signup page rendering===>>>
+// Signup page rendering
 const loadSignupPage = (req, res) => {
   try {
+    //rendering signup page
     return res.render('user/signup', { message: '' });
   } catch (error) {
+    // log error and render error page
+    console.log(error);
+    return res.status(500).render('user/pagenotFound');
+  };
+};
+
+
+//login page rendering
+const loadLoginpage = (req, res) => {
+  try {
+    // render login page
+    return res.render('user/login');
+
+  } catch (error) {
+
+    // if any error, log error and render error page
     console.log(error);
     return res.status(500).render('user/pagenotFound');
   }
 };
 
-// <<<====login page rendering===>>>
-const loadLoginpage = (req, res) => {
-  try {
-    return res.render('user/login');
-  } catch (error) {
-    console.log(error);
-    return res.status(500);
-  }
-};
 
-// <<<====login page rendering===>>>
+// login page rendering
 const loadHome = async (req, res) => {
   try {
-
+    // extract user id from session
     const userId = getUserIdFromSession(req);
 
+    // requiring all object to load home page
     const products = await Product.find({ isBlocked: false });
     const category = await Category.find({ isBlocked: false });
     const wishlist = await Wishlist.findOne({ userId }, { 'products.productId': 1 })
@@ -50,27 +59,33 @@ const loadHome = async (req, res) => {
     let wishlistProducts = [];
     if (wishlist) {
       wishlistProducts = wishlist.products.map((ele) => ele.productId.toString());
-    }
+    };
 
-
+    // render home page
     return res.render('user/home', { products, category, wishlistProducts });
 
   } catch (error) {
+    // logging error 
     console.log(error);
   }
 };
 
-// <<<====login page rendering===>>>
+// login page rendering
 const userLogout = (req, res) => {
   try {
+    // destroy current session and allow to logout
     req.session.destroy((error) => {
       if (error) {
         console.log('session destruction error');
         return res.render('user/pagenotFound');
       }
+
+      // redirect login page
       return res.redirect('/');
     });
+
   } catch (error) {
+    // log error
     console.log(error);
   }
 };
@@ -80,7 +95,7 @@ const otpGenerator = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
-// <====Generating otp using node mailer=====>
+// Generating otp using node mailer
 const sendverification = async (email, otp) => {
   try {
     const transport = nodemailer.createTransport({
@@ -100,93 +115,126 @@ const sendverification = async (email, otp) => {
       text: `YOUR OTP is ${otp}`,
     };
 
-    // <====sending Otp======>
+    //sending Otp
     const info = await transport.sendMail(mailoption);
     return info;
+
   } catch (error) {
+    // log error and throw error fro handling 
     console.log('error while sending otp');
     throw error;
-  }
+  };
+
 };
 
 
 
 
-// <====!!! Add New user request from user !!!=====>
+// Add New user request from user 
 const addNewUser = async (req, res) => {
   try {
+    // extracting details from session 
     const { name, email, phone, password, referralCode } = req.body;
+
+    //checking the user is exist with the email
     const userExist = await User.findOne({ email: email });
 
-    //  <===checkin db user is already exist====>
+    // checkin db user is already exist
     if (userExist) {
+      // render signup page with error
       return res.render('user/signup', {
         message: 'Entred Email Already Exist',
       });
-    }
+    };
 
+    // generating random otp
     const otp = otpGenerator();
+
+    // sending email with otp
     const sentInfo = await sendverification(email, otp);
+    
 
     if (sentInfo.accepted.length > 0) {
-      req.session.userOtp = otp;
-      req.session.userData = { name, email, phone, password, referralCode};
-      console.log('first otp:', otp);
-      return res.render('user/otp', { message: '' });
 
-    }
+      // saving otp to session
+      req.session.userOtp = otp;
+
+      // storing data to the session for later use
+      req.session.userData = { name, email, phone, password, referralCode };
+
+      // loging otp for test purpose
+      console.log('first otp:', otp);
+
+      // render otp endering page
+      return res.render('user/otp', { message: '' });
+    };
 
   } catch (error) {
-
+    // log error and render signup page with error
     console.log(error);
     return res.render('user/signup', { message: 'Error while sending OTP' });
-    
-  }
+  };
 };
 
-//===== verify otp and and creating user  =============>
+
+//verify otp and and creating user
 const verifyOtp = async (req, res) => {
   try {
-    const { name, phone, email, password ,referralCode} = req.session.userData;
+    // extract use details from session
+    const { name, phone, email, password, referralCode } = req.session.userData;
     const { enteredOtp } = req.body;
-
+    
+    // matching otp with saved otp
     if (enteredOtp === req.session.userOtp) {
 
-      //new user creating
+      //hashing entred password
       const hashPassword = await bcrypt.hash(password, 10);
+
+      // create and saving new user object to db
       const user = new User({ name, phone, email, password: hashPassword });
       await user.save()
-      
-      
+
+
       //refferal code 
-      if(referralCode){
-       await refferalsController.createRefferal(referralCode, user._id)
-      }
+      if (referralCode) {
+        // creating new referral
+        await refferalsController.createRefferal(referralCode, user._id)
+      };
 
-
+      //respond with success message
       res.status(200).json({ message: 'otp verified Sucessfully' });
+
     } else {
-      console.log('otp invalid');
-      return res.status(400).json({ message: 'Bad OTP' });
-    }
+      // respond with error message
+      return res.status(400).json({ message: 'invalid OTP' });
+    };
+
   } catch (error) {
-    console.log('mongoooo err', error);
+    // log error and render error page
+    console.log(error);
     return res.status(500).render('user/pagenotFound');
-  }
+  };
+
 };
 
-//================== user login=====================
+
+// user login
 const verifyLogin = async (req, res) => {
   try {
+    // extracting user details from request body
     const { email, password } = req.body;
+
+    // checkinh user is exist
     const user = await User.findOne({ email, googleId: null, isAdmin: false });
 
+    // if invalid user
     if (!user) {
       return res
         .status(401)
         .render('user/login', { error: 'invalid username or password' });
     }
 
+    // if user is blocked
     if (user.isBlocked) {
       return res
         .status(403)
@@ -195,36 +243,52 @@ const verifyLogin = async (req, res) => {
         });
     }
 
+    // if invalid password
     if (!(await bcrypt.compare(password, user.password))) {
       return res
         .status(403)
         .render('user/login', { error: 'invalid username or password' });
     }
 
+    // storing userid to the session 
     req.session._id = user._id;
     return res.redirect('/home');
+
   } catch (error) {
+    // logging error and render login page
     console.error(`login Faild ${error}`);
     return res.render('user/login', { error: 'Login Faild, Try Again later' });
   }
 };
 
-// <=====resent otp ==========>
+// resent otp
 const resentotp = async (req, res) => {
   try {
+    // extract email from session 
     const { email } = req.session.userData;
 
+    // generating random otp
     const otp = otpGenerator();
+
+    //sent new otp via email 
     const sentInfo = await sendverification(email, otp);
 
+    // storing otp to session
     req.session.userOtp = otp;
+
+    // log otp for testing purpose
     console.log('resend:', otp);
+
+    // senging success response
     res.status(200).json({ message: 'OTP Sent Successfully' });
+
   } catch (error) {
+    // logging error and render error page
     console.log('unable to resent otp :', error);
     return res.status(500).render('user/pagenotFound');
-  }
+  };
 };
+
 
 //google auth
 const googleAuth = (req, res) => {

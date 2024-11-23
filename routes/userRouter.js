@@ -23,7 +23,6 @@ const invoiceController = require('../controllers/user/invoiceController.js');
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/user' }), userController.googleAuth)
 
-
 //user route
 router.get('/', userMiddleware.isNotAuthenticated, userController.loadLoginpage);
 router.get('/signup', userMiddleware.isNotAuthenticated, userController.loadSignupPage);
@@ -32,13 +31,13 @@ router.get('/resentotp', userController.resentotp);
 router.post('/verify-otp', userController.verifyOtp);
 router.post('/login', userController.verifyLogin);
 router.get('/home', userMiddleware.isAuthenticated, userController.loadHome);
+router.get('/logout', userController.userLogout);
 
 //forgot password
 router.get('/forgotPassword', forgotPassword.forgotPassword);
 router.post('/verifyEmail', forgotPassword.verifyEmail);
 router.post('/verifyOtp', forgotPassword.verifyOtp);
 router.post('/changePassword', forgotPassword.changePassword);
-
 
 // profile section 
 router.get('/profile', userMiddleware.isAuthenticated, profileController.profilePage);
@@ -53,23 +52,16 @@ router.post('/updateAddress', userMiddleware.isAuthenticated, profileController.
 router.get('/resetPassword', userMiddleware.isAuthenticated, profileController.resetPasswordPage)
 router.post('/resetPassword', userMiddleware.isAuthenticated, profileController.resetPassword)
 
-
 //referral section
 router.get('/referrals', userMiddleware.isAuthenticated,referralsController.referralsPage)
 router.get('/checkReferralCode',referralsController.checkReferralCode)
-
-
-
-router.get('/logout', userController.userLogout);
 
 //product details
 router.get('/product/:id', userMiddleware.isAuthenticated, productsController.getDetailedPage);
 router.get('/checkProductQty/', userMiddleware.isAuthenticated, productsController.checkQty);
 
-
 //shop page
 router.get('/search', userMiddleware.isAuthenticated, shopController.search);
-
 
 //cart
 router.get('/cart', userMiddleware.isAuthenticated, cartController.getCartPage);
@@ -88,8 +80,6 @@ router.get('/cancelOrder', userMiddleware.isAuthenticated, orderController.cance
 router.get('/orderDetailPage', userMiddleware.isAuthenticated, orderController.orderDetails);
 router.get('/returnOrder', userMiddleware.isAuthenticated, orderController.retunOrder);
 
-
-
 //comments and rating 
 router.post('/comment', userMiddleware.isAuthenticated, commentRatingController.addComment);
 router.post('/rateProduct', userMiddleware.isAuthenticated, commentRatingController.addrating);
@@ -101,7 +91,6 @@ router.get('/removeFromWishlist', userMiddleware.isAuthenticated, wishlistContro
 
 //wallet
 router.get('/walletLedger', userMiddleware.isAuthenticated, wallerController.getWallet)
-
 
 //coupon
 router.get('/checkCouponCode',userMiddleware.isAuthenticated,couponController.checkCouponCode )

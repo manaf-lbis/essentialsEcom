@@ -8,14 +8,15 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL:'http://localhost:3000/auth/google/callback',
+      callbackURL: 'http://localhost:3000/auth/google/callback',
     },
     async (acessToken, refreshToken, profile, done) => {
-        let user = await User.findOne({ googleId: profile.id });
-        try {
-            
+      let user = await User.findOne({ googleId: profile.id });
+      try {
+
         if (user) {
           return done(null, user);
+
         } else {
           const user = new User({
             name: profile.displayName,
@@ -25,29 +26,33 @@ passport.use(
           await user.save();
           return done(null, user);
         }
+
       } catch (error) {
         return done(null, user);
+
       }
     }
   )
 );
 
 passport.serializeUser((user, done) => {
-    done(null, user._id);
-  });
-  
+  done(null, user._id);
+});
+
 
 passport.deserializeUser(async (id, done) => {
-try {
+  try {
     const user = await User.findById(id);
     if (user) {
-    done(null, user);
+      done(null, user);
+
     } else {
-    done(new Error('User not found'), null);
+      done(new Error('User not found'), null);
+      
     }
-} catch (err) {
+  } catch (err) {
     done(err, null);
-}
+  }
 });
 
 

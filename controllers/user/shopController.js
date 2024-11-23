@@ -4,19 +4,19 @@ const Category = require('../../models/categorySchema')
 
 
 
-
+// search controlle
 const search = async (req, res) => {
     try {
-
+        // find the category is available
         const categories =await Category.find({isBlocked:false})
 
+        // is there is any search query otherwise setting a default value
         const searchQuery  = req.query.searchQuery ?? '';
         const priceRange = req.query.priceRange ?? 1000000;
         let sort = req.query.sort ?? {};
         const categoryQuery  = req.query.category ?? '';
 
-
-    
+        // defining sort 
         if (sort === 'ace'){
             sort = { sellingPrice : 1 }
 
@@ -34,10 +34,10 @@ const search = async (req, res) => {
 
         }else if(sort === 'ratings'){
             sort = {averageRating : -1}
-        }
+        };
 
 
-
+        // searching product using query
         let products = await Product.find({
             isBlocked: false,
             $or: [
@@ -49,25 +49,22 @@ const search = async (req, res) => {
         }
         ).sort(sort).limit(15);
 
-
-
+        // finding the product related to search category
         if(categoryQuery){
             products = products.filter((ele)=>{
                return ele.category.toString() ===  categoryQuery
             })
-        }
-       
+        };
 
-
+        // render shop page
         res.render('user/shop',{products,searchQuery,categories,categoryQuery})
 
-
     } catch (error) {
+        //logging error and render error page
         console.log(error);
-
-
-    }
-}
+        res.render('user/pageNotFound');
+    };
+};
 
 
 module.exports = {

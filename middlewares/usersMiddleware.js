@@ -6,44 +6,38 @@ function getUserIdFromSession(req) {
   return req.session?._id ?? req.session.passport?.user;
 }
 
-const isAuthenticated =async (req, res, next) => {
-
+//checking the user is authenticated
+const isAuthenticated = async (req, res, next) => {
 
   if (req.isAuthenticated() || req.session._id) {
 
     const _id = getUserIdFromSession(req);
 
-    const user = await User.findOne({_id})
+    const user = await User.findOne({ _id })
 
     if (user.isBlocked) {
 
-       req.session.destroy((error) => {
-
+      req.session.destroy((error) => {
         if (error) {
           console.log('session destruction error');
           return res.render('user/pagenotFound');
         }
-        return res.redirect('/');
 
-        
+        return res.redirect('/');
       });
 
 
     } else {
-
       return next();
-      
     }
 
-  }else{
-
+  } else {
     return res.redirect('/');
   }
 
-  
 };
 
-
+//checking user is not authenticated
 const isNotAuthenticated = (req, res, next) => {
 
   if (!req.isAuthenticated() && !req.session._id) {
@@ -54,7 +48,7 @@ const isNotAuthenticated = (req, res, next) => {
   return res.redirect('/home');
 };
 
-
+//admin authentication
 const adminAuth = (req, res, next) => {
 
   if (req.session && req.session.user) {

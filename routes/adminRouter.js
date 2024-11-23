@@ -6,21 +6,17 @@ const userController = require('../controllers/admin/userController');
 const categoryController = require('../controllers/admin/categoryController');
 const productController = require('../controllers/admin/productControllers');
 const ordersController = require('../controllers/admin/ordersController');
-// const offerController = require('../controllers/admin/offerController');
 const couponController = require('../controllers/admin/couponController');
 const auth = require('../middlewares/usersMiddleware');
 const dashboardController = require('../controllers/admin/dashboardController')
 
 
-
-
-
-router.get('/pagenotFound', adminController.pagenotFound);
-
+//admin routes
 router.get('/', adminController.loadLogin);
 router.post('/', adminController.verifyLogin);
 router.get('/dashboard', auth.adminAuth, dashboardController.loadDashboard);
 router.get('/logout', adminController.logout);
+router.get('/pagenotFound', adminController.pagenotFound);
 
 //user management
 router.get('/usermanagement', auth.adminAuth, userController.getUsers);
@@ -43,10 +39,7 @@ router.post('/addProduct', auth.adminAuth, config.upload.array('images', 3), pro
 router.get('/removeProduct/:id', auth.adminAuth, productController.removeProduct);
 router.get('/editProduct/:id', auth.adminAuth, productController.editProduct);
 router.post('/updateProduct', auth.adminAuth,config.upload.array('images', 3),productController.updateProduct);
-
 router.get('/removeProductImage',auth.adminAuth,productController.removeImage)
-
-
 
 //orders
 router.get('/orders', auth.adminAuth,ordersController.getOrders);
@@ -56,14 +49,11 @@ router.get('/updateOrderStatus', auth.adminAuth,ordersController.orderStatusUpda
 router.get('/getReport', auth.adminAuth,dashboardController.getReport);
 router.get('/graphReport', auth.adminAuth,dashboardController.generateGraphReport)
 
-//offers
-router.get('/offers');
-
 //coupon
-router.get('/coupons',couponController.coupons);
-router.get('/addCoupons',couponController.createCouponPage);
-router.post('/createCoupon',couponController.newCoupon);
-router.get('/disableCoupon',couponController.disableCoupon);
+router.get('/coupons', auth.adminAuth,couponController.coupons);
+router.get('/addCoupons', auth.adminAuth,couponController.createCouponPage);
+router.post('/createCoupon', auth.adminAuth,couponController.newCoupon);
+router.get('/disableCoupon', auth.adminAuth,couponController.disableCoupon);
 
 
 

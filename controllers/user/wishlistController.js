@@ -4,116 +4,139 @@ function getUserIdFromSession(req) {
     return req.session?._id ?? req.session.passport?.user;
 }
 
-
+// loading wishlist
 const wishlist = async (req, res) => {
     try {
-
+        // extract user id from session 
         const userId = getUserIdFromSession(req);
-        
-    // Pagination
-    let currentpage = parseInt(req.query.currentpage) || 1;
-    const limit = 5;
 
-    const wishlist = await Wishlist.findOne({ userId }).populate('products.productId');
+        // Pagination
+        let currentpage = parseInt(req.query.currentpage) || 1;
+        const limit = 5;
 
-    if (wishlist) {
-    const totalProducts = wishlist.products.length;
-    const totalPages = Math.ceil(totalProducts / limit);
-
-    currentpage = Math.min(Math.max(currentpage, 1), totalPages);
-    const skip = (currentpage - 1) * limit;
-    const paginatedProducts = wishlist.products.slice(skip, skip + limit);
-
-  
-    res.render('user/purchase/wishlist', {
-        wishlist: { ...wishlist.toObject(), products: paginatedProducts },
-        currentpage,
-        totalPages
-    });
-
-    } else {
+        // populate user wishlist products  details
+        const wishlist = await Wishlist.findOne({ userId }).populate('products.productId');
 
 
-    res.render('user/purchase/wishlist', {
-        wishlist: { products: [] },
-        currentpage,
-        totalPages: 1
-    });
-    }
+        if (wishlist) {
+            const totalProducts = wishlist.products.length;
+            const totalPages = Math.ceil(totalProducts / limit);
+
+            currentpage = Math.min(Math.max(currentpage, 1), totalPages);
+            const skip = (currentpage - 1) * limit;
+            const paginatedProducts = wishlist.products.slice(skip, skip + limit);
+
+            // render wishlist page with query details
+            res.render('user/purchase/wishlist', {
+                wishlist: { ...wishlist.toObject(), products: paginatedProducts },
+                currentpage,
+                totalPages
+            });
+
+        } else {
+            //render wishlist
+            res.render('user/purchase/wishlist', {
+                wishlist: { products: [] },
+                currentpage,
+                totalPages: 1
+            });
+        };
 
     } catch (error) {
+        // logging error and render error page
         console.log(error);
-    }
-}
-
-
+        res.render('user/pageNotFound');
+    };
+};
 
 
 //toggle based on product availablity
 const wishlistToggle = async (req, res) => {
     try {
         const userId = getUserIdFromSession(req);
-
         const { productId } = req.query
-
+       
+        // find wishlist products
         const wishlist = await Wishlist.findOne({ userId });
-
 
         if (wishlist) {
 
+            // checking the product
+            const productExist = wishlist.products.some((product) => {
+                return product.productId.toString() === productId.toString()
+            });
 
-            const productExist = wishlist.products.some((product) => {  
-
-               return product.productId.toString() === productId.toString()
-            })
-
-
+            
             if (productExist) {
-                await Wishlist.updateOne({ userId }, { $pull: { products: { productId: productId } } });
+                // if exist , remove product from wishlist
+                await Wishlist.updateOne(
+                    { userId },
+                    { $pull: { products: { productId: productId } } }
+                );
+
+                // respond with sucess message
                 res.status(200).json({ message: 'Item Removed' })
 
             } else {
-                await Wishlist.updateOne({ userId }, { $push: { products: { productId: productId } } });
+                // adding the product to wishlist
+                await Wishlist.updateOne(
+                    { userId },
+                    { $push: { products: { productId: productId } } }
+                );
+                
+                // respond with success message
                 res.status(200).json({ message: 'Added To Wishlist' })
-            }
-
+            };
 
         } else {
+            
+            // creating new wishlist object
+            const wishlist = new Wishlist(
+                { userId, products: [{ productId: productId }] }
+            );
 
-            console.log(productId);
-
-            const wishlist = new Wishlist({ userId, products: [{ productId: productId }] });
+            // saving new object to database
             await wishlist.save();
+
+            // respond with success message 
             res.status(200).json({ message: 'Added To Wishlist' })
-
-        }
+        };
 
     } catch (error) {
-
+        // logging error and sending error status
         console.log(error);
-        res.status(500).json({ message: 'Something went Wrong' })
+        res.status(500).json({ message: 'Something went Wrong' });
+    };
+};
 
-    }
-}
 
-const removeFromWishlist = async (req,res)=>{
+// removing product from wishlist
+const removeFromWishlist = async (req, res) => {
     try {
-
+        // extract user id from session
         const userId = getUserIdFromSession(req)
-        const {productId} = req.query;
-   
-        await  Wishlist.updateOne({userId}, {$pull:{ products: {  productId } }});
+        const { productId } = req.query;
 
-        res.status(200).json({message:'removed'})
+        // remove product from wishlist array
+        await Wishlist.updateOne(
+            { userId },
+            { $pull: { products: { productId } } }
+        );
+
+        // respond with success message
+        res.status(200).json({ message: 'removed' })
 
     } catch (error) {
-        console.log(error);  
-    }
+        // log error  and respond with error message
+        console.log(error);
+        res.status(500).json({ message: 'Something went Wrong' });
+    };
+};
 
-}
+
 
 module.exports = {
     wishlist,
     wishlistToggle,
-    removeFromWishlist
+    removeFromWishlist,
 }

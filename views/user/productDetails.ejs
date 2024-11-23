@@ -80,8 +80,8 @@
             <!-- ========= Price section =========== -->
             <div class="line"></div>
             <h6 class="text-success">Special Price</h6>
-            <del>₹<%= dbResult.regularPrice %></del>
-            <h3>₹<%= dbResult.sellingPrice %>
+            <del>₹<%= dbResult.regularPrice.toFixed(2) %></del>
+            <h3>₹<%= dbResult.sellingPrice.toFixed(2) %>
             </h3>
             <p>inclusive of all taxes</p>
 
