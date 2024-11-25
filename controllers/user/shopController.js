@@ -1,5 +1,4 @@
 const Product = require('../../models/productSchema');
-const { options } = require('../../routes/userRouter');
 const Category = require('../../models/categorySchema')
 
 

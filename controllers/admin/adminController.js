@@ -1,5 +1,5 @@
 const User = require('../../models/userSchema');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 
 //render admin login page 

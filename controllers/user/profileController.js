@@ -1,6 +1,6 @@
 const User = require('../../models/userSchema');
 const Address = require('../../models/addressSchema')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 //profile view
 const profilePage = async (req, res) => {

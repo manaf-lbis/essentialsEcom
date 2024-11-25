@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const User = require('../../models/userSchema');
 const session = require('express-session');
 const passport = require('../../config/passport');

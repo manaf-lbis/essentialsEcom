@@ -82,8 +82,6 @@ async function getCartDetails(req) {
 }
 
 
-
-
 //loading cart page
 const getCartPage = async (req, res) => {
     try {
