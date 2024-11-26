@@ -23,7 +23,7 @@ async function initatePayment(event) {
         "description": "Test Transaction",
         "order_id": razorpayOrderId, // Order ID from the server
         "redirect": true, // Enables redirect on payment completion
-        "callback_url": "http://essentialsecom.shop/payment/callback" // Your server's callback URL
+        "callback_url": "http://essentialsecom.shop/payment/callback" // Your server's callback uri
     };
 
     // Initialize Razorpay instance
