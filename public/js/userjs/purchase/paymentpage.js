@@ -20,7 +20,7 @@ async function initatePayment(event) {
         "description": "Test Transaction",
         "order_id": razorpayOrderId, // Order ID from the server
         "redirect": true, // Enables redirect on payment completion
-        "callback_url": `http://localhost:3001/payment/callback`// Your server's callback uri
+        "callback_url": `https://essentials.manaf.live/payment/callback`// Your server's callback uri
         
     };
 

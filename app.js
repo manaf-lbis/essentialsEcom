@@ -56,7 +56,7 @@ app.use('/admin', adminRouter);
 //Google authentication routes
 app.use('/auth',userRouter)
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 //listening to the port 
 app.listen(port, () =>
   console.log(`running on port ${port}`)
