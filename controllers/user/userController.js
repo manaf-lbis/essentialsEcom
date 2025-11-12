@@ -53,6 +53,7 @@ const loadHome = async (req, res) => {
 
     // requiring all object to load home page
     const products = await Product.find({ isBlocked: false });
+    
     const category = await Category.find({ isBlocked: false });
     const wishlist = await Wishlist.findOne({ userId }, { 'products.productId': 1 })
 

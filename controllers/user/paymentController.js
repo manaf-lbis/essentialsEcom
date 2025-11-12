@@ -7,8 +7,7 @@ const razorpayInstance = require('../../config/razorpay')
 
 // adding payment response to order (callback from razorpay)
 const paymentResponse = async (req, res) => {
-    try {
-        // extracting payment details from req body
+    try {        
         const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body;
         const secret = process.env.RAZORPAY_KEY_SECRET;
 
@@ -25,7 +24,7 @@ const paymentResponse = async (req, res) => {
             const { razorpayOrderId, userId } = pendingOrder
 
             // update order status to payment pending
-            await Order.updateOne(
+            const updating =await Order.updateOne(
                 { paymentId: razorpayOrderId },
                 { $set: { 'orderItems.$[elem].status': 'Pending', paymentId: razorpay_payment_id } },
                 {

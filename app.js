@@ -11,7 +11,6 @@ const adminRouter = require('./routes/adminRouter');
 const razorpay = require('./config/razorpay');
 
 
-// Connect to the database
 db();
 
 
@@ -20,7 +19,6 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
-// Session middleware
 app.use(
   session({
     secret: process.env.SECRET,
@@ -33,7 +31,6 @@ app.use(
   })
 );
 
-//prevet caching
 app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store');
     next();
@@ -52,7 +49,6 @@ app.set('views', path.join(__dirname, 'views'));
 // user router
 app.use('/', userRouter);
 
-
 // admin Router
 app.use('/admin', adminRouter);
 
@@ -60,7 +56,7 @@ app.use('/admin', adminRouter);
 //Google authentication routes
 app.use('/auth',userRouter)
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 //listening to the port 
 app.listen(port, () =>
   console.log(`running on port ${port}`)

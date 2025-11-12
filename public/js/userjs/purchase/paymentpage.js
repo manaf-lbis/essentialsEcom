@@ -1,4 +1,3 @@
-
 const payNowBtn = document.getElementById('payNowBtn');
 
 payNowBtn.addEventListener('click', initatePayment)
@@ -6,8 +5,6 @@ payNowBtn.addEventListener('click', initatePayment)
 const razorpayOrderId = payNowBtn.getAttribute('razorpayOrderId')
 const finalAmount = payNowBtn.getAttribute('finalAmount')
 const razorpayKey = payNowBtn.getAttribute('razorpayKey')
-
-
 
 
 async function initatePayment(event) {
@@ -23,7 +20,8 @@ async function initatePayment(event) {
         "description": "Test Transaction",
         "order_id": razorpayOrderId, // Order ID from the server
         "redirect": true, // Enables redirect on payment completion
-        "callback_url": "http://essentialsecom.shop/payment/callback" // Your server's callback uri
+        "callback_url": `http://localhost:3001/payment/callback`// Your server's callback uri
+        
     };
 
     // Initialize Razorpay instance
@@ -31,8 +29,6 @@ async function initatePayment(event) {
 
 
     rzp1.open();
-
-
 
 }
 

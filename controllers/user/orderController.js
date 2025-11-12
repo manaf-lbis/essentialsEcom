@@ -35,7 +35,7 @@ async function calculateTotalAmountAfterDiscount(userId) {
         //populating coupon details from cart
         const cartCoupon = await Cart.findOne({ userId }).select('coupon').populate('coupon');
 
-        const orderItems = cartItems[0].products.map((item, index) => ({
+        const orderItems = cartItems[0]?.products?.map((item, index) => ({
             productId: item.productId,
             quantity: item.quantity,
             price: cartItems[0].productDetails[index].sellingPrice,
