@@ -20,6 +20,8 @@ const generateInvoice = async (req, res) => {
         const invoiceHtml = await renderFile(invoicePath, { orders });
 
         const browser = await puppeteer.launch();
+
+
         const page = await browser.newPage();
         await page.setContent(invoiceHtml);
 
@@ -42,3 +44,5 @@ const generateInvoice = async (req, res) => {
 module.exports = {
     generateInvoice
 };
+
+
