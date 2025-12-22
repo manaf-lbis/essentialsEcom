@@ -1,18 +1,30 @@
-const swiper = new Swiper('.swiper', {
-
-  direction: 'horizontal',
-  loop: true,
-  slidesPerView: 1,
-
-  pagination: {
-    el: '.swiper-pagination',
-  },
-
+new Swiper('.category-carousel', {
+  slidesPerView: 6,
+  spaceBetween: 30,
   navigation: {
-    nextEl: '.swiper-button-next',
-    prevEl: '.swiper-button-prev',
+    nextEl: '.category-carousel-next',
+    prevEl: '.category-carousel-prev',
   },
+  breakpoints: {
+    0: { slidesPerView: 2 },
+    768: { slidesPerView: 4 },
+    1024: { slidesPerView: 6 }
+  }
+});
 
+new Swiper('.products-carousel .swiper', {
+  slidesPerView: 5,
+  spaceBetween: 20,
+  navigation: {
+    nextEl: '.products-carousel-next',
+    prevEl: '.products-carousel-prev',
+  },
+  breakpoints: {
+    0: { slidesPerView: 1 },
+    768: { slidesPerView: 2 },
+    1024: { slidesPerView: 4 },
+    1400: { slidesPerView: 5 }
+  }
 });
 
 const cartBtn = document.querySelectorAll('.btn-cart')
@@ -145,7 +157,7 @@ async function wishlistFunc(event) {
 
     if (json.message === 'Item Removed') {
 
-      svg.style.fill =  'grey';
+      svg.style.fill = 'grey';
 
       svg.classList.add('grow-shrink');
 
@@ -153,7 +165,7 @@ async function wishlistFunc(event) {
         svg.classList.remove('grow-shrink');
       }, { once: true });
 
-    } else if(json.message === 'Added To Wishlist') {
+    } else if (json.message === 'Added To Wishlist') {
 
       svg.style.fill = 'red';
 
