@@ -1,8 +1,5 @@
-/**
- * Navbar and Live Search Functionality
- */
 
-// Function to update the cart badge quantity
+
 async function updateCartBadge() {
     try {
         const response = await fetch('/cartQuantity');
@@ -17,7 +14,6 @@ async function updateCartBadge() {
     }
 }
 
-// Live Search logic
 document.addEventListener('DOMContentLoaded', () => {
     updateCartBadge();
 
@@ -54,17 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (error) {
                     console.error('Error fetching suggestions:', error);
                 }
-            }, 300); // 300ms debounce
+            }, 300);
         });
 
-        // Hide suggestions when clicking outside
         document.addEventListener('click', (e) => {
             if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
                 suggestionsContainer.classList.add('d-none');
             }
         });
 
-        // Show suggestions again if input is focused and has text
         searchInput.addEventListener('focus', () => {
             if (searchInput.value.trim().length >= 2 && suggestionsList.children.length > 0) {
                 suggestionsContainer.classList.remove('d-none');
@@ -72,10 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Renders the suggestions list
-     * @param {Array} suggestions - List of product suggestions
-     */
     function renderSuggestions(suggestions) {
         suggestionsList.innerHTML = '';
         suggestions.forEach(item => {

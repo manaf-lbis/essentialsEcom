@@ -1,8 +1,5 @@
-/**
- * Product Details Page Functionality
- */
 
-// Initialize Swiper for Recommended Products
+
 const swiper = new Swiper('.swiper', {
   direction: 'horizontal',
   loop: false,
@@ -20,9 +17,8 @@ const swiper = new Swiper('.swiper', {
   }
 });
 
-// Global event listener for Add to Cart and Buy Now
 document.addEventListener('click', async (event) => {
-  // Handle Add to Cart
+
   const cartBtn = event.target.closest('.btn-cart-action');
   if (cartBtn) {
     event.preventDefault();
@@ -37,7 +33,6 @@ document.addEventListener('click', async (event) => {
     return;
   }
 
-  // Handle Buy Now
   const buyBtn = event.target.closest('.btn-buy-now-action');
   if (buyBtn) {
     event.preventDefault();
@@ -53,9 +48,6 @@ document.addEventListener('click', async (event) => {
   }
 });
 
-/**
- * Adds product to cart
- */
 async function addToCart(quantity, _id) {
   try {
     const response = await fetch('/addToCart', {
@@ -77,9 +69,6 @@ async function addToCart(quantity, _id) {
   }
 }
 
-/**
- * Handles Buy Now
- */
 async function handleBuyNow(quantity, _id) {
   try {
     const response = await fetch('/addToCart', {
@@ -103,7 +92,6 @@ async function handleBuyNow(quantity, _id) {
   }
 }
 
-// Quantity validation logic
 document.addEventListener('change', async (event) => {
   if (event.target.classList.contains('quantitySelection')) {
     let qty = parseInt(event.target.value);
@@ -134,22 +122,18 @@ document.addEventListener('change', async (event) => {
   }
 });
 
-/**
- * Main image update function
- */
 window.updateMainImage = function (src) {
   const thumb = document.getElementById('thumb');
   if (thumb) {
     thumb.src = src;
     thumb.setAttribute('data-large-img-url', src);
 
-    // Update active state
     document.querySelectorAll('.smallThumbnail').forEach(img => {
       img.classList.toggle('active', img.getAttribute('src') === src);
     });
   }
 };
-// Review Form AJAX Submission
+
 const reviewForm = document.getElementById('reviewForm');
 if (reviewForm) {
   reviewForm.addEventListener('submit', async (e) => {
@@ -173,7 +157,6 @@ if (reviewForm) {
         SuccessToast(result.message);
         reviewForm.reset();
 
-        // Add new review to the list dynamically
         const container = document.getElementById('reviewListContainer');
         if (container) {
           const noReviewsMsg = container.querySelector('.text-center.py-5');
@@ -193,7 +176,6 @@ if (reviewForm) {
           `;
           container.insertAdjacentHTML('afterbegin', newReviewHtml);
 
-          // Update review count badge
           const countBadge = document.getElementById('reviewCountBadge');
           if (countBadge) {
             const currentCount = parseInt(countBadge.innerText) || 0;
@@ -210,7 +192,6 @@ if (reviewForm) {
   });
 }
 
-// Simple animation for new reviews
 const style = document.createElement('style');
 style.innerHTML = `
 @keyframes slideInRight {

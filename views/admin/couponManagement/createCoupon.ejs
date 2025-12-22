@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/productmanagement/productmanagement.css" }) %>
+  <%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/productmanagement/productmanagement.css" })%>
     <style>
       .form-label {
         font-weight: 600;
@@ -19,13 +19,13 @@
 
 <body class="bg-light">
 
-  <%- include('../../partials/adminNavbar.ejs') %>
+  <%- include('../../partials/adminNavbar.ejs')%>
 
     <div class="container-fluid wrapper">
-      <%- include("../../partials/adminLeftsidebar.ejs") %>
+      <%- include("../../partials/adminLeftsidebar.ejs")%>
 
         <div class="mainpanel p-4">
-          <!-- Header -->
+
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h4 class="fw-bold mb-1">Create New Coupon</h4>
@@ -36,13 +36,11 @@
             </a>
           </div>
 
-          <!-- Add Coupon Card -->
           <div class="card border-0 shadow-sm" style="max-width: 800px; margin: 0 auto;">
             <div class="card-body p-4">
 
               <form id="couponForm">
 
-                <!-- Coupon Code -->
                 <div class="mb-4">
                   <label for="couponCode" class="form-label">Coupon Code</label>
                   <input type="text" name="couponCode" id="couponCode" class="form-control text-uppercase"
@@ -52,7 +50,7 @@
                 </div>
 
                 <div class="row">
-                  <!-- Discount Type -->
+
                   <div class="col-md-6 mb-4">
                     <label for="discountType" class="form-label">Discount Type</label>
                     <select name="discountType" id="discountType" class="form-select">
@@ -61,7 +59,6 @@
                     </select>
                   </div>
 
-                  <!-- Discount Value -->
                   <div class="col-md-6 mb-4">
                     <label for="discountAmount" class="form-label">Discount Value</label>
                     <input type="number" name="discount" id="discountAmount" class="form-control" placeholder="0">
@@ -69,7 +66,6 @@
                   </div>
                 </div>
 
-                <!-- Max Discount (Dynamic) -->
                 <div class="mb-4" id="maxDiscountField" style="display: none;">
                   <label for="maxDiscountAmount" class="form-label">Max Discount Amount (₹)</label>
                   <input type="number" name="maxDiscountAmount" id="maxDiscountAmount" class="form-control"
@@ -78,14 +74,13 @@
                 </div>
 
                 <div class="row">
-                  <!-- Min Purchase -->
+
                   <div class="col-md-6 mb-4">
                     <label for="minPurchase" class="form-label">Minimum Purchase (₹)</label>
                     <input type="number" name="minPurchaseValue" id="minPurchase" class="form-control" placeholder="0">
                     <div id="minPurchaseError" class="text-danger small mt-1"></div>
                   </div>
 
-                  <!-- Expiry Date -->
                   <div class="col-md-6 mb-4">
                     <label for="expiryDate" class="form-label">Expiry Date</label>
                     <input type="date" name="expiryDate" id="expiryDate" class="form-control">
@@ -93,7 +88,6 @@
                   </div>
                 </div>
 
-                <!-- Actions -->
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-3">
                   <button type="button" class="btn btn-light me-md-2"
                     onclick="window.location.href='/admin/coupons'">Cancel</button>

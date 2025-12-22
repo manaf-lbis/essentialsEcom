@@ -2,17 +2,17 @@
 <html lang="en">
 
 <head>
-    <%- include("../partials/htmlHead.ejs", { csspath: "/css/adminCss/addproduct/addproduct.css" }) %>
+    <%- include("../partials/htmlHead.ejs", { csspath: "/css/adminCss/addproduct/addproduct.css" })%>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body class="bg-light">
 
-    <%- include('../partials/adminNavbar.ejs') %>
+    <%- include('../partials/adminNavbar.ejs')%>
 
         <div class="container-fluid wrapper">
-            <%- include("../partials/adminLeftsidebar.ejs") %>
+            <%- include("../partials/adminLeftsidebar.ejs")%>
 
                 <div class="mainpanel p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -27,9 +27,9 @@
 
                     <form id="productForm" novalidate onsubmit="return false">
                         <div class="row g-4">
-                            <!-- Left Column: General Info & Details -->
+
                             <div class="col-lg-8">
-                                <!-- General Information -->
+
                                 <div class="card mb-4">
                                     <div class="card-header bg-white py-3">
                                         <h6 class="mb-0 fw-bold">General Information</h6>
@@ -50,7 +50,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Product Details -->
                                 <div class="card mb-4">
                                     <div class="card-header bg-white py-3">
                                         <h6 class="mb-0 fw-bold">Product Details</h6>
@@ -67,11 +66,11 @@
                                                 <label for="category" class="form-label">Category *</label>
                                                 <select class="form-select" id="category" name="category" required>
                                                     <option value="" selected disabled>Select Category</option>
-                                                    <% category.forEach(cat=> { %>
-                                                        <option value="<%= cat._id %>">
-                                                            <%= cat.categoryName %>
+                                                    <%category.forEach(cat=> {%>
+                                                        <option value="<%= cat._id%>">
+                                                            <%= cat.categoryName%>
                                                         </option>
-                                                        <% }) %>
+                                                        <%})%>
                                                 </select>
                                                 <div class="invalid-feedback">Please select a category</div>
                                             </div>
@@ -95,9 +94,8 @@
                                 </div>
                             </div>
 
-                            <!-- Right Column: Pricing & Media -->
                             <div class="col-lg-4">
-                                <!-- Pricing -->
+
                                 <div class="card mb-4">
                                     <div class="card-header bg-white py-3">
                                         <h6 class="mb-0 fw-bold">Pricing & Stock</h6>
@@ -124,7 +122,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Media -->
                                 <div class="card">
                                     <div
                                         class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
@@ -132,42 +129,42 @@
                                         <span class="badge bg-secondary">Min 2 / Max 6</span>
                                     </div>
                                     <div class="card-body">
-                                        <!-- Image Slots (Max 6) -->
-                                        <div class="row g-2">
-                                            <% for(let i=1; i <=6; i++) { %>
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label small text-muted">Image <%= i %></label>
-                                                    <div class="image-upload-container p-2" id="drop-zone-<%= i %>"
-                                                        onclick="document.getElementById('image<%= i %>').click()"
-                                                        style="min-height: 150px;">
-                                                        <input type="file" id="image<%= i %>" name="images"
-                                                            class="d-none" accept="image/*"
-                                                            onchange="handleImageNative(this, <%= i %>)">
 
-                                                        <div id="upload-content-<%= i %>" class="btn-upload-trigger">
+                                        <div class="row g-2">
+                                            <%for(let i=1; i <=6; i++) {%>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label small text-muted">Image <%= i%></label>
+                                                    <div class="image-upload-container p-2" id="drop-zone-<%= i%>"
+                                                        onclick="document.getElementById('image<%= i%>').click()"
+                                                        style="min-height: 150px;">
+                                                        <input type="file" id="image<%= i%>" name="images"
+                                                            class="d-none" accept="image/*"
+                                                            onchange="handleImageNative(this, <%= i%>)">
+
+                                                        <div id="upload-content-<%= i%>" class="btn-upload-trigger">
                                                             <i class="fas fa-cloud-upload-alt fs-4 mb-2"></i><br>
                                                             <span class="small">Upload</span>
                                                         </div>
 
-                                                        <img id="preview-<%= i %>" class="image-preview"
+                                                        <img id="preview-<%= i%>" class="image-preview"
                                                             style="max-height: 120px;">
 
-                                                        <div id="actions-<%= i %>"
+                                                        <div id="actions-<%= i%>"
                                                             class="image-actions justify-content-center">
                                                             <button type="button"
                                                                 class="btn btn-sm btn-outline-primary px-2 py-1"
-                                                                onclick="window.event.stopPropagation(); initCrop(<%= i %>)">
+                                                                onclick="window.event.stopPropagation(); initCrop(<%= i%>)">
                                                                 <i class="fas fa-crop-alt"></i>
                                                             </button>
                                                             <button type="button"
                                                                 class="btn btn-sm btn-outline-danger px-2 py-1"
-                                                                onclick="window.event.stopPropagation(); removeImage(<%= i %>)">
+                                                                onclick="window.event.stopPropagation(); removeImage(<%= i%>)">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <% } %>
+                                                <%}%>
                                         </div>
                                     </div>
                                 </div>
@@ -178,7 +175,6 @@
         </div>
         </div>
 
-        <!-- Crop Modal -->
         <div class="modal fade" id="cropModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">

@@ -6,15 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const imagePreview = document.getElementById('imagePreview');
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
 
-    // Real-time Image Preview
     imageInput.addEventListener('change', function (event) {
         const file = event.target.files[0];
         if (file) {
-            // Validate file type
+
             const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
             if (!validTypes.includes(file.type)) {
                 showError('imageError', 'Invalid file type. Only JPG, JPEG, and PNG are allowed.');
-                this.value = ''; // Clear input
+                this.value = '';
                 imagePreviewContainer.classList.add('d-none');
                 return;
             }
@@ -31,17 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Form Validation on Submit
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         let isValid = true;
 
-        // Clear previous errors
         clearError('categoryNameError');
         clearError('descriptionError');
         clearError('imageError');
 
-        // 1. Validate Category Name
         const nameValue = categoryNameInput.value.trim();
         if (nameValue === '') {
             showError('categoryNameError', 'Category Name is required.');
@@ -54,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isValid = false;
         }
 
-        // 2. Validate Description
         const descValue = descriptionInput.value.trim();
         if (descValue === '') {
             showError('descriptionError', 'Description is required.');
@@ -64,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isValid = false;
         }
 
-        // 3. Validate Image
         if (imageInput.files.length === 0) {
             showError('imageError', 'Please upload a category image.');
             isValid = false;

@@ -1,18 +1,14 @@
 
-//delete category =============================
 
 const deleteBtn = document.getElementById('deleteBtn');
 const deleteBtns = document.querySelectorAll('.deleteBtn');
 
-
-// Add confirmation before delete
 deleteBtns.forEach(deleteBtn => {
     deleteBtn.addEventListener('click', (event) => {
 
+        event.preventDefault();
 
-        event.preventDefault(); // Prevent the default delete action
-
-        const deleteUrl = deleteBtn.getAttribute('href'); // Get the delete URL
+        const deleteUrl = deleteBtn.getAttribute('href');
 
         Swal.fire({
             title: "Are you sure?",
@@ -24,15 +20,12 @@ deleteBtns.forEach(deleteBtn => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                // If confirmed, redirect to the delete URL
+
                 window.location.href = deleteUrl;
             }
         });
     });
 });
-
-
-// restore category =======================
 
 const restoreBtn = document.getElementById('restoreBtn')
 
@@ -40,7 +33,6 @@ restoreBtn.addEventListener('click', async (event) => {
 
     event.preventDefault();
 
-    // alert
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: "btn btn-success",
@@ -65,12 +57,11 @@ restoreBtn.addEventListener('click', async (event) => {
                 icon: "success"
             });
 
-            //sending restore request 
-            const request = restoreBtn.getAttribute('href'); //getting restore  request url
+            const request = restoreBtn.getAttribute('href');
             window.location.href = request
 
         } else if (
-            /* Read more about handling dismissals below */
+
             result.dismiss === Swal.DismissReason.cancel
         ) {
             swalWithBootstrapButtons.fire({
@@ -81,9 +72,5 @@ restoreBtn.addEventListener('click', async (event) => {
         }
     });
 
-
-
 })
-
-
 

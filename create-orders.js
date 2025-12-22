@@ -8,7 +8,6 @@ async function createSampleOrders() {
         await mongoose.connect('mongodb://127.0.0.1:27017/essentials');
         console.log('Connected to MongoDB\n');
 
-        // Get users and products
         const users = await User.find().limit(5);
         const products = await Products.find().limit(10);
 
@@ -24,7 +23,6 @@ async function createSampleOrders() {
 
         console.log(`Found ${users.length} users and ${products.length} products\n`);
 
-        // Create 25 orders with varying dates and statuses
         const statuses = ['Delivered', 'Delivered', 'Delivered', 'Shipped', 'Pending'];
         const orders = [];
 
@@ -34,7 +32,6 @@ async function createSampleOrders() {
             const quantity = Math.floor(Math.random() * 3) + 1;
             const status = statuses[i % statuses.length];
 
-            // Create orders spanning last 30 days
             const daysAgo = Math.floor(Math.random() * 30);
             const orderDate = new Date();
             orderDate.setDate(orderDate.getDate() - daysAgo);
@@ -68,7 +65,6 @@ async function createSampleOrders() {
         console.log(`✅ Created ${orders.length} sample orders!`);
         console.log(`Date range: ${orders[orders.length - 1].orderDate.toLocaleDateString()} to ${orders[0].orderDate.toLocaleDateString()}\n`);
 
-        // Show summary
         const delivered = orders.filter(o => o.status === 'Delivered').length;
         const totalRevenue = orders.filter(o => o.status === 'Delivered').reduce((sum, o) => sum + o.finalPrice, 0);
 

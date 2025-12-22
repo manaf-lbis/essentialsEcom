@@ -2,13 +2,13 @@
 <html lang="en">
 
 <head>
-  <% const headPath='../../partials/htmlHeadUser.ejs' ; %>
-    <%- include(headPath, {csspath: '/css/userCss/purchase/orderSucessPage.css' }) %>
+  <%const headPath='../../partials/htmlHeadUser.ejs' ;%>
+    <%- include(headPath, {csspath: '/css/userCss/purchase/orderSucessPage.css' })%>
       <title>Order Successful | Essentials</title>
 </head>
 
 <body class="d-flex flex-column min-vh-100 bg-light">
-  <%- include("../../partials/userNavbar.ejs") %>
+  <%- include("../../partials/userNavbar.ejs")%>
 
     <main class="flex-grow-1 py-5 mt-5">
       <div class="container">
@@ -26,10 +26,10 @@
               <h4 class="text-muted mb-4">Your order has been placed successfully.</h4>
 
               <div class="order-info bg-light p-4 rounded-4 mb-4 text-start">
-                <p class="mb-2"><strong>Order ID:</strong> <span class="text-primary">#<%= orderDetails.orderId %>
+                <p class="mb-2"><strong>Order ID:</strong> <span class="text-primary">#<%= orderDetails.orderId%>
                       </span></p>
                 <p class="mb-0"><strong>Items:</strong>
-                  <%= orderDetails.orderItems.length %>
+                  <%= orderDetails.orderItems.length%>
                 </p>
               </div>
 
@@ -46,7 +46,7 @@
       </div>
     </main>
 
-    <%- include("../../partials/userFooter.ejs") %>
+    <%- include("../../partials/userFooter.ejs")%>
 
       <script>
         document.addEventListener('DOMContentLoaded', () => {

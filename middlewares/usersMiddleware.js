@@ -1,12 +1,9 @@
 const User = require('../models/userSchema');
 
-
-// getting user id from session 
 function getUserIdFromSession(req) {
   return req.session?._id ?? req.session.passport?.user;
 }
 
-//checking the user is authenticated
 const isAuthenticated = async (req, res, next) => {
 
   if (req.isAuthenticated() || req.session._id) {
@@ -26,7 +23,6 @@ const isAuthenticated = async (req, res, next) => {
         return res.redirect('/');
       });
 
-
     } else {
       return next();
     }
@@ -37,7 +33,6 @@ const isAuthenticated = async (req, res, next) => {
 
 };
 
-//checking user is not authenticated
 const isNotAuthenticated = (req, res, next) => {
 
   if (!req.isAuthenticated() && !req.session._id) {
@@ -48,7 +43,6 @@ const isNotAuthenticated = (req, res, next) => {
   return res.redirect('/home');
 };
 
-//admin authentication
 const adminAuth = (req, res, next) => {
 
   if (req.session && req.session.user) {
@@ -60,7 +54,6 @@ const adminAuth = (req, res, next) => {
   }
   return res.redirect('/admin');
 };
-
 
 module.exports = {
   isAuthenticated,

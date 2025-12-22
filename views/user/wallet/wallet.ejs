@@ -2,32 +2,30 @@
 <html lang="en">
 
 <head>
-    <%- include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/wallet/wallet.css'}) %>
+    <%- include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/wallet/wallet.css'})%>
         <title>My Wallet | Essentials</title>
 </head>
 
 <body class="bg-light">
-    <%- include('../../partials/userNavbar.ejs') %>
+    <%- include('../../partials/userNavbar.ejs')%>
 
         <div class="profile-container my-5">
             <div class="profile-layout">
-                <%- include('../../partials/userprofile/profileLayoutMinimal.ejs', { activePage: 'walletLedger' }) %>
+                <%- include('../../partials/userprofile/profileLayoutMinimal.ejs', { activePage: 'walletLedger' })%>
 
-                    <!-- Main Content -->
                     <main class="w-100">
-                        <!-- Header -->
+
                         <div class="mb-4">
                             <h3 class="fw-bold text-dark mb-1">My Wallet</h3>
                             <p class="text-muted small">Manage your balance and view transaction history</p>
                         </div>
 
-                        <!-- Wallet Balance Card -->
                         <div class="wallet-card mb-5">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <div class="wallet-label">Available Balance</div>
                                     <div class="wallet-balance">
-                                        ₹<%= wallet?.balance?.toFixed(2) ?? '0.00' %>
+                                        ₹<%= wallet?.balance?.toFixed(2) ?? '0.00'%>
                                     </div>
                                 </div>
                                 <div class="d-none d-md-block opacity-25">
@@ -39,67 +37,64 @@
                                 <i class="far fa-clock"></i>
                                 <span>Last Updated: <%= wallet?.updatedAt ? new
                                         Date(wallet.updatedAt).toLocaleString('en-IN', { dateStyle: 'medium' ,
-                                        timeStyle: 'short' }) : 'Never' %></span>
+                                        timeStyle: 'short' }) : 'Never'%></span>
                             </div>
                         </div>
 
-                        <!-- Transaction History Section -->
                         <div class="history-section">
                             <div class="history-header d-flex justify-content-between align-items-center mb-4">
                                 <h5 class="history-title mb-0">Recent Transactions</h5>
                             </div>
 
                             <div class="transaction-list">
-                                <% if(transactions && transactions.length> 0) { %>
-                                    <% transactions.forEach((transaction)=> { %>
+                                <%if(transactions && transactions.length> 0) {%>
+                                    <%transactions.forEach((transaction)=> {%>
                                         <div class="transaction-item bg-white">
                                             <div class="d-flex align-items-center">
-                                                <!-- Icon -->
+
                                                 <div
-                                                    class="t-icon-wrapper <%= transaction.type === 'credit' ? 't-icon-credit' : 't-icon-debit' %>">
-                                                    <% if(transaction.type==='credit' ) { %>
+                                                    class="t-icon-wrapper <%= transaction.type === 'credit' ? 't-icon-credit' : 't-icon-debit'%>">
+                                                    <%if(transaction.type==='credit' ) {%>
                                                         <i class="fas fa-arrow-down"></i>
-                                                        <% } else { %>
+                                                        <%} else {%>
                                                             <i class="fas fa-shopping-bag"></i>
-                                                            <% } %>
+                                                            <%}%>
                                                 </div>
 
-                                                <!-- Details -->
                                                 <div class="t-details">
                                                     <div class="t-title">
                                                         <%= transaction.description || (transaction.type==='credit'
-                                                            ? 'Wallet Top-up' : 'Purchase' ) %>
+                                                            ? 'Wallet Top-up' : 'Purchase' )%>
                                                     </div>
                                                     <div class="t-meta">
                                                         <span class="t-meta-item">
                                                             <i class="far fa-calendar-alt"></i>
                                                             <%= new Date(transaction.date).toLocaleDateString('en-IN', {
-                                                                day: 'numeric' , month: 'short' , year: 'numeric' }) %>
+                                                                day: 'numeric' , month: 'short' , year: 'numeric' })%>
                                                         </span>
                                                         <span class="t-meta-item">
                                                             <i class="far fa-clock"></i>
                                                             <%= new Date(transaction.date).toLocaleTimeString('en-IN', {
-                                                                hour: '2-digit' , minute: '2-digit' }) %>
+                                                                hour: '2-digit' , minute: '2-digit' })%>
                                                         </span>
-                                                        <% if (transaction.orderId) { %>
+                                                        <%if (transaction.orderId) {%>
                                                             <span class="t-meta-item d-none d-sm-flex">
                                                                 <i class="fas fa-receipt"></i>
-                                                                ID: #<%= transaction.orderId.substring(0, 10) %>...
+                                                                ID: #<%= transaction.orderId.substring(0, 10)%>...
                                                             </span>
-                                                            <% } %>
+                                                            <%}%>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <!-- Amount -->
                                             <div
-                                                class="t-amount <%= transaction.type === 'credit' ? 'credit' : 'debit' %>">
-                                                <%= transaction.type==='credit' ? '+' : '-' %> ₹<%=
-                                                        transaction.amount.toFixed(2) %>
+                                                class="t-amount <%= transaction.type === 'credit' ? 'credit' : 'debit'%>">
+                                                <%= transaction.type==='credit' ? '+' : '-'%> ₹<%=
+                                                        transaction.amount.toFixed(2)%>
                                             </div>
                                         </div>
-                                        <% }) %>
-                                            <% } else { %>
+                                        <%})%>
+                                            <%} else {%>
                                                 <div class="empty-state bg-white">
                                                     <div class="mb-3 opacity-25">
                                                         <i class="fas fa-history fa-4x"></i>
@@ -108,44 +103,43 @@
                                                     <p class="small text-muted px-4">Your wallet details and transaction
                                                         history will appear here once you start using it.</p>
                                                 </div>
-                                                <% } %>
+                                                <%}%>
                             </div>
 
-                            <!-- Pagination -->
-                            <% if (typeof totalPages !=='undefined' && totalPages> 1) { %>
+                            <%if (typeof totalPages !=='undefined' && totalPages> 1) {%>
                                 <div class="d-flex justify-content-center mt-5">
                                     <nav aria-label="Wallet navigation">
                                         <ul class="pagination pagination-sm border-0">
-                                            <li class="page-item <%= currentPage <= 1 ? 'disabled' : '' %>">
-                                                <a class="page-link" href="?page=<%= currentPage - 1 %>">
+                                            <li class="page-item <%= currentPage <= 1 ? 'disabled' : ''%>">
+                                                <a class="page-link" href="?page=<%= currentPage - 1%>">
                                                     <i class="fas fa-chevron-left small"></i>
                                                 </a>
                                             </li>
 
-                                            <% for(let i=1; i <=totalPages; i++) { %>
-                                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                                    <a class="page-link" href="?page=<%= i %>">
-                                                        <%= i %>
+                                            <%for(let i=1; i <=totalPages; i++) {%>
+                                                <li class="page-item <%= currentPage === i ? 'active' : ''%>">
+                                                    <a class="page-link" href="?page=<%= i%>">
+                                                        <%= i%>
                                                     </a>
                                                 </li>
-                                                <% } %>
+                                                <%}%>
 
                                                     <li
-                                                        class="page-item <%= currentPage >= totalPages ? 'disabled' : '' %>">
-                                                        <a class="page-link" href="?page=<%= currentPage + 1 %>">
+                                                        class="page-item <%= currentPage >= totalPages ? 'disabled' : ''%>">
+                                                        <a class="page-link" href="?page=<%= currentPage + 1%>">
                                                             <i class="fas fa-chevron-right small"></i>
                                                         </a>
                                                     </li>
                                         </ul>
                                     </nav>
                                 </div>
-                                <% } %>
+                                <%}%>
                         </div>
                     </main>
             </div>
         </div>
 
-        <%- include('../../partials/userFooter.ejs') %>
+        <%- include('../../partials/userFooter.ejs')%>
 </body>
 
 </html>

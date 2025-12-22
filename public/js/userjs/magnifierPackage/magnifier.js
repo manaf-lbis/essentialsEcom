@@ -1,25 +1,4 @@
-/**
-* Magnifier.js is a Javascript library enabling magnifying glass effect on an images.
-*
-* Features
-*
-* Zoom in / out functionality using mouse wheel
-* Setting options via Javascript or data attributes
-* Magnified image can be displayed in the lens itself or outside of it in a wrapper
-* Attachment to multiple images with single call
-* Attachment of user defined functions for thumbnail entering, moving and leaving and image zooming events
-* Display loading text while the large image is being loaded, and switch to lens once its loaded
-*
-* Magnifier.js uses Event.js as a cross-browser event handling wrapper, which is available at
-* Github and JSClasses.org:
-*
-* Github - https://github.com/mark-rolich/Event.js
-* JS Classes - http://www.jsclasses.org/package/212-JavaScript-Handle-events-in-a-browser-independent-manner.html
-*
-* Works in Chrome, Firefox, Safari, IE 7, 8, 9 & 10.
-*
-* @author Mark Rolich <mark.rolich@gmail.com>
-*/
+
 var Magnifier = function (evt, options) {
     "use strict";
 

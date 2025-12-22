@@ -4,7 +4,6 @@ const path = require('path');
 
 const viewsDir = path.join(__dirname, 'views');
 
-// Mock Data for Checkout
 const checkoutData = {
     totalAmount: 1000,
     totalItems: 2,
@@ -22,10 +21,9 @@ const checkoutData = {
     discount: 0,
     deliveryCharge: 40,
     coupon: null,
-    wallet: { balance: 5000 } // Test with wallet
+    wallet: { balance: 5000 }
 };
 
-// Mock Data for Order Details
 const orderDetailsData = {
     orders: [{
         orderId: 'ORD123',
@@ -59,7 +57,6 @@ const orderDetailsData = {
     userData: { name: 'Test User', email: 'test@example.com' }
 };
 
-// Mock Data for Wishlist
 const wishlistData = {
     wishlist: {
         products: [{
@@ -97,9 +94,8 @@ async function testPage(pagePath, data, pageName) {
 
         const template = fs.readFileSync(fullPath, 'utf8');
 
-        // EJS render options
         const options = {
-            filename: fullPath, // Important for includes
+            filename: fullPath,
             root: viewsDir
         };
 
@@ -109,14 +105,14 @@ async function testPage(pagePath, data, pageName) {
     } catch (err) {
         log(`FAIL: ${pageName} failed to render.`);
         log('Error Message: ' + err.message);
-        // Clean up stack trace for readability
+
         const stackLines = err.stack.split('\n').slice(0, 10);
         log('Stack Trace Preview:\n' + stackLines.join('\n'));
     }
 }
 
 async function runTests() {
-    fs.writeFileSync(logFile, ''); // Clear log
+    fs.writeFileSync(logFile, '');
     log('--- Starting Page Verification ---');
     await testPage('user/purchase/checkout.ejs', checkoutData, 'Checkout Page');
     log('\n');

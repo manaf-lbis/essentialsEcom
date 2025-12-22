@@ -1,19 +1,13 @@
 const swiper = new Swiper('.swiper', {
-  // Optional parameters
+
   direction: 'horizontal',
   loop: true,
-  slidesPerView: 1, // Number of slides to show
+  slidesPerView: 1,
 
-  // autoplay: {
-  //     delay: 2000,            // Auto-scroll delay (3 seconds)
-  //     disableOnInteraction: false, // Continue autoplay after user interaction
-  // },
-  // If we need pagination
   pagination: {
     el: '.swiper-pagination',
   },
 
-  // Navigation arrows
   navigation: {
     nextEl: '.swiper-button-next',
     prevEl: '.swiper-button-prev',
@@ -21,14 +15,11 @@ const swiper = new Swiper('.swiper', {
 
 });
 
-
-//add to cart logic
 const cartBtn = document.querySelectorAll('.btn-cart')
 
 cartBtn.forEach((ele) => {
   ele.addEventListener('click', getValues)
 });
-
 
 function getValues(event) {
 
@@ -38,7 +29,6 @@ function getValues(event) {
 
   addToCart(quantity, productId);
 }
-
 
 async function addToCart(quantity, _id) {
 
@@ -62,7 +52,6 @@ async function addToCart(quantity, _id) {
       backdrop: false
     });
 
-
   } else {
     Swal.fire({
       position: "top-end",
@@ -75,19 +64,15 @@ async function addToCart(quantity, _id) {
       backdrop: false
     });
 
-
   }
 
 }
 
-// checking the qty of this product is availabel or not 
 const quantitySelection = document.querySelectorAll('.quantitySelection');
-
 
 quantitySelection.forEach((ele) => {
   ele.addEventListener('change', checkQuantity)
 })
-
 
 async function checkQuantity(event) {
 
@@ -110,8 +95,6 @@ async function checkQuantity(event) {
     qty = 5;
   }
 
-
-  //checking stock is the product qty is avilable(when qty incrementing)
   const response = await fetch(`/checkProductQty/?qty=${qty}&_id=${_id}`, {
     method: 'GET',
     headers: {
@@ -139,8 +122,6 @@ async function checkQuantity(event) {
 
 }
 
-
-//wishlist
 const wishlistToggle = document.querySelectorAll('.wishlistToggle');
 wishlistToggle.forEach((wishlist) => {
   wishlist.addEventListener('click', wishlistFunc)
@@ -162,16 +143,12 @@ async function wishlistFunc(event) {
 
     const svg = event.target.closest('.wishlistBtn').querySelector('svg');
 
-    
-
-    //if item is added change heart color to red
     if (json.message === 'Item Removed') {
 
       svg.style.fill =  'grey';
 
       svg.classList.add('grow-shrink');
 
-      // Remove bounce class after animation ends
       svg.addEventListener('animationend', () => {
         svg.classList.remove('grow-shrink');
       }, { once: true });
@@ -182,13 +159,11 @@ async function wishlistFunc(event) {
 
       svg.classList.add('grow-shrink');
 
-      // Remove bounce class after animation ends
       svg.addEventListener('animationend', () => {
         svg.classList.remove('grow-shrink');
       }, { once: true });
 
     }
-
 
   } catch (error) {
     console.log(error);

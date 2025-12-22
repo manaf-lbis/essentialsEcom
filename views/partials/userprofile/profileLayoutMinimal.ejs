@@ -1,4 +1,4 @@
-<!-- Shared Profile Layout Styles -->
+
 <style>
     /* Clean Minimal Profile Design */
     body {
@@ -126,7 +126,6 @@
         border-radius: 0 4px 4px 0;
     }
 
-
     /* Profile Content Card - Matching the clean theme */
     .profile-content-card {
         background: #ffffff;
@@ -181,36 +180,35 @@
     }
 </style>
 
-<!-- Sidebar Navigation -->
 <aside class="profile-sidebar">
     <div class="sidebar-header">
         <h5>My Account</h5>
         <p class="sidebar-user-greeting">Hello,</p>
         <p class="sidebar-user-name">
-            <%= userData.name %>
+            <%= userData.name%>
         </p>
         <p class="sidebar-user-email">
-            <%= userData.email ? userData.email.substring(0,20)+'...' : userData.phone %>
+            <%= userData.email ? userData.email.substring(0,20)+'...' : userData.phone%>
         </p>
     </div>
 
     <nav class="sidebar-nav">
-        <a href="/profile" class="<%= activePage === 'profile' ? 'active' : '' %>">
+        <a href="/profile" class="<%= activePage === 'profile' ? 'active' : ''%>">
             <i class="fas fa-user mb-1" style="width: 20px;"></i> Profile
         </a>
-        <a href="/address" class="<%= activePage === 'address' ? 'active' : '' %>">
+        <a href="/address" class="<%= activePage === 'address' ? 'active' : ''%>">
             <i class="fas fa-map-marker-alt mb-1" style="width: 20px;"></i> Manage Address
         </a>
-        <a href="/resetPassword" class="<%= activePage === 'resetPassword' ? 'active' : '' %>">
+        <a href="/resetPassword" class="<%= activePage === 'resetPassword' ? 'active' : ''%>">
             <i class="fas fa-key mb-1" style="width: 20px;"></i> Reset Password
         </a>
-        <a href="/referrals" class="<%= activePage === 'referrals' ? 'active' : '' %>">
+        <a href="/referrals" class="<%= activePage === 'referrals' ? 'active' : ''%>">
             <i class="fas fa-gift mb-1" style="width: 20px;"></i> Referrals
         </a>
-        <a href="/orders" class="<%= activePage === 'orders' ? 'active' : '' %>">
+        <a href="/orders" class="<%= activePage === 'orders' ? 'active' : ''%>">
             <i class="fas fa-shopping-bag mb-1" style="width: 20px;"></i> My Orders
         </a>
-        <a href="/walletLedger" class="<%= activePage === 'walletLedger' ? 'active' : '' %>">
+        <a href="/walletLedger" class="<%= activePage === 'walletLedger' ? 'active' : ''%>">
             <i class="fas fa-wallet mb-1" style="width: 20px;"></i> Wallet
         </a>
     </nav>

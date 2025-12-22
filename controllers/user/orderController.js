@@ -11,13 +11,10 @@ const Category = require('../../models/categorySchema');
 const User = require('../../models/userSchema');
 const Wallet = require('../../models/walletSchema');
 
-
 function getUserIdFromSession(req) {
     return req.session?._id ?? req.session.passport?.user;
 }
 
-
-// Calculate Total Amount After Discount
 async function calculateTotalAmountAfterDiscount(userId) {
     try {
         const cartItems = await Cart.aggregate([
@@ -34,7 +31,6 @@ async function calculateTotalAmountAfterDiscount(userId) {
 
         ]);
 
-        //populating coupon details from cart
         const cartCoupon = await Cart.findOne({ userId }).select('coupon').populate('coupon');
 
         const orderItems = cartItems[0]?.products?.map((item, index) => ({
@@ -43,23 +39,18 @@ async function calculateTotalAmountAfterDiscount(userId) {
             price: cartItems[0].productDetails[index].sellingPrice,
         }));
 
-        // Calculate total price
         const totalPrice = orderItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
 
-        // Apply discount if available
         const finalAmount = cartCoupon?.coupon ? totalPrice - cartCoupon.coupon.discount : totalPrice;
 
         return { finalAmount };
 
     } catch (error) {
-        //throw error for handling error 
         throw error
     }
 
 };
 
-
-//creating new order
 async function createOrder(orderInfo) {
     try {
         const {
@@ -69,9 +60,6 @@ async function createOrder(orderInfo) {
 
         } = orderInfo;
 
-        // finding the cart of user and proceeding with cart data and quantity
-
-        // find the cart and get the product and lookup for products collection for products details
         const cartItems = await Cart.aggregate([
             { $match: { userId: new mongoose.Types.ObjectId(userId) } },
             { $project: { products: 1 } },
@@ -85,7 +73,6 @@ async function createOrder(orderInfo) {
             }
         ]);
 
-        // Checking cart is empty
         if (!cartItems.length || !cartItems[0].products.length) {
 
             throw new Error("Cart is empty. Cannot create an order.");
@@ -96,14 +83,11 @@ async function createOrder(orderInfo) {
             .select('coupon')
             .populate('coupon');
 
-
         const orderItems = [];
 
         for (const [index, ele] of cartItems[0].products.entries()) {
 
-            // update category selling count
             await Category.updateOne({ _id: ele.category }, { $inc: { categorySalesCount: ele.quantity } })
-
 
             orderItems.push({
                 productId: ele.productId,
@@ -113,13 +97,11 @@ async function createOrder(orderInfo) {
                 category: ele.category
             });
 
-            // Reduce quantity in the Product collection
             const updatedProduct = await Product.findOneAndUpdate(
                 { _id: ele.productId, quantity: { $gte: ele.quantity } },
                 { $inc: { quantity: - ele.quantity, sellingCount: ele.quantity } },
                 { new: true }
             );
-
 
             if (!updatedProduct) {
                 throw new Error(`Insufficient stock for product ${ele.productId}`);
@@ -127,13 +109,10 @@ async function createOrder(orderInfo) {
 
         }
 
-
-        //calculationg total price
         const totalPrice = orderItems.reduce((acc, ele) => {
             return acc += ele.quantity * ele.price
         }, 0);
 
-        //final price after discount
         let finalPrice = totalPrice;
         if (cartCoupon?.coupon) {
 
@@ -141,8 +120,6 @@ async function createOrder(orderInfo) {
 
         }
 
-
-        //adderess finding  
         let address = await Address.findOne(
             {
                 userId: userId,
@@ -151,9 +128,6 @@ async function createOrder(orderInfo) {
             { 'address.$': 1 }
         );
 
-
-
-        // if coupon Define coupon object for order
         const coupon = cartCoupon?.coupon
             ? {
                 couponId: cartCoupon.coupon._id,
@@ -162,106 +136,83 @@ async function createOrder(orderInfo) {
             }
             : null;
 
-
-        //creating order object 
         const order = new Order({
             userId: userId,
             orderItems: orderItems,
             totalPrice: totalPrice,
             deliveryCharge: finalPrice < 500 ? 40 : 0,
             finalPrice: finalPrice += finalPrice < 500 ? 40 : 0,
-            address: address.address[0],// query of of mongo is an nested array of object
+            address: address.address[0],
             paymentMethod: paymentMethod,
             discount: cartCoupon?.coupon?.discount ?? 0,
             coupon,
-            paymentId: paymentMethod === 'Online Payment' ? orderInfo.razorpayOrder : '', //initalise payment id with order id after order sucess change to payment id 
+            paymentId: paymentMethod === 'Online Payment' ? orderInfo.razorpayOrder : '',
 
         });
 
-        //clearing the cart
         await Cart.deleteOne({ userId: userId })
 
         await order.save();
         return true;
 
     } catch (error) {
-        // logg error and throw error for handling error
         console.log(error);
         throw error
     };
 };
 
-// creating new order
 const placeOrder = async (req, res) => {
     try {
-        //extract user id from session 
         const userId = getUserIdFromSession(req);
 
-        // extract details from request body 
         const { paymentMethod, deliveryAddress } = req.body;
 
-        //creating new object with order details
         const orderInfo = {
             paymentMethod,
             deliveryAddress,
             userId
         }
 
-
         if (paymentMethod === 'COD') {
-            //create new Order
             const order = await createOrder(orderInfo);
 
             if (order) {
-                //find the last created order
                 const orderDetails = await Order.findOne({ userId })
                     .sort({ orderDate: -1 })
                     .limit(1);
 
-                //redner order success page
                 res.render('user/purchase/orderSuccessPage', { orderDetails });
 
             } else {
-                //render order fail page 
                 res.render('user/purchase/orderFailedPage')
             };
 
-
         } else if (paymentMethod === 'Online Payment') {
 
-            // calculate the final amout for making online payment 
             const { finalAmount } = await calculateTotalAmountAfterDiscount(userId)
 
-            // Create Razorpay order
             const razorpayOrder = await razorpayInstance.orders.create(
                 {
-                    amount: finalAmount * 100,//converting to paise
+                    amount: finalAmount * 100,
                     currency: 'INR',
                     receipt: `rcptid_${userId.toString().substring(0, 5) + Date.now().toString().substring(0, 5)}`,
                 }
             );
 
-
             if (razorpayOrder) {
-                //adding razor pay orderid to orderInfo object 
                 orderInfo.razorpayOrder = razorpayOrder.id
 
-                //creating new order with status pending
                 await createOrder(orderInfo);
             };
 
-
             if (razorpayOrder) {
-                // rendering payment confirmation page
                 res.render('user/purchase/paymentPage',
                     { razorpayOrder, finalAmount, razorpayKey: process.env.RAZORPAY_KEY_ID }
                 );
             } else {
-                // render order fail page
                 res.render('user/purchase/orderFailedPage')
             };
         } else if (paymentMethod === 'Wallet') {
-            // Calculate total amount
             const { finalAmount } = await calculateTotalAmountAfterDiscount(userId);
             let totalAmountToCheck = finalAmount;
             if (totalAmountToCheck < 500) { totalAmountToCheck += 40; }
@@ -271,10 +222,8 @@ const placeOrder = async (req, res) => {
             if (userWallet && userWallet.balance >= totalAmountToCheck) {
                 const order = await createOrder(orderInfo);
                 if (order) {
-                    // Fetch the created order
                     const orderDetails = await Order.findOne({ userId }).sort({ orderDate: -1 }).limit(1);
 
-                    // Deduct from wallet
                     await walletController.updateUserWallet(userId, totalAmountToCheck, 'debit', 'Order Payment', orderDetails.orderId);
 
                     res.render('user/purchase/orderSuccessPage', { orderDetails });
@@ -286,20 +235,16 @@ const placeOrder = async (req, res) => {
         };
 
     } catch (error) {
-        // logging error and render error page
         console.log(error);
         res.render('user/pagenotFound');
     };
 
 };
 
-
 const allOrders = async (req, res) => {
     try {
-        //extract user id from session 
         const userId = getUserIdFromSession(req);
 
-        // pagenation 
         let currentpage = req.query.currentpage || 1;
         const limit = 5;
         const totalPages = Math.ceil(await Order.countDocuments({ userId }) / limit)
@@ -309,115 +254,83 @@ const allOrders = async (req, res) => {
 
         const skip = limit * (currentpage - 1);
 
-        //listing all order in decenting order
         const orders = await Order.find({ userId })
             .populate('orderItems.productId')
             .sort({ orderDate: -1 })
             .skip(skip)
             .limit(limit)
 
-        // fetch user data
         const userData = await User.findOne({ _id: userId });
 
-        //render orders page with order details
         res.render('user/purchase/orders', { orders, currentpage, userData })
 
-
     } catch (error) {
-        //logging error and render error page
         console.log(error);
         res.render('user/pageNotFound');
     };
 };
 
-
-//cancell Individual order
 const cancelOrder = async (req, res) => {
     try {
-        //logging error and render error page
         const userId = getUserIdFromSession(req);
 
-        // extracting order details from request object
         const { orderId, productId, cancellationReason } = req.query;
 
-        // Find the order
         const order = await Order.findOne({ orderId });
 
-        // Locate the item to cancel within the order
         const orderItem = order.orderItems.find(item => item.productId.toString() === productId);
 
-
-        // Capture original status BEFORE updating it
         const previousStatus = orderItem.status;
 
-        // Calculate the total price after cancelling the item
         const itemTotalPrice = orderItem.price * orderItem.quantity;
         order.totalPrice -= itemTotalPrice;
         orderItem.status = "Cancelled";
         orderItem.cancellationReason = cancellationReason;
 
-
-        // if coupon is applied in the order
         if (order.coupon) {
 
             const coupon = await Coupon.findById(order.coupon.couponId);
 
             if (coupon) {
-                // final amout after canellation is lessthan minimum purchase value of coupon
                 if (order.totalPrice < coupon.minPurchaseValue) {
 
-                    //removing coupon from order
                     order.couponApplied = false;
                     order.discount = 0;
                 } else {
-                    // continue with the same discount
                     order.discount = coupon.discount;
                 };
             } else {
-                //removing coupon from the order 
                 order.couponApplied = false;
                 order.discount = 0;
             };
         };
 
-        // calculating final price
         order.finalPrice = order.totalPrice - order.discount;
 
-        // Only refund to wallet if payment was COMPLETED (not pending)
-        // Check PREVIOUS status - 'Pending for Payment' means unpaid
         if (order.paymentMethod === 'Online Payment' && previousStatus !== 'Pending for Payment') {
-            //refund the order amount to wallet
             await walletController.updateUserWallet(userId, itemTotalPrice - order.discount, 'credit', 'Cancellation Refund', order.orderId);
         }
 
-        //final price is lessthan 500 add delivery charge
         if (order.deliveryCharge && order.finalPrice < 500) {
             order.deliveryCharge = 40;
             order.finalPrice += 40
         };
 
-        // Increment the stock after cancellation
         await Product.findOneAndUpdate(
             { _id: productId },
             { $inc: { quantity: orderItem.quantity, sellingCount: -orderItem.quantity } }
 
         );
 
-
-        //finding the product category for decrementing the categoy sales count
         const category = await Product.findOne({ _id: productId }, { category: 1 });
 
-        // update category selling count
         await Category.updateOne({ _id: category.category }, { $inc: { categorySalesCount: -orderItem.quantity } })
 
-        // saving order object
         await order.save();
 
-        //redirect to order page
         res.redirect('/orders');
 
     } catch (error) {
-        // logging error and respond with status 500
         console.log(error);
         res.status(500)
             .json({ message: "An error occurred while processing the order cancellation." });
@@ -425,59 +338,46 @@ const cancelOrder = async (req, res) => {
     };
 };
 
-
-// render order details page
 const orderDetails = async (req, res) => {
     try {
-        // extracting order id from request
         const { orderId } = req.query;
         const userId = getUserIdFromSession(req);
 
-        // find the order details
         const orders = await Order.find({ orderId })
             .populate('orderItems.productId')
 
-        // fetch user data for profile sidebar
         const userData = await User.findOne({ _id: userId });
 
-        //render order details page with all details
         res.render('user/purchase/orderDetails', { orders, userData })
 
     } catch (error) {
-        //logging error and render error page
         console.log(error);
         res.render('user/pageNotFound');
     };
 };
 
-//order return after delivery
 const retunOrder = async (req, res) => {
     try {
-        // extracting order details from query 
         const { orderId, productId } = req.query
 
-        // changing order status to ReturnRequested
         response = await Order.updateOne(
             { orderId, 'orderItems.productId': productId },
             { $set: { 'orderItems.$.status': 'ReturnRequested' } }
         );
 
-        //redirect to order page
         res.redirect('/orders');
 
     } catch (error) {
-        //logging error and render error page
         console.log(error);
         res.render('user/pageNotFound');
     };
 };
 
-
 module.exports = {
-    placeOrder, // creating new order
-    allOrders, //listing orders 
-    cancelOrder, //cancell order
-    orderDetails, // render order details page
-    retunOrder, // return order
-    createOrder // creating order with order details
+    placeOrder,
+    allOrders,
+    cancelOrder,
+    orderDetails,
+    retunOrder,
+    createOrder
 }

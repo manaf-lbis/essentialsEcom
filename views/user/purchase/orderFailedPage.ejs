@@ -2,13 +2,13 @@
 <html lang="en">
 
 <head>
-  <% const headPath='../../partials/htmlHeadUser.ejs' ; %>
-    <%- include(headPath, {csspath: '/css/userCss/purchase/orderFailurePage.css' }) %>
+  <%const headPath='../../partials/htmlHeadUser.ejs' ;%>
+    <%- include(headPath, {csspath: '/css/userCss/purchase/orderFailurePage.css' })%>
       <title>Order Failed | Essentials</title>
 </head>
 
 <body class="d-flex flex-column min-vh-100 bg-light">
-  <%- include("../../partials/userNavbar.ejs") %>
+  <%- include("../../partials/userNavbar.ejs")%>
 
     <main class="flex-grow-1 py-5 mt-5">
       <div class="container">
@@ -43,7 +43,7 @@
       </div>
     </main>
 
-    <%- include("../../partials/userFooter.ejs") %>
+    <%- include("../../partials/userFooter.ejs")%>
 
       <script>
         document.addEventListener('DOMContentLoaded', () => {

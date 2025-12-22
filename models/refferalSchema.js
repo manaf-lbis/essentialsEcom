@@ -23,8 +23,6 @@ const referralSchema = new Schema({
       default: 0
     }
   });
-  
-
 
 const Referral = mongoose.model('Referral', referralSchema);
 

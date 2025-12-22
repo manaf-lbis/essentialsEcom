@@ -8,11 +8,8 @@ submitBtn.addEventListener('click', (event) => {
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
 
-
-    // resetting error 
     document.getElementById('confirmPassErr').innerHTML = '';
     document.getElementById('existingPasswordErr').innerHTML = '';
-
 
     let verification = true
 
@@ -37,16 +34,11 @@ submitBtn.addEventListener('click', (event) => {
         document.getElementById('confirmPassErr').innerHTML = 'New password Should not be same as old'
     }
 
-
-
-
     if (verification) {
         passwordReset(existingPassword, newPassword)
     }
 
 })
-
-
 
 async function passwordReset(existingPassword, newPassword) {
     try {
@@ -59,7 +51,6 @@ async function passwordReset(existingPassword, newPassword) {
         })
 
         console.log();
-
 
         if (respose.ok) {
 
@@ -77,11 +68,8 @@ async function passwordReset(existingPassword, newPassword) {
             });
         }
 
-
-
     } catch (error) {
         console.log(error);
-
 
     }
 

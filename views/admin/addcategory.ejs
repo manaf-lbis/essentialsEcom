@@ -1,14 +1,14 @@
 <html lang="en">
-<%- include("../partials/htmlHead.ejs", { csspath: "/css/adminCss/category/category.css" }) %>
+<%- include("../partials/htmlHead.ejs", { csspath: "/css/adminCss/category/category.css" })%>
 
     <body>
-        <%- include('../partials/adminNavbar.ejs') %>
+        <%- include('../partials/adminNavbar.ejs')%>
 
             <div class="container-fluid wrapper">
-                <%- include("../partials/adminLeftsidebar.ejs") %>
+                <%- include("../partials/adminLeftsidebar.ejs")%>
 
                     <div class="mainpanel p-4">
-                        <!-- Header -->
+
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div>
                                 <h4 class="fw-bold mb-1">Add New Category</h4>
@@ -19,20 +19,18 @@
                             </a>
                         </div>
 
-                        <!-- Add Category Card -->
                         <div class="card border-0 shadow-sm" style="max-width: 800px; margin: 0 auto;">
                             <div class="card-body p-4">
 
-                                <% if (message) { %>
+                                <%if (message) {%>
                                     <div class="alert alert-danger" role="alert">
-                                        <%= message %>
+                                        <%= message%>
                                     </div>
-                                    <% } %>
+                                    <%}%>
 
                                         <form action="/admin/category" id="addCategoryForm" method="post"
                                             enctype="multipart/form-data">
 
-                                            <!-- Category Name -->
                                             <div class="mb-4">
                                                 <label for="categoryName" class="form-label fw-bold">Category
                                                     Name</label>
@@ -41,7 +39,6 @@
                                                 <div class="text-danger small mt-1" id="categoryNameError"></div>
                                             </div>
 
-                                            <!-- Description -->
                                             <div class="mb-4">
                                                 <label for="description" class="form-label fw-bold">Description</label>
                                                 <textarea name="description" class="form-control" id="description"
@@ -49,7 +46,6 @@
                                                 <div class="text-danger small mt-1" id="descriptionError"></div>
                                             </div>
 
-                                            <!-- Image Upload -->
                                             <div class="mb-4">
                                                 <label for="categoryImage" class="form-label fw-bold">Category
                                                     Image</label>
@@ -64,7 +60,7 @@
                                                         onclick="document.getElementById('categoryImage').click()">Select
                                                         Image</button>
                                                 </div>
-                                                <!-- Preview Container -->
+
                                                 <div id="imagePreviewContainer" class="mt-3 d-none">
                                                     <img id="imagePreview" src="#" alt="Preview" class="img-thumbnail"
                                                         style="max-height: 200px;">
@@ -72,7 +68,6 @@
                                                 <div class="text-danger small mt-1" id="imageError"></div>
                                             </div>
 
-                                            <!-- Actions -->
                                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                                 <button type="button" class="btn btn-light me-md-2"
                                                     onclick="window.location.href='/admin/category'">Cancel</button>
@@ -89,13 +84,11 @@
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script src="/js/adminjs/addCategory.js"></script>
 
-
-            <!-- Inline script for showing SweetAlert -->
-            <% if (typeof alert !=='undefined' && alert.trim() !=='' ) { %>
+            <%if (typeof alert !=='undefined' && alert.trim() !=='' ) {%>
                 <script>
-                    callSweetAlert('<%= alert %>');
+                    callSweetAlert('<%= alert%>');
                 </script>
-                <% } %>
+                <%}%>
 
     </body>
 

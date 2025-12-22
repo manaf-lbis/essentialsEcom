@@ -1,37 +1,32 @@
 
-// State Management
+
 let cropper = null;
 let currentCropIndex = null;
 const croppedBlobs = {};
 const originalFiles = {};
 
-// DOM Elements
 const form = document.getElementById('editProductForm');
 const cropModal = new bootstrap.Modal(document.getElementById('cropModal'), { keyboard: false });
 const cropImageTarget = document.getElementById('cropImageTarget');
 const btnApplyCrop = document.getElementById('btnApplyCrop');
 
-// 1. Handle File Selection
 function handleImageNative(input, index) {
     if (input.files && input.files[0]) {
         const file = input.files[0];
 
-        // Validate File Type
         if (!['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(file.type)) {
             Swal.fire({ icon: 'error', title: 'Invalid File', text: 'Please select a valid image (JPG, PNG, WEBP).' });
-            input.value = ''; // Reset
+            input.value = '';
             return;
         }
 
         originalFiles[index] = file;
 
-        // Show Preview
         const preview = document.getElementById(`preview-${index}`);
         const uploadContent = document.getElementById(`upload-content-${index}`);
         const actions = document.getElementById(`actions-${index}`);
         const existingView = document.getElementById(`existing-view-${index}`);
 
-        // Hide existing view if present (though logic usually hides it via delete first, but if overwriting?)
         if (existingView) existingView.style.display = 'none';
 
         const reader = new FileReader();
@@ -45,7 +40,6 @@ function handleImageNative(input, index) {
     }
 }
 
-// 2. Init Crop Modal
 function initCrop(index) {
     currentCropIndex = index;
     const file = originalFiles[index];
@@ -63,7 +57,6 @@ function initCrop(index) {
     reader.readAsDataURL(file);
 }
 
-// 3. Apply Crop
 btnApplyCrop.addEventListener('click', () => {
     if (!cropper) return;
     const canvas = cropper.getCroppedCanvas({ width: 800, height: 800, imageSmoothingQuality: 'high' });
@@ -76,7 +69,6 @@ btnApplyCrop.addEventListener('click', () => {
     }, 'image/jpeg', 0.9);
 });
 
-// 4. Remove New Image
 function removeImage(index) {
     const input = document.getElementById(`image${index}`);
     const preview = document.getElementById(`preview-${index}`);
@@ -93,7 +85,6 @@ function removeImage(index) {
     delete croppedBlobs[index];
 }
 
-// 5. Delete Existing Image (AJAX)
 async function deleteExistingImage(productId, imageName, index) {
 
     const count = getActualImageCount();
@@ -113,7 +104,7 @@ async function deleteExistingImage(productId, imageName, index) {
 
     if (isConfirmed) {
         try {
-            // Updated to use POST and JSON body
+
             constresponse = await fetch('/admin/removeProductImage', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -129,14 +120,13 @@ async function deleteExistingImage(productId, imageName, index) {
             const data = await response.json();
 
             if (data.success) {
-                // Update UI: Remove existing view, show upload view
+
                 const existingView = document.getElementById(`existing-view-${index}`);
                 if (existingView) existingView.remove();
 
                 const uploadContent = document.getElementById(`upload-content-${index}`);
                 if (uploadContent) uploadContent.style.display = 'block';
 
-                // Allow clicking the container to trigger file input
                 const dropZone = document.getElementById(`drop-zone-${index}`);
                 if (dropZone) dropZone.setAttribute('onclick', `document.getElementById('image${index}').click()`);
 
@@ -162,16 +152,14 @@ async function deleteExistingImage(productId, imageName, index) {
     }
 }
 
-// Helper: Count total images (Current Visible Existing + New Uploads)
 function getActualImageCount() {
-    // Count existing images visible
-    const existing = document.querySelectorAll('[id^="existing-view-"]').length; // fixed selector to match DIVs not img
-    // Count new files selected
+
+    const existing = document.querySelectorAll('[id^="existing-view-"]').length;
+
     const newFiles = Object.keys(originalFiles).length;
     return existing + newFiles;
 }
 
-// 6. Validation
 function validateForm() {
     let isValid = true;
     const required = ['productName', 'description', 'brand', 'color', 'size', 'material', 'quantity', 'regularPrice', 'sellingPrice'];
@@ -194,7 +182,6 @@ function validateForm() {
         isValid = false;
     }
 
-    // Image Count Check
     if (getActualImageCount() < 2) {
         Swal.fire({ icon: 'warning', title: 'Images Missing', text: 'Product must have at least 2 images (Max 6).' });
         isValid = false;
@@ -203,7 +190,6 @@ function validateForm() {
     return isValid;
 }
 
-// 7. Submit
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -212,7 +198,6 @@ form.addEventListener('submit', async (e) => {
 
     const formData = new FormData(form);
 
-    // Remove default images field to avoid duplicates/wrong types
     formData.delete('images');
 
     for (let i = 1; i <= 6; i++) {
@@ -230,9 +215,6 @@ form.addEventListener('submit', async (e) => {
             method: 'POST',
             body: formData
         });
-
-        // Controller returns JSON usually? Wait, updateProduct in controller calls res.status(200).json or redirect?
-        // Let's check controller. It returns JSON { message: 'sucessfully updated' }.
 
         const result = await response.json();
         if (response.ok) {

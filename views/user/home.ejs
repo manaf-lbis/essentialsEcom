@@ -2,13 +2,12 @@
 <html lang="en">
 <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/css/coreui.min.css" rel="stylesheet"
   integrity="sha384-/ElSMRaKgsWY7yc9is+yGoOmLb0lEnL0i8BqJoNBrejJNHx8+6ZSD0u13ea6fUn3" crossorigin="anonymous">
-<%- include('../partials/htmlHeadUser.ejs',{csspath:''}) %>
+<%- include('../partials/htmlHeadUser.ejs',{csspath:''})%>
 
   <body>
 
-    <%- include('../partials/userNavbar.ejs') %>
+    <%- include('../partials/userNavbar.ejs')%>
 
-      <!-- -------Banner----- -->
       <section
         style="background-image: url('/assets/images/banner.jpg');background-repeat: no-repeat;background-size: cover;">
         <div class="container-lg">
@@ -113,7 +112,6 @@
         </div>
       </section>
 
-
       <section class="py-5 overflow-hidden">
         <div class="container-lg">
           <div class="row">
@@ -139,17 +137,17 @@
               <div class="category-carousel swiper">
                 <div class="swiper-wrapper">
 
-                  <% for(let ele of category){ %>
+                  <%for(let ele of category){%>
 
                     <a href="category.html" class="nav-link swiper-slide text-center">
-                      <img style="width: 150px;" src="uploads/<%= ele.image[0] %>" class="rounded-circle"
+                      <img style="width: 150px;" src="uploads/<%= ele.image[0]%>" class="rounded-circle"
                         alt="Category Thumbnail">
                       <h4 class="fs-6 mt-3 fw-normal category-title">
-                        <%= ele.categoryName %>
+                        <%= ele.categoryName%>
                       </h4>
                     </a>
 
-                    <% } %>
+                    <%}%>
 
                 </div>
               </div>
@@ -159,19 +157,9 @@
         </div>
       </section>
 
-
-
-
-
-
-
-
-
-      <!-- best selling products  -->
       <section class="pb-5">
         <div class="container-lg">
 
-          <!-- heading  -->
           <div class="row">
             <div class="col-md-12">
 
@@ -183,31 +171,25 @@
 
             </div>
           </div>
-          <!-- heading  ends -->
 
-          <!-- product list 5*2 rows  -->
           <div class="row">
             <div class="col-md-12">
 
               <div
                 class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5">
 
+                <%products.forEach((product,index)=>{%>
 
-
-                <!-- product start -->
-
-                <% products.forEach((product,index)=>{ %>
-
-                  <%if(index===10){ %>
-                    <% return %>
-                      <% } %>
+                  <%if(index===10){%>
+                    <%return%>
+                      <%}%>
 
                         <div class="col">
 
                           <div class="product-item">
                             <figure>
-                              <a href="/product/<%= product._id %>" title="Product Title">
-                                <img src="<%=product.productImage[0] %>" alt="Product Thumbnail" class="tab-image">
+                              <a href="/product/<%= product._id%>" title="Product Title">
+                                <img src="<%=product.productImage[0]%>" alt="Product Thumbnail" class="tab-image">
                               </a>
                             </figure>
                             <div class="d-flex flex-column text-center">
@@ -216,31 +198,30 @@
                               </h3>
 
                               <div class="d-flex justify-content-center align-items-center">
-                                <!-- rating -->
+
                                 <div class="justify-content-center" data-coreui-read-only="true" data-coreui-size="sm"
-                                  data-coreui-toggle="rating" data-coreui-value="<%= Number(product.averageRating) %>">
+                                  data-coreui-toggle="rating" data-coreui-value="<%= Number(product.averageRating)%>">
                                 </div>
 
-                                <% if( !isNaN(Number(product.averageRating))){ %>
-                                  <small>(<%= Number(product.averageRating).toFixed(1) %>) </small>
-                                  <% } %>
-
+                                <%if( !isNaN(Number(product.averageRating))){%>
+                                  <small>(<%= Number(product.averageRating).toFixed(1)%>) </small>
+                                  <%}%>
 
                               </div>
 
                               <div class="d-flex justify-content-center align-items-center gap-2">
-                                <del>₹<%=product.regularPrice %></del>
-                                <span class="text-dark fw-semibold">₹ <%=product.sellingPrice %> </span>
+                                <del>₹<%=product.regularPrice%></del>
+                                <span class="text-dark fw-semibold">₹ <%=product.sellingPrice%> </span>
                                 <span
                                   class="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">
                                   <%=(((product.regularPrice -
-                                    product.sellingPrice)/product.sellingPrice)*100).toFixed(0) %>% OFF
+                                    product.sellingPrice)/product.sellingPrice)*100).toFixed(0)%>% OFF
                                 </span>
                               </div>
                               <div class="button-area p-3 pt-0">
                                 <div class="row g-1 mt-2">
                                   <div class="col-3 "><input type="number" min="0" max="5"
-                                      productid="<%= product._id %>" name="quantity"
+                                      productid="<%= product._id%>" name="quantity"
                                       class="form-control border-dark-subtle input-number quantity quantitySelection"
                                       value="1" onkeydown="return false;">
                                     </div>
@@ -250,10 +231,9 @@
                                       </svg> Add to Cart</a>
                                     </div>
 
-                                  <!-- wishlist Btn -->
                                   <div class="col-2 wishlistBtn">
                                     <a class="wishlistToggle" href="/wishlistToggle/?productId=<%= product._id%>">
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="<%=wishlistProducts.includes(product._id.toString())?'red':'grey'  %>"
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="<%=wishlistProducts.includes(product._id.toString())?'red':'grey'%>"
                                         class="wishlistIcon" viewBox="0 0 16 16">
                                         <path
                                           d="M8 3.314C12.438-1.392 23.534 4.733 8 15-7.534 4.733 3.562-1.392 8 3.314z" />
@@ -267,21 +247,15 @@
                           </div>
                         </div>
 
-                        <% }) %>
-                          <!-- product ends -->
-
+                        <%})%>
 
               </div>
-              <!-- / product-grid -->
-
 
             </div>
           </div>
         </div>
       </section>
 
-
-      <!-- color full blocks image -->
       <section class="py-3">
         <div class="container-lg">
           <div class="row">
@@ -323,16 +297,12 @@
                 </div>
 
               </div>
-              <!-- / Banner Blocks -->
 
             </div>
           </div>
         </div>
       </section>
-      <!-- color full blocks image ends-->
 
-
-      <!-- featured products -->
       <section id="featured-products" class="products-carousel">
         <div class="container-lg overflow-hidden py-5">
           <div class="row">
@@ -358,40 +328,39 @@
               <div class="swiper">
                 <div class="swiper-wrapper">
 
-                  <!-- product slider  -->
-                  <% for(let product of products){ %>
+                  <%for(let product of products){%>
 
                     <div class="product-item swiper-slide">
                       <figure>
-                        <a href="/product/<%= product._id %>" title="Product Title">
-                          <img src="<%= product.productImage[0] %>" alt="Product Thumbnail" class="tab-image">
+                        <a href="/product/<%= product._id%>" title="Product Title">
+                          <img src="<%= product.productImage[0]%>" alt="Product Thumbnail" class="tab-image">
                         </a>
                       </figure>
                       <div class="d-flex flex-column text-center">
                         <h3 class="fs-6 fw-normal">
-                          <%= product.productName.substring(0,18)+'...' %>
+                          <%= product.productName.substring(0,18)+'...'%>
                         </h3>
 
                         <div class="d-flex justify-content-center align-items-center gap-2">
-                          <del>₹<%= product.regularPrice %></del>
-                          <span class="text-dark fw-semibold">₹<%= product.sellingPrice %></span>
+                          <del>₹<%= product.regularPrice%></del>
+                          <span class="text-dark fw-semibold">₹<%= product.sellingPrice%></span>
                           <span
                             class="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">
-                            <%=(((product.regularPrice - product.sellingPrice)/product.sellingPrice)*100).toFixed(0) %>%
+                            <%=(((product.regularPrice - product.sellingPrice)/product.sellingPrice)*100).toFixed(0)%>%
                               OFF
                           </span>
 
                         </div>
                         <div class="button-area p-3 pt-0">
                           <div class="row g-1 mt-2">
-                            <div class="col-3"><input type="number" productid="<%= product._id %>" name="quantity"
+                            <div class="col-3"><input type="number" productid="<%= product._id%>" name="quantity"
                                 class="form-control border-dark-subtle input-number quantity quantitySelection"
                                 value="1" onkeydown="return false;" min="0" max="5"></div>
                             <div class="col-7"><a href="#" class="btn btn-primary rounded-1 p-2 fs-7 btn-cart"><svg
                                   width="18" height="18">
                                   <use xlink:href="#cart"></use>
                                 </svg> Add to Cart</a></div>
-                              <!-- wishlist Btn -->
+
                               <div class="col-2 wishlistBtn">
                                 <a class="wishlistToggle" href="/wishlistToggle/?productId=<%= product._id%>">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="<%=wishlistProducts.includes(product._id.toString())?'red':'grey'%>"
@@ -405,23 +374,16 @@
                         </div>
                       </div>
                     </div>
-                    <% } %>
-                      <!-- product ends -->
-
+                    <%}%>
 
                 </div>
               </div>
-              <!-- / products-carousel -->
 
             </div>
           </div>
         </div>
       </section>
 
-
-
-
-      <!-- also looking for buttons -->
       <section class="py-4">
         <div class="container-lg">
           <h2 class="my-4">People are also looking for</h2>
@@ -445,7 +407,6 @@
           <a href="#" class="btn btn-warning me-2 mb-2">Dell Inspiron 5430 Lap</a>
         </div>
       </section>
-      <!-- also looking for buttons ends -->
 
       <section class="py-5">
         <div class="container-lg">
@@ -519,19 +480,14 @@
         </div>
       </section>
 
+      <%- include('../partials/userFooter.ejs')%>
 
-      <%- include('../partials/userFooter.ejs') %>
-
-        <!-- rating -->
         <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/js/coreui.bundle.min.js"
           integrity="sha384-mLGa1g62d9QzDXVGjvdUasvKUjkIoq7kjvKJsQifgQdr9x+4Ge3SZuGRTHYwvAl/"
           crossorigin="anonymous"></script>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="/js/userjs/home.js"></script>
-
-
-
 
   </body>
 

@@ -9,16 +9,13 @@ async function testRender() {
     try {
         console.log('Testing EJS compilation for:', filename);
 
-        // Mock data required by the template
         const data = {
             orders: [],
             currentpage: 1,
-            userData: { name: 'Test User', email: 'test@test.com' }, // For partials
+            userData: { name: 'Test User', email: 'test@test.com' },
             activePage: 'orders'
         };
 
-        // Render the file
-        // We need to set the root for include resolution
         ejs.renderFile(filename, data, { root: viewsDir }, (err, str) => {
             if (err) {
                 console.error('Compilation Failed!');

@@ -15,46 +15,33 @@ async function loadReport(value) {
     }
   })
 
-
-
   const data = await response.json();
 
   if (response.ok) {
     animate(data);
 
-    // Refresh graphs with dates if custom
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
     refreshGraphs(value, startDate, endDate);
 
-    // Update AOV separately
     if (data.averageOrderValue !== undefined) {
       document.getElementById('aov').innerHTML = `₹ ${Math.round(data.averageOrderValue).toLocaleString()}`;
     }
 
-    // Update Customer Count
     if (data.totalCustomers !== undefined) {
       document.getElementById('customers').innerHTML = data.totalCustomers;
     }
 
-    // Update Recent Orders Table
     if (data.orders) {
       updateRecentOrdersTable(data.orders);
     }
 
-    // Update KPI Cards
     document.getElementById('salesCount').innerHTML = data.salesCount;
     document.getElementById('orderAmount').innerHTML = `₹ ${data.totalAmount.toLocaleString()}`;
-
-    // Note: discount and coupons elements might have been removed or renamed in the new UI layout. 
-    // If they are no longer in the specific KPI grid, we can keep them if they exist elsewhere, or remove if obsolete.
-    // Based on the new EJS, we don't have IDs 'discount' and 'coupons' in the top grid anymore.
-    // However, I will check for their existence before updating to avoid errors.
 
     if (document.getElementById('discount')) document.getElementById('discount').innerHTML = `₹ ${data.totalDiscount.toLocaleString()}`;
     if (document.getElementById('coupons')) document.getElementById('coupons').innerHTML = `₹ ${data.couponDeduction.toLocaleString()}`;
 
-    // New KPIs
     if (document.getElementById('activeOrders')) document.getElementById('activeOrders').innerHTML = data.activeOrdersCount;
     if (document.getElementById('returns')) document.getElementById('returns').innerHTML = data.returnedCount;
     if (document.getElementById('cancelled')) document.getElementById('cancelled').innerHTML = data.cancelledCount;
@@ -80,7 +67,7 @@ function updateRecentOrdersTable(orders) {
             </td>
             <td class="border-0 fw-bold">₹${order.finalPrice.toLocaleString()}</td>
             <td class="border-0">
-                <span class="badge rounded-pill 
+                <span class="badge rounded-pill
                     ${order.status === 'Delivered' ? 'bg-success-subtle text-success' :
       order.status === 'Cancelled' ? 'bg-danger-subtle text-danger' : 'bg-primary-subtle text-primary'} px-3">
                     ${order.status}
@@ -92,7 +79,6 @@ function updateRecentOrdersTable(orders) {
         </tr>
     `).join('');
 }
-
 
 function downloadPDF() {
   const value = document.getElementById('reportDuration').value;
@@ -106,7 +92,6 @@ function downloadPDF() {
 
   window.location.href = url;
 }
-
 
 function downloadExcel() {
   const getVal = (id) => document.getElementById(id) ? document.getElementById(id).textContent : '0';
@@ -134,8 +119,6 @@ function applyCustomRange() {
   loadReport(duration);
 }
 
-
-// Count-up Animation Function
 function animateCount(elementId, endValue, duration) {
   const element = document.getElementById(elementId);
   if (!element) return;
@@ -144,7 +127,7 @@ function animateCount(elementId, endValue, duration) {
   const isCurrency = currencyIds.includes(elementId);
 
   let startValue = 0;
-  // Prevent division by zero or negative duration
+
   const safeDuration = duration > 0 ? duration : 500;
   const increment = endValue / (safeDuration / 10);
 
@@ -155,7 +138,6 @@ function animateCount(elementId, endValue, duration) {
       startValue = endValue;
     }
 
-    // Format based on type
     if (elementId === 'performance') {
       element.textContent = Math.floor(startValue).toFixed(1) + '%';
     } else {
@@ -164,12 +146,10 @@ function animateCount(elementId, endValue, duration) {
   }, 10);
 }
 
-// Call the animation functions for each element when the page loads
 function animate(data) {
   animateCount("salesCount", data.salesCount, 1000);
   animateCount("orderAmount", data.totalAmount, 500);
 
-  // Check for existence before animating
   if (document.getElementById('discount')) animateCount("discount", data.totalDiscount, 500);
   if (document.getElementById('coupons')) animateCount("coupons", data.couponDeduction, 500);
 
@@ -180,7 +160,6 @@ function animate(data) {
     animateCount("customers", data.totalCustomers, 500);
   }
 
-  // New KPIs animation
   if (data.activeOrdersCount !== undefined) animateCount("activeOrders", data.activeOrdersCount, 500);
   if (data.returnedCount !== undefined) animateCount("returns", data.returnedCount, 500);
   if (data.cancelledCount !== undefined) animateCount("cancelled", data.cancelledCount, 500);

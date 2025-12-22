@@ -4,7 +4,7 @@ async function testAPI() {
     console.log('=== TESTING BACKEND APIs ===\n');
 
     try {
-        // Test getReport
+
         console.log('Testing /admin/getReport/?duration=1day...');
         const reportRes = await fetch('http://localhost:3000/admin/getReport/?duration=1day');
         const reportData = await reportRes.json();
@@ -14,7 +14,6 @@ async function testAPI() {
 
         console.log('\n---\n');
 
-        // Test graphReport
         console.log('Testing /admin/graphReport/?duration=1day...');
         const graphRes = await fetch('http://localhost:3000/admin/graphReport/?duration=1day');
         const graphData = await graphRes.json();

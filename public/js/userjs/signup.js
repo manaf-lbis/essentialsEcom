@@ -1,8 +1,6 @@
 
 const form = document.getElementById('form');
 
-
-
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -13,7 +11,6 @@ form.addEventListener("submit", async (event) => {
     const phone = document.getElementById('phoneField').value;
     const password = document.getElementById('passwordField').value;
     const referralCode = document.getElementById('referralCode').value;
-
 
     let validation = true;
 
@@ -29,7 +26,6 @@ form.addEventListener("submit", async (event) => {
         document.getElementById('emailerr').innerHTML = 'Valid email is required.';
     }
 
-
     if (Number(phone) < 5999999999 || Number(phone) > 10000000000) {
         document.getElementById('phoneerr').innerHTML = 'Enter a valid Mobile Number';
         validation = false;
@@ -41,7 +37,6 @@ form.addEventListener("submit", async (event) => {
         validation = false;
     }
 
-    //if referral code entred? checking refferal code 
     if (referralCode.trim().length > 0) {
 
         const response = await fetch(`/checkReferralCode/?referralCode=${referralCode}`, {
@@ -60,14 +55,12 @@ form.addEventListener("submit", async (event) => {
 
     }
 
-
     function clearError() {
         document.getElementById('nameerr').innerHTML = '';
         document.getElementById('phoneerr').innerHTML = '';
         document.getElementById('emailerr').innerHTML = '';
         document.getElementById('passworderr').innerHTML = '';
     }
-
 
     if (validation) {
         form.submit();

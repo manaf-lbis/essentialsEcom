@@ -12,8 +12,8 @@ filesToFix.forEach(filePath => {
     try {
         if (fs.existsSync(fullPath)) {
             let content = fs.readFileSync(fullPath, 'utf8');
-            // Regex to match '.. /../' with any amount of spaces
-            const regex = /\.\.\s+\/\.\.\//g;
+
+            const regex = /\.\.\s+\/\.\.\
 
             if (regex.test(content)) {
                 console.log(`Fixing ${filePath}...`);

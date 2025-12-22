@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/ordermanagement/orderListing.css" }) %>
+    <%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/ordermanagement/orderListing.css" })%>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <style>
             /* Styles preserved from original */
@@ -87,13 +87,13 @@
 
 <body class="bg-light">
 
-    <%- include('../../partials/adminNavbar.ejs') %>
+    <%- include('../../partials/adminNavbar.ejs')%>
 
         <div class="container-fluid wrapper">
-            <%- include("../../partials/adminLeftsidebar.ejs") %>
+            <%- include("../../partials/adminLeftsidebar.ejs")%>
 
                 <div class="mainpanel p-4">
-                    <!-- Header -->
+
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
                             <h4 class="fw-bold mb-1">Order Management</h4>
@@ -101,28 +101,26 @@
                         </div>
                     </div>
 
-                    <!-- Filter Toolbar -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-body p-2 d-flex gap-2 flex-wrap">
                             <a href="/admin/orders?status=All"
-                                class="btn btn-sm <%= filterStatus === 'All' ? 'btn-dark' : 'btn-outline-secondary' %>">All
+                                class="btn btn-sm <%= filterStatus === 'All' ? 'btn-dark' : 'btn-outline-secondary'%>">All
                                 Orders</a>
                             <a href="/admin/orders?status=Pending"
-                                class="btn btn-sm <%= filterStatus === 'Pending' ? 'btn-warning text-white' : 'btn-outline-warning' %>">Pending</a>
+                                class="btn btn-sm <%= filterStatus === 'Pending' ? 'btn-warning text-white' : 'btn-outline-warning'%>">Pending</a>
                             <a href="/admin/orders?status=Processing"
-                                class="btn btn-sm <%= filterStatus === 'Processing' ? 'btn-info text-white' : 'btn-outline-info' %>">Processing</a>
+                                class="btn btn-sm <%= filterStatus === 'Processing' ? 'btn-info text-white' : 'btn-outline-info'%>">Processing</a>
                             <a href="/admin/orders?status=Shipped"
-                                class="btn btn-sm <%= filterStatus === 'Shipped' ? 'btn-primary' : 'btn-outline-primary' %>">Shipped</a>
+                                class="btn btn-sm <%= filterStatus === 'Shipped' ? 'btn-primary' : 'btn-outline-primary'%>">Shipped</a>
                             <a href="/admin/orders?status=Delivered"
-                                class="btn btn-sm <%= filterStatus === 'Delivered' ? 'btn-success' : 'btn-outline-success' %>">Delivered</a>
+                                class="btn btn-sm <%= filterStatus === 'Delivered' ? 'btn-success' : 'btn-outline-success'%>">Delivered</a>
                             <a href="/admin/orders?status=Returned"
-                                class="btn btn-sm <%= filterStatus === 'Returned' ? 'btn-danger' : 'btn-outline-danger' %>">Returned</a>
+                                class="btn btn-sm <%= filterStatus === 'Returned' ? 'btn-danger' : 'btn-outline-danger'%>">Returned</a>
                             <a href="/admin/orders?status=Cancelled"
-                                class="btn btn-sm <%= filterStatus === 'Cancelled' ? 'btn-danger' : 'btn-outline-danger' %>">Cancelled</a>
+                                class="btn btn-sm <%= filterStatus === 'Cancelled' ? 'btn-danger' : 'btn-outline-danger'%>">Cancelled</a>
                         </div>
                     </div>
 
-                    <!-- Orders Table -->
                     <div class="order-table mb-4">
                         <div class="table-responsive">
                             <table class="table mb-0">
@@ -138,73 +136,74 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% const statusPriority={ 'Pending' : 0, 'Processing' : 1, 'Shipped' :
-                                        2, 'Delivered' : 3, 'Cancelled' : 4, 'Returned' : 4, 'Rejected' : 4 }; %>
-                                        <% if(allOrders && allOrders.length> 0) { %>
-                                            <% allOrders.forEach(order=> { %>
-                                                <% order.orderItems.forEach(item=> {
-                                                    const currentPriority = statusPriority[item.status] || 0;
-                                                    %>
+                                    <%const statusPriority={ 'Pending' : 0, 'Processing' : 1, 'Shipped' :
+                                        2, 'Delivered' : 3, 'Cancelled' : 4, 'Returned' : 4, 'Rejected' : 4 };%>
+                                        <%if(allOrders && allOrders.length> 0) {%>
+                                            <%allOrders.forEach(order=> {%>
+                                                <%order.orderItems.forEach(item=> {
+                                                    const currentPriority = statusPriority[item.status] || 0;%>
                                                     <tr class="order-item-row"
-                                                        id="row-<%= order.orderId %>-<%= item.productId ? item.productId._id : 'unknown' %>">
-                                                        <td class="fw-bold text-primary">#<%= order.orderId %>
+                                                        id="row-<%= order.orderId%>-<%= item.productId ? item.productId._id : 'unknown'%>">
+                                                        <td class="fw-bold text-primary">#<%= order.orderId%>
                                                         </td>
                                                         <td>
                                                             <div class="fw-bold">
-                                                                <%= order.address.fullName %>
+                                                                <%= order.address.fullName%>
                                                             </div>
                                                             <div class="small text-muted">
-                                                                <%= new Date(order.orderDate).toLocaleDateString() %>
+                                                                <%= new Date(order.orderDate).toLocaleDateString()%>
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <% if(item.productId) { %>
-                                                                <%= item.productId.productName %>
-                                                                    <% } else { %>
+                                                            <%if(item.productId) {%>
+                                                                <%= item.productId.productName%>
+                                                                    <%} else {%>
                                                                         <span class="text-danger">Deleted Product</span>
-                                                                        <% } %>
+                                                                        <%}%>
                                                         </td>
                                                         <td>
-                                                            <%= item.quantity %>
+                                                            <%= item.quantity%>
                                                         </td>
-                                                        <td>₹<%= item.price %>
+                                                        <td>₹<%= item.price%>
                                                         </td>
                                                         <td>
                                                             <span class="badge bg-light text-dark border">
-                                                                <%= order.paymentMethod %>
+                                                                <%= order.paymentMethod%>
                                                             </span>
-                                                            <% if(order.paymentId){ %>
+                                                            <%if(order.paymentId){%>
                                                                 <small class="d-block text-muted"
                                                                     style="font-size: 0.7em">
-                                                                    <%= order.paymentId %>
+                                                                    <%= order.paymentId%>
                                                                 </small>
-                                                                <% } %>
+                                                                <%}%>
                                                         </td>
                                                         <td
-                                                            id="status-cell-<%= order.orderId %>-<%= item.productId ? item.productId._id : 'unknown' %>">
+                                                            id="status-cell-<%= order.orderId%>-<%= item.productId ? item.productId._id : 'unknown'%>">
                                                             <div
                                                                 class="d-flex gap-2 justify-content-end align-items-center">
                                                                 <button type="button"
                                                                     class="btn btn-outline-primary btn-sm"
-                                                                    data-name="<%= order.address.fullName %>"
-                                                                    data-address="<%= order.address.houseName || '' %>, <%= order.address.area || '' %>, <%= order.address.street || '' %>, <%= order.address.city || '' %>, <%= order.address.state || '' %> - <%= order.address.pincode || '' %>"
-                                                                    data-phone="<%= order.address.phone %>"
-                                                                    data-product="<%= item.productId ? item.productId.productName : 'Deleted Product' %>"
-                                                                    data-qty="<%= item.quantity %>"
-                                                                    data-price="<%= item.price %>"
-                                                                    data-payment="<%= order.paymentMethod %>"
-                                                                    data-payment-id="<%= order.paymentId || '' %>"
+                                                                    data-name="<%= order.address.fullName%>"
+                                                                    data-address="<%= order.address.houseName || ''%>, <%= order.address.area || ''%>, <%= order.address.street || ''%>, <%= order.address.city || ''%>, <%= order.address.state || ''%> - <%= order.address.pincode || ''%>"
+                                                                    data-phone="<%= order.address.phone%>"
+                                                                    data-product="<%= item.productId ? item.productId.productName : 'Deleted Product'%>"
+                                                                    data-qty="<%= item.quantity%>"
+                                                                    data-price="<%= item.price%>"
+                                                                    data-payment="<%= order.paymentMethod%>"
+                                                                    data-payment-id="<%= order.paymentId || ''%>"
                                                                     onclick="openOrderDetails(this)">
                                                                     <i class="fas fa-eye"></i>
                                                                 </button>
 
-                                                                <% if (['Delivered', 'Cancelled' , 'Rejected'
-                                                                    , 'Returned' ].includes(item.status)) { %>
+                                                                <%if (['Delivered', 'Cancelled' , 'Rejected'
+                                                                    , 'Returned' ].includes(item.status)) {%>
                                                                     <span
-                                                                        class="status-badge status-<%= item.status %>">
-                                                                        <%= item.status %>
+                                                                        class="status-badge status-<%= item.status%>">
+                                                                        <%= item.status%>
                                                                     </span>
-                                                                    <% } else if (item.status==='ReturnRequested' ) { %>
+                                                                    <%} else if (item.status==='ReturnRequested' ) {
+                                                                        const pId=item.productId ? item.productId._id
+                                                                        : '' ;%>
                                                                         <div class="d-flex flex-column gap-1">
                                                                             <span
                                                                                 class="badge bg-warning text-dark mb-1">Return
@@ -212,84 +211,83 @@
                                                                             <button
                                                                                 class="btn btn-sm btn-outline-success"
                                                                                 style="font-size: 0.75rem; white-space: nowrap;"
-                                                                                onclick="handleReturnAction('<%= order.orderId %>', '<%= item.productId ? item.productId._id : '' %>', 'Returned')">
+                                                                                onclick="handleReturnAction('<%= order.orderId%>', '<%= pId%>', 'Returned')">
                                                                                 Collect Item
                                                                             </button>
                                                                         </div>
-                                                                        <% } else { %>
+                                                                        <%} else {%>
                                                                             <select
                                                                                 class="form-select form-select-sm status-select"
                                                                                 style="width: auto;"
-                                                                                data-order-id="<%= order.orderId %>"
-                                                                                data-product-id="<%= item.productId ? item.productId._id : '' %>"
+                                                                                data-order-id="<%= order.orderId%>"
+                                                                                data-product-id="<%= item.productId ? item.productId._id : ''%>"
                                                                                 onchange="updateStatus(this)">
                                                                                 <option value="Pending"
                                                                                     <%=item.status==='Pending'
-                                                                                    ? 'selected' : '' %>
+                                                                                    ? 'selected' : ''%>
                                                                                     <%= statusPriority['Pending'] <
                                                                                         currentPriority ? 'disabled'
-                                                                                        : '' %>
+                                                                                        : ''%>
                                                                                         >Pending
                                                                                 </option>
                                                                                 <option value="Processing"
                                                                                     <%=item.status==='Processing'
-                                                                                    ? 'selected' : '' %>
+                                                                                    ? 'selected' : ''%>
                                                                                     <%= statusPriority['Processing'] <
                                                                                         currentPriority ? 'disabled'
-                                                                                        : '' %>
+                                                                                        : ''%>
                                                                                         >Processing
                                                                                 </option>
                                                                                 <option value="Shipped"
                                                                                     <%=item.status==='Shipped'
-                                                                                    ? 'selected' : '' %>
+                                                                                    ? 'selected' : ''%>
                                                                                     <%= statusPriority['Shipped'] <
                                                                                         currentPriority ? 'disabled'
-                                                                                        : '' %>
+                                                                                        : ''%>
                                                                                         >Shipped
                                                                                 </option>
                                                                                 <option value="Delivered"
                                                                                     <%=item.status==='Delivered'
-                                                                                    ? 'selected' : '' %>
+                                                                                    ? 'selected' : ''%>
                                                                                     <%= statusPriority['Delivered'] <
                                                                                         currentPriority ? 'disabled'
-                                                                                        : '' %>
+                                                                                        : ''%>
                                                                                         >Delivered
                                                                                 </option>
                                                                                 <option value="Cancelled"
                                                                                     <%=item.status==='Cancelled'
-                                                                                    ? 'selected' : '' %>>Cancelled
+                                                                                    ? 'selected' : ''%>>Cancelled
                                                                                 </option>
                                                                                 <option value="Rejected"
                                                                                     <%=item.status==='Rejected'
-                                                                                    ? 'selected' : '' %>>Rejected
+                                                                                    ? 'selected' : ''%>>Rejected
                                                                                 </option>
                                                                             </select>
-                                                                            <% } %>
+                                                                            <%}%>
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <% }); %>
-                                                        <% }); %>
-                                                            <% } else { %>
+                                                    <%});%>
+                                                        <%});%>
+                                                            <%} else {%>
                                                                 <tr>
                                                                     <td colspan="7" class="text-center py-5 text-muted">
                                                                         No orders found.</td>
                                                                 </tr>
-                                                                <% } %>
+                                                                <%}%>
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Pagination -->
                     <nav aria-label="Page navigation" class="d-flex justify-content-center mt-4">
                         <ul class="pagination">
-                            <li class="page-item <%= currentPage <= 1 ? 'disabled' : '' %>">
+                            <li class="page-item <%= currentPage <= 1 ? 'disabled' : ''%>">
                                 <a class="page-link" href="/admin/orders/?pageReq=<%=currentPage-1%>">Previous</a>
                             </li>
                             <li class="page-item active">
                                 <span class="page-link">
-                                    <%= currentPage %>
+                                    <%= currentPage%>
                                 </span>
                             </li>
                             <li class="page-item">
@@ -300,7 +298,6 @@
                 </div>
         </div>
 
-        <!-- Order Details Modal -->
         <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -333,7 +330,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            // Inject orders data safely for client-side access
+
             function openOrderDetails(btn) {
                 try {
                     const data = btn.dataset;
@@ -441,7 +438,6 @@
                 }
             }
 
-            // Save original status
             document.querySelectorAll('.status-select').forEach(el => {
                 el.setAttribute('data-original', el.value);
             });

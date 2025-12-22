@@ -10,8 +10,8 @@ const addressSchema = new Schema({
   address: [
     {
       _id: {
-        type: Schema.Types.ObjectId, 
-        default: () => new mongoose.Types.ObjectId(), 
+        type: Schema.Types.ObjectId,
+        default: () => new mongoose.Types.ObjectId(),
       },
       fullName: {
         type: String,

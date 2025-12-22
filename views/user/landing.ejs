@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESSENTIALS | Smart Choice for Smart Living</title>
-    <!-- CoreUI + Bootstrap -->
+
     <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/css/coreui.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -286,22 +286,20 @@
 
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar-landing sticky-top">
         <div class="container d-flex justify-content-between align-items-center">
             <div class="logo-text">ESSENTIALS<span>.</span></div>
             <div class="d-flex gap-2">
-                <% if (!locals.userId) { %>
+                <%if (!locals.userId) {%>
                     <a href="/login" class="btn btn-link text-dark text-decoration-none fw-semibold">Sign In</a>
                     <a href="/signup" class="btn btn-primary rounded-pill px-4 fw-semibold">Join Now</a>
-                    <% } else { %>
+                    <%} else {%>
                         <a href="/home" class="btn btn-primary rounded-pill px-4 fw-semibold">Explore Shop</a>
-                        <% } %>
+                        <%}%>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="row align-items-center">
@@ -313,18 +311,18 @@
                         Experience the next generation of shopping.
                     </p>
                     <div class="cta-group">
-                        <% if (!locals.userId) { %>
+                        <%if (!locals.userId) {%>
                             <a href="/login" class="btn-premium btn-primary-premium">
                                 Start Shopping <i class="fas fa-arrow-right"></i>
                             </a>
                             <a href="/signup" class="btn-premium btn-outline-premium">
                                 Create Account
                             </a>
-                            <% } else { %>
+                            <%} else {%>
                                 <a href="/home" class="btn-premium btn-primary-premium">
                                     Go to Dashboard <i class="fas fa-arrow-right"></i>
                                 </a>
-                                <% } %>
+                                <%}%>
                     </div>
 
                     <div class="mt-5 d-flex align-items-center gap-4">
@@ -343,7 +341,7 @@
                 </div>
 
                 <div class="col-lg-6 hero-image-container">
-                    <!-- Premium Electronics Hero Image -->
+
                     <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
                         alt="Premium Tech" class="hero-main-img">
 
@@ -371,7 +369,6 @@
         </div>
     </section>
 
-    <!-- Categories Section -->
     <section class="tech-categories text-center">
         <div class="container">
             <h5 class="text-uppercase fw-bold text-muted small mb-4" style="letter-spacing: 2px;">Trending Collections
@@ -388,7 +385,6 @@
         </div>
     </section>
 
-    <!-- Features Section -->
     <section class="features">
         <div class="container">
             <div class="text-center mb-5 pb-3">
@@ -427,7 +423,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer-landing">
         <div class="container">
             <div class="row">

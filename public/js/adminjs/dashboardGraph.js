@@ -1,5 +1,5 @@
 
-// document.getElementById('reportDuration').
+
 document.addEventListener('DOMContentLoaded', () => {
     const duration = document.getElementById('reportDuration').value || '1day';
     loadReport(duration);
@@ -92,7 +92,6 @@ function configureSalesTrendChart(salesTrend) {
     });
 }
 
-
 function configureCategoryChart(topSellingCategorys) {
     const canvas = document.getElementById('graph2');
     if (Chart.getChart(canvas)) Chart.getChart(canvas).destroy();
@@ -120,8 +119,6 @@ function configureCategoryChart(topSellingCategorys) {
         }
     });
 }
-
-
 
 function configureProductChart(topSellingProducts) {
     const canvas = document.getElementById('graph1');
@@ -196,9 +193,6 @@ function configureBrandChart(topsellingBrand) {
         data.push(brand.totalSales)
     });
 
-
-
-
     const data1 = {
         labels: labels,
         datasets: [{
@@ -238,15 +232,8 @@ function configureBrandChart(topsellingBrand) {
         },
     };
 
-    // Initialize the chart
     const ctx = document.getElementById('graph3').getContext('2d');
     new Chart(ctx, config);
 
-
 }
-
-
-
-
-
 

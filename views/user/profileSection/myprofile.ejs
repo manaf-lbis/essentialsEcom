@@ -1,62 +1,53 @@
 <html lang="en">
 
-<%- include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/profile/profile.css'}) %>
+<%- include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/profile/profile.css'})%>
 
     <body>
-        <%- include('../../partials/userNavbar.ejs') %>
+        <%- include('../../partials/userNavbar.ejs')%>
 
             <div class="profile-container">
 
-                <!-- Main Content (inserted after sidebar in partial) -->
                 <script>
-                    // Move content to correct location in DOM if needed, 
-                    // or simpler: just render the active page specific content here
-                    // The partial renders style + sidebar.
-                    // We need to structure this so the partial is closed or we rearrange.
-                    // Actually the partial closes the aside but leaves profile-layout open?
-                    // No, the partial has <style> and <aside>.
-                    // We need to wrap the <aside> and <main> in <div class="profile-layout">
+
                 </script>
 
                 <div class="profile-layout">
-                    <!-- Re-include sidebar here properly -->
-                    <%- include('../../partials/userprofile/profileLayoutMinimal.ejs', { activePage: 'profile' }) %>
 
-                        <!-- Main Profile Card -->
+                    <%- include('../../partials/userprofile/profileLayoutMinimal.ejs', { activePage: 'profile' })%>
+
                         <main class="profile-content-card">
-                            <!-- Header Section -->
+
                             <div class="sidebar-header border-0 pb-0 mb-4">
-                                <!-- Content from previous file... -->
+
                                 <div class="d-flex align-items-center">
                                     <div class="user-avatar"
                                         style="width: 80px; height: 80px; border-radius: 50%; background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 600; margin-right: 1.5rem;">
-                                        <%= userData.name.charAt(0).toUpperCase() %>
+                                        <%= userData.name.charAt(0).toUpperCase()%>
                                     </div>
                                     <div>
                                         <h2
                                             style="margin: 0 0 0.5rem 0; font-size: 1.5rem; font-weight: 600; color: #212529;">
-                                            <%= userData.name %>
+                                            <%= userData.name%>
                                         </h2>
                                         <p style="margin: 0; color: #6c757d;">
-                                            <%= userData.phone %>
+                                            <%= userData.phone%>
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Form Section -->
                             <div>
                                 <h3 style="font-size: 1.1rem; font-weight: 600; color: #212529; margin-bottom: 1.5rem;">
                                     Personal Information</h3>
 
                                 <form>
-                                    <input id="_id" type="text" value="<%= userData._id %>" name="_id" hidden>
+                                    <input id="_id" type="text" value="<%= userData._id%>" name="_id" hidden>
 
                                     <div class="mb-3">
                                         <label for="name" class="d-block mb-2 fw-medium text-secondary">Full
                                             Name</label>
                                         <span id="nameerr" class="text-danger small d-block"></span>
-                                        <input type="text" class="form-control" value="<%= userData.name %>" id="name"
+                                        <input type="text" class="form-control" value="<%= userData.name%>" id="name"
                                             placeholder="Enter your full name" disabled style="padding: 0.65rem 1rem;">
                                     </div>
 
@@ -65,7 +56,7 @@
                                             of Birth</label>
                                         <span id="doberr" class="text-danger small d-block"></span>
                                         <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth"
-                                            value="<%= userData.dateOfBirth ? new Date(userData.dateOfBirth).toISOString().split('T')[0] : '' %>"
+                                            value="<%= userData.dateOfBirth ? new Date(userData.dateOfBirth).toISOString().split('T')[0] : ''%>"
                                             disabled style="padding: 0.65rem 1rem;">
                                     </div>
 
@@ -75,13 +66,13 @@
                                         <div class="d-flex gap-4 mt-2">
                                             <div class="d-flex align-items-center">
                                                 <input name="gender" id="male" value="male" type="radio"
-                                                    <%=userData.gender==="male" ? 'checked' : '' %> disabled
+                                                    <%=userData.gender==="male" ? 'checked' : ''%> disabled
                                                 class="me-2">
                                                 <label for="male" class="check-label">Male</label>
                                             </div>
                                             <div class="d-flex align-items-center">
                                                 <input name="gender" id="female" value="female"
-                                                    <%=userData.gender==="female" ? 'checked' : '' %> type="radio"
+                                                    <%=userData.gender==="female" ? 'checked' : ''%> type="radio"
                                                 disabled class="me-2">
                                                 <label for="female" class="check-label">Female</label>
                                             </div>
@@ -92,7 +83,7 @@
                                         <label for="phone" class="d-block mb-2 fw-medium text-secondary">Mobile
                                             Number</label>
                                         <span id="phoneerr" class="text-danger small d-block"></span>
-                                        <input type="text" class="form-control" value="<%= userData.phone %>" id="phone"
+                                        <input type="text" class="form-control" value="<%= userData.phone%>" id="phone"
                                             placeholder="Enter mobile number" disabled style="padding: 0.65rem 1rem;">
                                     </div>
 
@@ -114,7 +105,7 @@
                 </div>
             </div>
 
-            <%- include('../../partials/userFooter.ejs') %>
+            <%- include('../../partials/userFooter.ejs')%>
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                 <script src="/js/userjs/profileSection/myProfile.js"></script>
 

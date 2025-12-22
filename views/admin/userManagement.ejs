@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <%- include("../partials/htmlHead.ejs",{csspath:"/css/adminCss/usermanagement/usermanagement.css"}) %>
+  <%- include("../partials/htmlHead.ejs",{csspath:"/css/adminCss/usermanagement/usermanagement.css"})%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
       .user-table {
@@ -63,31 +63,29 @@
 
 <body class="bg-light">
 
-  <%- include('../partials/adminNavbar.ejs') %>
+  <%- include('../partials/adminNavbar.ejs')%>
 
     <div class="container-fluid wrapper">
-      <%- include("../partials/adminLeftsidebar.ejs") %>
+      <%- include("../partials/adminLeftsidebar.ejs")%>
 
         <div class="mainpanel p-4">
-          <!-- Header -->
+
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h4 class="fw-bold mb-1">User Management</h4>
               <p class="text-muted small mb-0">Manage customer accounts</p>
             </div>
 
-            <!-- Search -->
             <form method="get" action="/admin/usermanagement"
               class="d-flex shadow-sm bg-white rounded-3 overflow-hidden" style="max-width: 300px;">
               <input name="search" class="form-control border-0 shadow-none ps-3" type="search"
-                placeholder="Search Users..." value="<%= searchQuery %>" aria-label="Search">
+                placeholder="Search Users..." value="<%= searchQuery%>" aria-label="Search">
               <button class="btn btn-white border-0 text-primary px-3" type="submit">
                 <i class="fas fa-search"></i>
               </button>
             </form>
           </div>
 
-          <!-- Users Table -->
           <div class="user-table mb-4">
             <div class="table-responsive">
               <table class="table mb-0">
@@ -102,75 +100,74 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% if(userData && userData.length> 0) { %>
-                    <% userData.forEach((user, index)=> { %>
-                      <tr id="row-<%= user._id %>">
+                  <%if(userData && userData.length> 0) {%>
+                    <%userData.forEach((user, index)=> {%>
+                      <tr id="row-<%= user._id%>">
                         <td class="text-muted small">
-                          <%= (currentPage - 1) * 10 + (index + 1) %>
+                          <%= (currentPage - 1) * 10 + (index + 1)%>
                         </td>
                         <td>
                           <div class="fw-bold">
-                            <%= user.name %>
+                            <%= user.name%>
                           </div>
                         </td>
                         <td>
-                          <%= user.email %>
+                          <%= user.email%>
                         </td>
                         <td>
-                          <%= user.phone %>
+                          <%= user.phone%>
                         </td>
                         <td>
-                          <% if(!user.isBlocked){ %>
+                          <%if(!user.isBlocked){%>
                             <span class="status-badge status-active">Active</span>
-                            <% } else { %>
+                            <%} else {%>
                               <span class="status-badge status-blocked">Blocked</span>
-                              <% } %>
+                              <%}%>
                         </td>
                         <td class="text-end">
-                          <% if(!user.isBlocked){ %>
-                            <button onclick="toggleUserStatus('<%= user._id %>', 'block')"
+                          <%if(!user.isBlocked){%>
+                            <button onclick="toggleUserStatus('<%= user._id%>', 'block')"
                               class="btn btn-outline-danger btn-action">
                               <i class="fas fa-ban me-1"></i> Block
                             </button>
-                            <% } else { %>
-                              <button onclick="toggleUserStatus('<%= user._id %>', 'unblock')"
+                            <%} else {%>
+                              <button onclick="toggleUserStatus('<%= user._id%>', 'unblock')"
                                 class="btn btn-outline-success btn-action">
                                 <i class="fas fa-check me-1"></i> Unblock
                               </button>
-                              <% } %>
+                              <%}%>
                         </td>
                       </tr>
-                      <% }) %>
-                        <% } else { %>
+                      <%})%>
+                        <%} else {%>
                           <tr>
                             <td colspan="6" class="text-center py-5 text-muted">No users found.</td>
                           </tr>
-                          <% } %>
+                          <%}%>
                 </tbody>
               </table>
             </div>
           </div>
 
-          <!-- Pagination -->
-          <% if(totalPage> 1) { %>
+          <%if(totalPage> 1) {%>
             <nav aria-label="Page navigation" class="d-flex justify-content-center">
               <ul class="pagination">
-                <li class="page-item <%= Number(currentPage) <= 1 ? 'disabled' : '' %>">
+                <li class="page-item <%= Number(currentPage) <= 1 ? 'disabled' : ''%>">
                   <a class="page-link"
-                    href="/admin/usermanagement/?pageReq=<%= Number(currentPage)-1 %>&search=<%= searchQuery %>">Previous</a>
+                    href="/admin/usermanagement/?pageReq=<%= Number(currentPage)-1%>&search=<%= searchQuery%>">Previous</a>
                 </li>
                 <li class="page-item active">
                   <a class="page-link" href="#">
-                    <%= currentPage %>
+                    <%= currentPage%>
                   </a>
                 </li>
-                <li class="page-item <%= Number(currentPage) >= totalPage ? 'disabled' : '' %>">
+                <li class="page-item <%= Number(currentPage) >= totalPage ? 'disabled' : ''%>">
                   <a class="page-link"
-                    href="/admin/usermanagement/?pageReq=<%= Number(currentPage)+1 %>&search=<%= searchQuery %>">Next</a>
+                    href="/admin/usermanagement/?pageReq=<%= Number(currentPage)+1%>&search=<%= searchQuery%>">Next</a>
                 </li>
               </ul>
             </nav>
-            <% } %>
+            <%}%>
 
         </div>
     </div>
@@ -194,9 +191,7 @@
 
         if (result.isConfirmed) {
           try {
-            const response = await fetch(url, { method: 'POST' }); // Controller uses POST usually for these actions or GET? Routes say POST based on previous ejs forms.
-            // Wait, previous ejs form was method="post" action="/admin/blockUser/...".
-            // I need to check routes.
+            const response = await fetch(url, { method: 'POST' });
 
             const data = await response.json();
 

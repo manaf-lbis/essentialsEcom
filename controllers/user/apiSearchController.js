@@ -1,11 +1,5 @@
 const Product = require('../../models/productSchema');
 
-/**
- * Search Suggestions API
- * Returns a list of products matching the search query for live suggestions.
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
 const getSuggestions = async (req, res) => {
     try {
         const query = req.query.q ?? '';
@@ -14,7 +8,6 @@ const getSuggestions = async (req, res) => {
             return res.json([]);
         }
 
-        // Search for products matching the query in name, brand, or description
         const products = await Product.find({
             isBlocked: false,
             $or: [
@@ -25,7 +18,6 @@ const getSuggestions = async (req, res) => {
             .select('productName productImage sellingPrice')
             .limit(6);
 
-        // Format suggestions data
         const suggestions = products.map(product => ({
             id: product._id,
             name: product.productName,

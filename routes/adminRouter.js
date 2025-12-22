@@ -10,20 +10,16 @@ const couponController = require('../controllers/admin/couponController');
 const auth = require('../middlewares/usersMiddleware');
 const dashboardController = require('../controllers/admin/dashboardController')
 
-
-//admin routes
 router.get('/', adminController.loadLogin);
 router.post('/', adminController.verifyLogin);
 router.get('/dashboard', auth.adminAuth, dashboardController.loadDashboard);
 router.get('/logout', adminController.logout);
 router.get('/pagenotFound', adminController.pagenotFound);
 
-//user management
 router.get('/usermanagement', auth.adminAuth, userController.getUsers);
 router.post('/blockUser/:id', auth.adminAuth, userController.blockUser);
 router.post('/unblockUser/:id', auth.adminAuth, userController.unblockUser);
 
-//category
 router.get('/category', auth.adminAuth, categoryController.listCategory);
 router.get('/addCategory', auth.adminAuth, categoryController.addCategoryPage);
 router.post('/category', auth.adminAuth, config.upload.single('image'), categoryController.addCategory);
@@ -32,7 +28,6 @@ router.get('/editCategoryPage', auth.adminAuth, categoryController.editCategoryP
 router.post('/updateCategory', auth.adminAuth, config.upload.single('image'), categoryController.updateCategory);
 router.get('/restoreCategory', auth.adminAuth, categoryController.restoreCategory);
 
-//product
 router.get('/products', auth.adminAuth, productController.products);
 router.get('/addProduct', auth.adminAuth, productController.addproductPage);
 router.post('/addProduct', auth.adminAuth, config.upload.array('images', 6), productController.addProduct);
@@ -42,21 +37,16 @@ router.get('/editProduct/:id', auth.adminAuth, productController.editProduct);
 router.post('/updateProduct', auth.adminAuth, config.upload.array('images', 6), productController.updateProduct);
 router.post('/removeProductImage', auth.adminAuth, productController.removeImage)
 
-//orders
 router.get('/orders', auth.adminAuth, ordersController.getOrders);
 router.get('/updateOrderStatus', auth.adminAuth, ordersController.orderStatusUpdate);
 
-//report
 router.get('/getReport', auth.adminAuth, dashboardController.getReport);
 router.get('/graphReport', auth.adminAuth, dashboardController.generateGraphReport);
 router.get('/downloadPDF', auth.adminAuth, dashboardController.downloadSalesReportPDF);
 
-//coupon
 router.get('/coupons', auth.adminAuth, couponController.coupons);
 router.get('/addCoupons', auth.adminAuth, couponController.createCouponPage);
 router.post('/createCoupon', auth.adminAuth, couponController.newCoupon);
 router.get('/disableCoupon', auth.adminAuth, couponController.disableCoupon);
-
-
 
 module.exports = router;

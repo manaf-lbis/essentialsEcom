@@ -22,7 +22,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/essentials')
         console.log(`Delivered Orders: ${deliveredOrders}`);
         console.log(`Successful Orders (not cancelled/returned): ${successfulOrders}`);
 
-        // Check date range
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -33,7 +32,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/essentials')
         console.log(`\nOrders Today: ${todayOrders}`);
         console.log(`Orders Last 7 Days: ${weekOrders}`);
 
-        // Get a sample order
         const sampleOrder = await Order.findOne().lean();
         console.log(`\nSample Order:`);
         console.log(`  ID: ${sampleOrder._id}`);
@@ -42,7 +40,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/essentials')
         console.log(`  Order Date: ${sampleOrder.orderDate}`);
         console.log(`  User ID: ${sampleOrder.userId}`);
 
-        // Calculate what the backend SHOULD return
         const successOrders = await Order.find({
             status: { $nin: ['Cancelled', 'Returned'] }
         });

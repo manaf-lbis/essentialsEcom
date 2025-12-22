@@ -7,7 +7,6 @@ function getEdit() {
     const editBtn = document.getElementById('editBtn');
     const submitBtn = document.getElementById('submitBtn');
 
-    // Toggle the disabled property for each input
     const isDisabled = nameInput.disabled;
 
     nameInput.disabled = !isDisabled;
@@ -16,7 +15,6 @@ function getEdit() {
     femaleInput.disabled = !isDisabled;
     phoneInput.disabled = !isDisabled;
 
-    // Toggle the visibility of the buttons
     editBtn.hidden = !editBtn.hidden
     submitBtn.hidden =  !submitBtn.hidden
 }
@@ -32,7 +30,7 @@ function clearErr() {
 
 submitBtn.addEventListener('click', () => {
 
-    clearErr();//clear default err
+    clearErr();
 
     const name = document.getElementById('name').value;
     const dateOfBirth = document.getElementById('dateOfBirth').value;
@@ -49,7 +47,6 @@ submitBtn.addEventListener('click', () => {
 
     let validation = true;
 
-    // validate
     if (Number(phone) < 5999999999 || Number(phone) > 10000000000) {
         document.getElementById('phoneerr').innerHTML =
             ' Enter a valid Mobile Number';
@@ -74,9 +71,6 @@ submitBtn.addEventListener('click', () => {
         document.getElementById('doberr').innerHTML = "You must select a date before January 1, 2018.";
         return false;
       }
-   
-
-
 
     if (name.trim().length < 3) {
         document.getElementById('nameerr').innerHTML = 'name should be minimum 3';
@@ -87,7 +81,6 @@ submitBtn.addEventListener('click', () => {
         submitForm(name,dateOfBirth,gender,phone);
     }
 });
-
 
 async function submitForm(name,dateOfBirth,gender,phone){
 
@@ -117,11 +110,11 @@ async function submitForm(name,dateOfBirth,gender,phone){
           });
           getEdit()
     }
-    
+
    } catch (error) {
 
     console.log(error);
-    
+
     Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -130,6 +123,5 @@ async function submitForm(name,dateOfBirth,gender,phone){
       getEdit()
 
    }
-
 
 }

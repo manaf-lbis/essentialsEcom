@@ -10,9 +10,7 @@ const userRouter = require('./routes/userRouter');
 const adminRouter = require('./routes/adminRouter');
 const razorpay = require('./config/razorpay');
 
-
 db();
-
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -36,28 +34,20 @@ app.use((req, res, next) => {
   next();
 });
 
-
-//initialize passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
-//setting viewengine 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-
-// user router
 app.use('/', userRouter);
 
-// admin Router
 app.use('/admin', adminRouter);
 
-
-//Google authentication routes
 app.use('/auth', userRouter)
 
 const port = process.env.PORT || 3000;
-//listening to the port 
+
 app.listen(port, () =>
   console.log(`running on port ${port}`)
 );

@@ -2,8 +2,6 @@
 
   "use strict";
 
-
-
   var initSwiper = function() {
 
     var swiper = new Swiper(".main-swiper", {
@@ -67,12 +65,10 @@
 
     });
 
-
-    // product single page
     var thumb_slider = new Swiper(".product-thumbnail-slider", {
       slidesPerView: 5,
       spaceBetween: 20,
-      // autoplay: true,
+
       direction: "vertical",
       breakpoints: {
         0: {
@@ -86,7 +82,7 @@
 
     var large_slider = new Swiper(".product-large-slider", {
       slidesPerView: 1,
-      // autoplay: true,
+
       spaceBetween: 0,
       effect: 'fade',
       thumbs: {
@@ -99,14 +95,13 @@
     });
   }
 
-  // input spinner
   var initProductQty = function(){
 
     $('.product-qty').each(function(){
-      
+
       var $el_product = $(this);
       var quantity = 0;
-      
+
       $el_product.find('.quantity-right-plus').click(function(e){
         e.preventDefault();
         quantity = parseInt($el_product.find('#quantity').val());
@@ -125,13 +120,11 @@
 
   }
 
-
-  // document ready
   $(document).ready(function() {
-    
+
     initSwiper();
     initProductQty();
 
-  }); // End of a document
+  });
 
 })(jQuery);

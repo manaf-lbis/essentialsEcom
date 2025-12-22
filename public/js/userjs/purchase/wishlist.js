@@ -1,18 +1,15 @@
 
-//add to cart logic
-const cartBtn = document.querySelectorAll('.addtoCartBtn');
 
+const cartBtn = document.querySelectorAll('.addtoCartBtn');
 
 cartBtn.forEach((ele) => {
     ele.addEventListener('click', getValues)
 });
 
-
 function getValues(event) {
     const productId = event.target.closest('div').getAttribute('productId')
     addToCart(1, productId);
 }
-
 
 async function addToCart(quantity, _id) {
 
@@ -30,11 +27,7 @@ async function addToCart(quantity, _id) {
     }
 }
 
-
-//Item remove from wishlist
-
 const removeFromWishlistBtn = document.querySelectorAll('.removeFromWishlist');
-
 
 removeFromWishlistBtn.forEach((ele) => {
     ele.addEventListener('click', removeFromWishlist)

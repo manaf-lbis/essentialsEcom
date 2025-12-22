@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const discountTypeSelect = document.getElementById('discountType');
     const maxDiscountField = document.getElementById('maxDiscountField');
 
-    // Toggle Max Discount field
     discountTypeSelect.addEventListener('change', function () {
         if (this.value === 'percentage') {
             maxDiscountField.style.display = 'block';
@@ -15,10 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     couponForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Reset errors
         document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
 
-        // Get values
         const couponCode = document.getElementById('couponCode').value.trim();
         const discountType = document.getElementById('discountType').value;
         const discountAmount = parseFloat(document.getElementById('discountAmount').value);
@@ -28,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let isValid = true;
 
-        // Validation Logic
         if (!couponCode) {
             document.getElementById('couponCodeError').textContent = 'Coupon Code is required';
             isValid = false;

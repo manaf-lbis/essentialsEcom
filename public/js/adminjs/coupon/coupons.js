@@ -25,7 +25,7 @@ async function removecoupon(event){
 
   });
 
-} 
+}
 
 async function sendeServerReq(href){
 
@@ -44,8 +44,4 @@ async function sendeServerReq(href){
     }
 
 }
-
-
-
-
 

@@ -1,5 +1,5 @@
 
-// Coupon Handling Logic
+
 document.addEventListener('DOMContentLoaded', () => {
     const viewCouponsBtn = document.getElementById('viewCouponsBtn');
     const applyCouponBtn = document.getElementById('applyCouponBtn');
@@ -7,9 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const couponList = document.getElementById('couponList');
     const couponCodeInput = document.getElementById('couponCodeInput');
 
-    // Initial check if coupon is applied (populate UI if discount > 0)
-    // Note: We'd need server to pass down the code if we want to show it on load, 
-    // but for now we can infer from discount existence or handle it progressively.
     const initialDiscount = parseFloat(document.getElementById('discountValue').innerText.replace(/[^\d.]/g, ''));
     if (initialDiscount > 0) {
         document.getElementById('appliedCouponSection').style.display = 'block';
@@ -19,8 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('applyCouponBtn').disabled = true;
     }
 
-
-    // Fetch and Display Coupons
     viewCouponsBtn.addEventListener('click', async () => {
         try {
             const response = await fetch('/available-coupons');
@@ -47,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 html += '</ul>';
                 couponList.innerHTML = html;
 
-                // Add event listeners to new buttons
                 document.querySelectorAll('.apply-coupon-list-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const code = e.target.getAttribute('data-code');
@@ -67,13 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Apply Coupon
     applyCouponBtn.addEventListener('click', () => {
         const code = couponCodeInput.value.trim();
         if (code) applyCoupon(code);
     });
 
-    // Remove Coupon
     removeCouponBtn.addEventListener('click', async () => {
         try {
             const response = await fetch('/remove-coupon');
@@ -87,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     timer: 1500,
                     showConfirmButton: false
                 }).then(() => {
-                    window.location.reload(); // Simple reload to calculate totals on server side properly
+                    window.location.reload();
                 });
             } else {
                 Swal.fire({
@@ -114,13 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     timer: 1500,
                     showConfirmButton: false
                 }).then(() => {
-                    // Update UI
-                    /* 
-                    // Client side update is risky if logic is complex, reloading is safer to ensure server state matches UI
-                    // But for better UX, we could update DOM elements here.
-                    document.getElementById('discountValue').innerText = data.discount;
-                    // ... update total ...
-                    */
+
                     window.location.reload();
                 });
             } else {

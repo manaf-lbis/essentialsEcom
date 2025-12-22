@@ -1,9 +1,5 @@
-/**
- * Global Alert Helper for modern and beautiful SweetAlert2 notifications.
- * This utility provides pre-configured mixins for a consistent premium feel.
- */
 
-// Toast Mixin
+
 const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -19,7 +15,6 @@ const Toast = Swal.mixin({
     }
 });
 
-// Global Toast Functions
 window.SuccessToast = (message) => {
     Toast.fire({
         icon: 'success',
@@ -41,7 +36,6 @@ window.WarningToast = (message) => {
     });
 };
 
-// Confirm Modal Function
 window.ConfirmAction = async (title, text, confirmButtonText = 'Yes, Proceed', icon = 'warning') => {
     return Swal.fire({
         title: title,

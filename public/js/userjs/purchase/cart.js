@@ -1,5 +1,5 @@
 
-//confirm before removing the item from cart
+
 const removeBtn = document.querySelectorAll('.removeBtn');
 
 removeBtn.forEach((ele) => {
@@ -23,7 +23,6 @@ async function removeItem(event) {
   }
 }
 
-//checking cart is empty or not and prevent proceed to checkout page
 const checkoutBtn = document.getElementById('checkoutBtn');
 if (checkoutBtn) {
   checkoutBtn.addEventListener('click', (event) => {
@@ -37,7 +36,6 @@ if (checkoutBtn) {
   });
 }
 
-// changing product quanntity
 const items = document.querySelectorAll('#items')
 items.forEach((ele) => ele.addEventListener('click', qtyChangeRqst));
 
@@ -90,10 +88,9 @@ function updatePage(data, totalPriceTag, qty, priceOfItem) {
   if (data.discount > 0) {
     if (dv) dv.innerHTML = `₹ ${data.discount}`;
   } else {
-    // Clear discount UI
+
     if (dv) dv.innerHTML = `₹ 0`;
 
-    // Reset coupon UI sections if coupon was invalidated
     const appliedSection = document.getElementById('appliedCouponSection');
     if (appliedSection) {
       appliedSection.style.display = 'none';

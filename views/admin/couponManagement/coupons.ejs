@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/productmanagement/productmanagement.css" }) %>
+  <%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/productmanagement/productmanagement.css" })%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
       .coupon-table {
@@ -79,13 +79,13 @@
 
 <body class="bg-light">
 
-  <%- include('../../partials/adminNavbar.ejs') %>
+  <%- include('../../partials/adminNavbar.ejs')%>
 
     <div class="container-fluid wrapper">
-      <%- include("../../partials/adminLeftsidebar.ejs") %>
+      <%- include("../../partials/adminLeftsidebar.ejs")%>
 
         <div class="mainpanel p-4">
-          <!-- Header -->
+
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h4 class="fw-bold mb-1">Coupon Management</h4>
@@ -96,7 +96,6 @@
             </a>
           </div>
 
-          <!-- Coupons Table -->
           <div class="coupon-table mb-4">
             <div class="table-responsive">
               <table class="table mb-0">
@@ -111,66 +110,65 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <% if(coupons && coupons.length> 0) { %>
-                    <% for(let coupon of coupons){ %>
-                      <tr id="row-<%= coupon._id %>">
+                  <%if(coupons && coupons.length> 0) {%>
+                    <%for(let coupon of coupons){%>
+                      <tr id="row-<%= coupon._id%>">
                         <td class="fw-bold text-primary">
-                          <%= coupon.couponCode %>
+                          <%= coupon.couponCode%>
                         </td>
                         <td>
-                          <div class="fw-bold">₹<%= coupon.discount %>
+                          <div class="fw-bold">₹<%= coupon.discount%>
                           </div>
-                          <div class="small text-muted">Min: ₹<%= coupon.minPurchaseValue %>
+                          <div class="small text-muted">Min: ₹<%= coupon.minPurchaseValue%>
                           </div>
                         </td>
                         <td>
-                          <%= coupon.usedCount %>
+                          <%= coupon.usedCount%>
                         </td>
                         <td>
-                          <%= new Date(coupon.expiryDate).toLocaleDateString() %>
+                          <%= new Date(coupon.expiryDate).toLocaleDateString()%>
                         </td>
                         <td>
-                          <% if (new Date(coupon.expiryDate) < new Date()) { %>
+                          <%if (new Date(coupon.expiryDate) < new Date()) {%>
                             <span class="status-badge status-expired">Expired</span>
-                            <% } else if (!coupon.isActive) { %>
+                            <%} else if (!coupon.isActive) {%>
                               <span class="status-badge status-inactive">Inactive</span>
-                              <% } else { %>
+                              <%} else {%>
                                 <span class="status-badge status-active">Active</span>
-                                <% } %>
+                                <%}%>
                         </td>
                         <td class="text-end">
-                          <% if (new Date(coupon.expiryDate)> new Date() && coupon.isActive) { %>
-                            <button class="action-btn btn-delete" onclick="disableCoupon('<%= coupon._id %>')"
+                          <%if (new Date(coupon.expiryDate)> new Date() && coupon.isActive) {%>
+                            <button class="action-btn btn-delete" onclick="disableCoupon('<%= coupon._id%>')"
                               title="Disable/Remove">
                               <i class="fas fa-trash"></i>
                             </button>
-                            <% } %>
+                            <%}%>
                         </td>
                       </tr>
-                      <% } %>
-                        <% } else { %>
+                      <%}%>
+                        <%} else {%>
                           <tr>
                             <td colspan="6" class="text-center py-5 text-muted">No coupons found.</td>
                           </tr>
-                          <% } %>
+                          <%}%>
                 </tbody>
               </table>
             </div>
           </div>
 
-          <!-- Pagination -->
           <nav aria-label="Page navigation" class="d-flex justify-content-center">
             <ul class="pagination">
-              <li class="page-item <%= Number(currentPage) <= 1 ? 'disabled' : '' %>">
-                <a class="page-link" href="/admin/coupons/?pageReq=<%= Number(currentPage)-1 %>">Previous</a>
+              <li class="page-item <%= Number(currentPage) <= 1 ? 'disabled' : ''%>">
+                <a class="page-link" href="/admin/coupons/?pageReq=<%= Number(currentPage)-1%>">Previous</a>
               </li>
               <li class="page-item active">
                 <a class="page-link" href="#">
-                  <%= currentPage %>
+                  <%= currentPage%>
                 </a>
               </li>
               <li class="page-item">
-                <a class="page-link" href="/admin/coupons/?pageReq=<%= Number(currentPage)+1 %>">Next</a>
+                <a class="page-link" href="/admin/coupons/?pageReq=<%= Number(currentPage)+1%>">Next</a>
               </li>
             </ul>
           </nav>

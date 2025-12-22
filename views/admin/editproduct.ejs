@@ -2,17 +2,17 @@
 <html lang="en">
 
 <head>
-    <%- include("../partials/htmlHead.ejs", { csspath: "/css/adminCss/addproduct/addproduct.css" }) %>
+    <%- include("../partials/htmlHead.ejs", { csspath: "/css/adminCss/addproduct/addproduct.css" })%>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body class="bg-light">
 
-    <%- include('../partials/adminNavbar.ejs') %>
+    <%- include('../partials/adminNavbar.ejs')%>
 
         <div class="container-fluid wrapper">
-            <%- include("../partials/adminLeftsidebar.ejs") %>
+            <%- include("../partials/adminLeftsidebar.ejs")%>
 
                 <div class="mainpanel p-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -29,12 +29,12 @@
                     </div>
 
                     <form id="editProductForm" novalidate onsubmit="return false">
-                        <input type="hidden" name="_id" id="_id" value="<%= dbResult._id %>">
+                        <input type="hidden" name="_id" id="_id" value="<%= dbResult._id%>">
 
                         <div class="row g-4">
-                            <!-- Left Column: General Info & Details -->
+
                             <div class="col-lg-8">
-                                <!-- General Information -->
+
                                 <div class="card mb-4">
                                     <div class="card-header bg-white py-3">
                                         <h6 class="mb-0 fw-bold">General Information</h6>
@@ -43,19 +43,18 @@
                                         <div class="mb-3">
                                             <label for="productName" class="form-label">Product Name *</label>
                                             <input type="text" class="form-control" id="productName" name="productName"
-                                                value="<%= dbResult.productName %>" required>
+                                                value="<%= dbResult.productName%>" required>
                                             <div class="invalid-feedback">Product Name is required</div>
                                         </div>
                                         <div class="mb-3">
                                             <label for="description" class="form-label">Description *</label>
                                             <textarea class="form-control" id="description" name="description" rows="5"
-                                                required><%= dbResult.description %></textarea>
+                                                required><%= dbResult.description%></textarea>
                                             <div class="invalid-feedback">Description is required</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Product Details -->
                                 <div class="card mb-4">
                                     <div class="card-header bg-white py-3">
                                         <h6 class="mb-0 fw-bold">Product Details</h6>
@@ -65,41 +64,40 @@
                                             <div class="col-md-6">
                                                 <label for="brand" class="form-label">Brand *</label>
                                                 <input type="text" class="form-control" id="brand" name="brand"
-                                                    value="<%= dbResult.brand %>" required>
+                                                    value="<%= dbResult.brand%>" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="status" class="form-label">Status</label>
                                                 <select class="form-select" id="status" name="status">
                                                     <option value="Available" <%=dbResult.status==='Available'
-                                                        ? 'selected' : '' %>>Available</option>
+                                                        ? 'selected' : ''%>>Available</option>
                                                     <option value="Out of Stock" <%=dbResult.status==='Out of Stock'
-                                                        ? 'selected' : '' %>>Out of Stock</option>
+                                                        ? 'selected' : ''%>>Out of Stock</option>
                                                 </select>
                                             </div>
-                                            <!-- Category is usually fixed or harder to move, but allowing edit if backend handles it -->
+
                                             <div class="col-md-4">
                                                 <label for="color" class="form-label">Color *</label>
                                                 <input type="text" class="form-control" id="color" name="color"
-                                                    value="<%= dbResult.color %>" required>
+                                                    value="<%= dbResult.color%>" required>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="size" class="form-label">Size *</label>
                                                 <input type="text" class="form-control" id="size" name="size"
-                                                    value="<%= dbResult.size %>" required>
+                                                    value="<%= dbResult.size%>" required>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="material" class="form-label">Material *</label>
                                                 <input type="text" class="form-control" id="material" name="material"
-                                                    value="<%= dbResult.material %>" required>
+                                                    value="<%= dbResult.material%>" required>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Right Column: Pricing & Media -->
                             <div class="col-lg-4">
-                                <!-- Pricing -->
+
                                 <div class="card mb-4">
                                     <div class="card-header bg-white py-3">
                                         <h6 class="mb-0 fw-bold">Pricing & Stock</h6>
@@ -108,14 +106,14 @@
                                         <div class="mb-3">
                                             <label for="regularPrice" class="form-label">Regular Price (₹) *</label>
                                             <input type="number" class="form-control" id="regularPrice"
-                                                name="regularPrice" min="0" value="<%= dbResult.regularPrice %>"
+                                                name="regularPrice" min="0" value="<%= dbResult.regularPrice%>"
                                                 required>
                                             <div class="invalid-feedback">Valid Regular Price is required</div>
                                         </div>
                                         <div class="mb-3">
                                             <label for="sellingPrice" class="form-label">Selling Price (₹) *</label>
                                             <input type="number" class="form-control" id="sellingPrice"
-                                                name="sellingPrice" min="0" value="<%= dbResult.sellingPrice %>"
+                                                name="sellingPrice" min="0" value="<%= dbResult.sellingPrice%>"
                                                 required>
                                             <div class="invalid-feedback">Selling Price must be less than Regular Price
                                             </div>
@@ -123,12 +121,11 @@
                                         <div class="mb-3">
                                             <label for="quantity" class="form-label">Stock Quantity *</label>
                                             <input type="number" class="form-control" id="quantity" name="quantity"
-                                                min="0" value="<%= dbResult.quantity %>" required>
+                                                min="0" value="<%= dbResult.quantity%>" required>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Media -->
                                 <div class="card">
                                     <div
                                         class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
@@ -137,86 +134,82 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row g-2">
-                                            <% for(let i=0; i < 6; i++) { let existingImg=dbResult.productImage[i]; let
-                                                slotIndex=i + 1; %>
+                                            <%for(let i=0; i < 6; i++) { let existingImg=dbResult.productImage[i]; let
+                                                slotIndex=i + 1;%>
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label small text-muted">Image <%= slotIndex %>
+                                                    <label class="form-label small text-muted">Image <%= slotIndex%>
                                                             </label>
                                                     <div class="image-upload-container p-2"
-                                                        id="drop-zone-<%= slotIndex %>"
-                                                        onclick="if(!'<%= existingImg %>') document.getElementById('image<%= slotIndex %>').click()"
+                                                        id="drop-zone-<%= slotIndex%>"
+                                                        onclick="if(!'<%= existingImg%>') document.getElementById('image<%= slotIndex%>').click()"
                                                         style="min-height: 150px;">
 
-                                                        <input type="file" id="image<%= slotIndex %>" name="images"
+                                                        <input type="file" id="image<%= slotIndex%>" name="images"
                                                             class="d-none" accept="image/*"
-                                                            onchange="handleImageNative(this, <%= slotIndex %>)">
+                                                            onchange="handleImageNative(this, <%= slotIndex%>)">
 
-                                                        <!-- If existing image, show it & Delete button -->
-                                                        <!-- If no image, show Upload trigger -->
-
-                                                        <% if(existingImg) { %>
-                                                            <div id="existing-view-<%= slotIndex %>"
+                                                        <%if(existingImg) {%>
+                                                            <div id="existing-view-<%= slotIndex%>"
                                                                 class="text-center w-100 h-100">
-                                                                <img src="<%= existingImg %>"
+                                                                <img src="<%= existingImg%>"
                                                                     class="image-preview d-block mb-2"
                                                                     style="max-height: 100px; margin: 0 auto;">
                                                                 <button type="button"
                                                                     class="btn btn-sm btn-outline-danger w-100"
-                                                                    onclick="deleteExistingImage('<%= dbResult._id %>', '<%= existingImg %>', <%= slotIndex %>)">
+                                                                    onclick="deleteExistingImage('<%= dbResult._id%>', '<%= existingImg%>', <%= slotIndex%>)">
                                                                     <i class="fas fa-trash me-1"></i> Remove
                                                                 </button>
                                                             </div>
 
-                                                            <!-- Hidden placeholders for upload UI components so JS can toggle them if deleted -->
-                                                            <div id="upload-content-<%= slotIndex %>"
+                                                            <div id="upload-content-<%= slotIndex%>"
                                                                 class="btn-upload-trigger" style="display:none;">
                                                                 <i class="fas fa-cloud-upload-alt fs-4 mb-2"></i><br>
                                                                 <span class="small">Upload</span>
                                                             </div>
-                                                            <img id="preview-<%= slotIndex %>" class="image-preview"
+                                                            <img id="preview-<%= slotIndex%>" class="image-preview"
                                                                 style="display:none; max-height: 120px;">
-                                                            <div id="actions-<%= slotIndex %>"
+                                                            <div id="actions-<%= slotIndex%>"
                                                                 class="image-actions justify-content-center"
                                                                 style="display:none;">
                                                                 <button type="button"
                                                                     class="btn btn-sm btn-outline-primary px-2 py-1"
-                                                                    onclick="window.event.stopPropagation(); initCrop(<%= slotIndex %>)"><i
+                                                                    onclick="window.event.stopPropagation(); initCrop(<%= slotIndex%>)"><i
                                                                         class="fas fa-crop-alt"></i></button>
                                                                 <button type="button"
                                                                     class="btn btn-sm btn-outline-danger px-2 py-1"
-                                                                    onclick="window.event.stopPropagation(); removeImage(<%= slotIndex %>)"><i
+                                                                    onclick="window.event.stopPropagation(); removeImage(<%= slotIndex%>)"><i
                                                                         class="fas fa-trash"></i></button>
                                                             </div>
 
-                                                            <% } else { %>
+                                                            <%} else {%>
 
-                                                                <div id="existing-view-<%= slotIndex %>"
+                                                                <div id="existing-view-<%= slotIndex%>"
                                                                     style="display:none;"></div>
 
-                                                                <div id="upload-content-<%= slotIndex %>"
+                                                                <div id="upload-content-<%= slotIndex%>"
                                                                     class="btn-upload-trigger">
                                                                     <i
                                                                         class="fas fa-cloud-upload-alt fs-4 mb-2"></i><br>
                                                                     <span class="small">Upload</span>
                                                                 </div>
-                                                                <img id="preview-<%= slotIndex %>" class="image-preview"
+                                                                <img id="preview-<%= slotIndex%>" class="image-preview"
                                                                     style="max-height: 120px;">
-                                                                <div id="actions-<%= slotIndex %>"
+                                                                <div id="actions-<%= slotIndex%>"
                                                                     class="image-actions justify-content-center">
                                                                     <button type="button"
                                                                         class="btn btn-sm btn-outline-primary px-2 py-1"
-                                                                        onclick="window.event.stopPropagation(); initCrop(<%= slotIndex %>)"><i
+                                                                        onclick="window.event.stopPropagation(); initCrop(<%= slotIndex%>)"><i
                                                                             class="fas fa-crop-alt"></i></button>
                                                                     <button type="button"
                                                                         class="btn btn-sm btn-outline-danger px-2 py-1"
-                                                                        onclick="window.event.stopPropagation(); removeImage(<%= slotIndex %>)"><i
+                                                                        onclick="window.event.stopPropagation(); removeImage(<%= slotIndex%>)"><i
                                                                             class="fas fa-trash"></i></button>
                                                                 </div>
-                                                                <% } %>
+                                                                <%}%>
 
                                                     </div>
                                                 </div>
-                                                <% } %>
+                                                <%}%>
                                         </div>
                                     </div>
                                 </div>
@@ -226,7 +219,6 @@
                 </div>
         </div>
 
-        <!-- Crop Modal Same as Add Product -->
         <div class="modal fade" id="cropModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
@@ -250,7 +242,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <!-- We create a new script for Edit specific logic -->
+
         <script src="/js/adminjs/editProduct.js"></script>
 </body>
 

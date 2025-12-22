@@ -34,7 +34,7 @@ const walletSchema = new Schema({
         default: ''
       },
       orderId: {
-        type: String, // Reference to Order.orderId (the unique orderId, not _id)
+        type: String,
         default: null
       },
       status: {
@@ -48,7 +48,6 @@ const walletSchema = new Schema({
   {
     timestamps: true
   });
-
 
 const Wallet = mongoose.model('Wallet', walletSchema);
 

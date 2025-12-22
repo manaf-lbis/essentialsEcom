@@ -1,7 +1,6 @@
 const countdown = document.getElementById('countdown');
 const resendBtn = document.getElementById('resendBtn');
 
-
 function timer() {
 
     let decCounter = 60;
@@ -19,7 +18,6 @@ function timer() {
 
 timer();
 
-
 resendBtn.addEventListener('click', () => {
 
     fetch('/resentotp', { method: 'GET', })
@@ -33,7 +31,6 @@ resendBtn.addEventListener('click', () => {
             });
             console.log(result);
 
-
         }).catch((e) => {
             console.log(e)
             alert('somthing wrong', e)
@@ -44,14 +41,8 @@ resendBtn.addEventListener('click', () => {
     timer();
 });
 
-
-
-
-
-// otp verify
 const verifyOtp = async () => {
     const enteredOtp = document.getElementById('userOtp').value;
-
 
     const response = await fetch('/verify-otp', {
         method: 'post',
@@ -60,7 +51,6 @@ const verifyOtp = async () => {
             'Content-Type': 'application/json'
         }
     });
-
 
     if (response.ok) {
 
@@ -72,8 +62,6 @@ const verifyOtp = async () => {
         });
 
         window.location.href = '/home'
-
-
 
     } else {
 
@@ -87,5 +75,4 @@ const verifyOtp = async () => {
     }
 
 }
-
 

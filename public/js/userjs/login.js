@@ -1,6 +1,5 @@
 const form = document.getElementById('form');
 
-// Test Login Button - Auto-fill credentials
 const testLoginBtn = document.getElementById('testLoginBtn');
 if (testLoginBtn) {
     testLoginBtn.addEventListener('click', () => {
@@ -22,7 +21,7 @@ form.addEventListener("submit", (event) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailPattern.test(email)) {
         validation = false;
-        document.getElementById('emailerr').innerHTML = 'Valid email is required.'; // Show error message
+        document.getElementById('emailerr').innerHTML = 'Valid email is required.';
     }
 
     const passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -30,7 +29,6 @@ form.addEventListener("submit", (event) => {
         document.getElementById('passworderr').innerHTML = 'Password must be at least 8 characters long and contain at least one letter and one number.';
         validation = false;
     }
-
 
     function clearError() {
         document.getElementById('emailerr').innerHTML = '';
@@ -40,6 +38,5 @@ form.addEventListener("submit", (event) => {
     if (validation) {
         form.submit();
     }
-
 
 });

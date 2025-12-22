@@ -1,15 +1,14 @@
 <html lang="en">
 
-<%- include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/profile/profile.css'}) %>
+<%- include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/profile/profile.css'})%>
 
     <body>
-        <%- include('../../partials/userNavbar.ejs') %>
+        <%- include('../../partials/userNavbar.ejs')%>
 
             <div class="profile-container">
                 <div class="profile-layout">
-                    <%- include('../../partials/userprofile/profileLayoutMinimal.ejs', { activePage: 'address' }) %>
+                    <%- include('../../partials/userprofile/profileLayoutMinimal.ejs', { activePage: 'address' })%>
 
-                        <!-- Main Content -->
                         <main class="profile-content-card">
                             <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
                                 <h4 class="mb-0 fw-bold">Address Management</h4>
@@ -19,14 +18,14 @@
                                 </button>
                             </div>
 
-                            <% if(addressDetails.length> 0) { %>
+                            <%if(addressDetails.length> 0) {%>
                                 <div class="row g-3">
-                                    <% for(let ele of addressDetails ){ %>
+                                    <%for(let ele of addressDetails ){%>
                                         <div class="col-md-6 mb-3">
                                             <div class="card h-100 border p-3 bg-light rounded shadow-sm">
                                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                                     <span class="badge bg-secondary text-white">
-                                                        <%= ele.defaultAddress ? 'Default' : 'Address' %>
+                                                        <%= ele.defaultAddress ? 'Default' : 'Address'%>
                                                     </span>
                                                     <div class="dropdown">
                                                         <button class="btn btn-sm btn-link text-dark p-0" type="button"
@@ -44,34 +43,33 @@
                                                     </div>
                                                 </div>
                                                 <h6 class="fw-bold mb-1">
-                                                    <%= ele.fullName %>
+                                                    <%= ele.fullName%>
                                                 </h6>
                                                 <p class="mb-1 text-muted small">
-                                                    <%= ele.houseName %>, <%= ele.street %>
+                                                    <%= ele.houseName%>, <%= ele.street%>
                                                 </p>
                                                 <p class="mb-1 text-muted small">
-                                                    <%= ele.area %>, <%= ele.city %>
+                                                    <%= ele.area%>, <%= ele.city%>
                                                 </p>
                                                 <p class="mb-0 text-muted small">
-                                                    <%= ele.state %> - <%= ele.pincode %>
+                                                    <%= ele.state%> - <%= ele.pincode%>
                                                 </p>
                                                 <p class="mb-0 mt-2 text-primary small"><i
                                                         class="fas fa-phone-alt me-1"></i>
-                                                    <%= ele.phone %>
+                                                    <%= ele.phone%>
                                                 </p>
                                             </div>
                                         </div>
-                                        <% } %>
+                                        <%}%>
                                 </div>
-                                <% } else { %>
+                                <%} else {%>
                                     <div class="text-center py-5">
                                         <img src="/assets/images/no-address.svg" alt="No Address" class="mb-3"
                                             style="width: 100px; opacity: 0.5;">
                                         <p class="text-muted">No addresses saved yet.</p>
                                     </div>
-                                    <% } %>
+                                    <%}%>
 
-                                        <!-- Add/Edit Modal (Same as before but cleaned up) -->
                                         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
                                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -160,7 +158,7 @@
                                                                         <option value="Karnataka">Karnataka</option>
                                                                         <option value="Maharashtra">Maharashtra
                                                                         </option>
-                                                                        <!-- Add other states as needed -->
+
                                                                     </select>
                                                                     <small class="text-danger" id="stateErr"></small>
                                                                 </div>
@@ -199,7 +197,7 @@
                 </div>
             </div>
 
-            <%- include('../../partials/userFooter.ejs') %>
+            <%- include('../../partials/userFooter.ejs')%>
 
                 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
                 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
