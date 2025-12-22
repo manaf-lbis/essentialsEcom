@@ -1,5 +1,7 @@
 const Category = require('../../models/categorySchema');
 const Product = require('../../models/productSchema');
+const fs = require('fs');
+const path = require('path');
 
 const listCategory = async (req, res) => {
     try {
@@ -49,32 +51,45 @@ const addCategoryPage = (req, res) => {
 
 const addCategory = async (req, res) => {
     try {
-
         const { categoryName, description } = req.body;
-        const { filename } = req.file;
+
+        // Basic presence validation
+        if (!categoryName || !description || !req.file) {
+            return res.render('admin/addcategory', { message: 'All fields including image are required.' });
+        }
 
         const categoryNameTrimmed = categoryName.trim();
 
+        // Specific field validation
+        if (categoryNameTrimmed.length < 3) {
+            return res.render('admin/addcategory', { message: 'Category Name must be at least 3 characters.' });
+        }
+        if (!/^[a-zA-Z\s]+$/.test(categoryNameTrimmed)) {
+            return res.render('admin/addcategory', { message: 'Category Name should contain only alphabets.' });
+        }
+        if (description.trim().length < 10) {
+            return res.render('admin/addcategory', { message: 'Description must be at least 10 characters.' });
+        }
+
         const isExist = await Category.findOne(
-            { categoryName: { $regex: new RegExp(categoryNameTrimmed, 'i') } }
+            { categoryName: { $regex: new RegExp(`^${categoryNameTrimmed}$`, 'i') } }
         );
 
         if (isExist) {
-            return res.render('admin/addcategory', { message: 'Category Exists' });
+            return res.render('admin/addcategory', { message: 'Category already exists.' });
         }
 
+        const { filename } = req.file;
         const category = new Category({
             categoryName: categoryNameTrimmed,
-            description,
+            description: description.trim(),
             image: filename,
         });
 
         await category.save();
-
         return res.redirect('/admin/category');
 
     } catch (error) {
-
         console.log('Error while adding category: ', error);
         return res.status(500).redirect('/admin/pagenotFound');
     }
@@ -109,7 +124,7 @@ const editCategoryPage = async (req, res) => {
         const _id = req.query.id;
 
         const dbResult = await Category.findOne({ _id });
-        res.render('admin/editcategory', { dbResult });
+        res.render('admin/editcategory', { dbResult, message: '' });
 
     } catch (error) {
 
@@ -121,12 +136,51 @@ const editCategoryPage = async (req, res) => {
 
 const updateCategory = async (req, res) => {
     try {
-
         const { categoryName, description, _id } = req.body;
 
-        let updateData = { categoryName, description };
+        const currentCategory = await Category.findById(_id);
+        if (!currentCategory) {
+            return res.redirect('/admin/pagenotFound');
+        }
+
+        if (!categoryName || !description) {
+            return res.render('admin/editcategory', { dbResult: currentCategory, message: 'All fields are required.' });
+        }
+
+        const categoryNameTrimmed = categoryName.trim();
+
+        if (categoryNameTrimmed.length < 3) {
+            return res.render('admin/editcategory', { dbResult: currentCategory, message: 'Category Name must be at least 3 characters.' });
+        }
+        if (!/^[a-zA-Z\s]+$/.test(categoryNameTrimmed)) {
+            return res.render('admin/editcategory', { dbResult: currentCategory, message: 'Category Name should contain only alphabets.' });
+        }
+        if (description.trim().length < 10) {
+            return res.render('admin/editcategory', { dbResult: currentCategory, message: 'Description must be at least 10 characters.' });
+        }
+
+        const isExist = await Category.findOne({
+            categoryName: { $regex: new RegExp(`^${categoryNameTrimmed}$`, 'i') },
+            _id: { $ne: _id }
+        });
+
+        if (isExist) {
+            return res.render('admin/editcategory', { dbResult: currentCategory, message: 'Another category with this name already exists.' });
+        }
+
+        let updateData = {
+            categoryName: categoryNameTrimmed,
+            description: description.trim()
+        };
 
         if (req.file) {
+            // Delete old image if it exists
+            if (currentCategory.image) {
+                const oldImagePath = path.join(__dirname, '../public/uploads', currentCategory.image);
+                fs.unlink(oldImagePath, (err) => {
+                    if (err) console.error("Error deleting old image:", err);
+                });
+            }
             updateData.image = req.file.filename;
         }
 
@@ -138,7 +192,6 @@ const updateCategory = async (req, res) => {
         res.redirect('/admin/category');
 
     } catch (error) {
-
         console.log(error);
         return res.redirect('/admin/pagenotFound');
     }

@@ -123,6 +123,26 @@ const orderStatusUpdate = async (req, res) => {
             { $set: updateData }
         );
 
+        // Sync top-level status
+        const updatedOrder = await Order.findOne({ orderId });
+        const allItems = updatedOrder.orderItems;
+
+        let newOrderStatus = updatedOrder.status;
+        if (allItems.every(i => ['Delivered', 'Cancelled', 'Returned', 'Rejected'].includes(i.status))) {
+            if (allItems.some(i => i.status === 'Delivered')) newOrderStatus = 'Delivered';
+            else if (allItems.every(i => i.status === 'Cancelled')) newOrderStatus = 'Cancelled';
+            else if (allItems.some(i => i.status === 'Returned')) newOrderStatus = 'Returned';
+            else newOrderStatus = allItems[0].status; // Fallback
+        } else if (allItems.some(i => i.status === 'Shipped')) {
+            newOrderStatus = 'Shipped';
+        } else if (allItems.some(i => i.status === 'Processing')) {
+            newOrderStatus = 'Processing';
+        }
+
+        if (newOrderStatus !== updatedOrder.status) {
+            await Order.updateOne({ orderId }, { $set: { status: newOrderStatus } });
+        }
+
         return res.json({ success: true, message: 'Status updated successfully' });
 
     } catch (error) {

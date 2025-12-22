@@ -130,6 +130,12 @@ const orderSchema = new Schema({
   paymentId: {
     type: String
   },
+  status: {
+    type: String,
+    required: true,
+    default: 'Pending',
+    enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Rejected', 'ReturnRequested', 'Returned', 'Pending for Payment'],
+  },
 },
   {
     timestamps: true

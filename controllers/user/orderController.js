@@ -147,7 +147,7 @@ async function createOrder(orderInfo) {
             discount: cartCoupon?.coupon?.discount ?? 0,
             coupon,
             paymentId: paymentMethod === 'Online Payment' ? orderInfo.razorpayOrder : '',
-
+            status: (paymentMethod === 'Online Payment') ? 'Pending for Payment' : 'Pending',
         });
 
         await Cart.deleteOne({ userId: userId })
@@ -325,6 +325,11 @@ const cancelOrder = async (req, res) => {
         const category = await Product.findOne({ _id: productId }, { category: 1 });
 
         await Category.updateOne({ _id: category.category }, { $inc: { categorySalesCount: -orderItem.quantity } })
+
+        const allCancelled = order.orderItems.every(item => item.status === 'Cancelled');
+        if (allCancelled) {
+            order.status = 'Cancelled';
+        }
 
         await order.save();
 

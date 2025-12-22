@@ -6,11 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const imagePreview = document.getElementById('imagePreview');
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
 
+    const cropModalElement = document.getElementById('cropModal');
+    const cropModal = new bootstrap.Modal(cropModalElement);
+    const imageToCrop = document.getElementById('imageToCrop');
+    const cropButton = document.getElementById('cropButton');
+    const reCropBtn = document.getElementById('reCropBtn');
+
+    let cropper;
+
     if (imageInput) {
         imageInput.addEventListener('change', function (event) {
             const file = event.target.files[0];
             if (file) {
-
                 const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
                 if (!validTypes.includes(file.type)) {
                     showError('imageError', 'Invalid file type. Only JPG, JPEG, and PNG are allowed.');
@@ -21,19 +28,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    imagePreview.src = e.target.result;
-                    imagePreviewContainer.classList.remove('d-none');
-                    clearError('imageError');
+                    imageToCrop.src = e.target.result;
+                    cropModal.show();
                 }
                 reader.readAsDataURL(file);
-            } else {
-                imagePreviewContainer.classList.add('d-none');
             }
         });
     }
 
+    cropModalElement.addEventListener('shown.bs.modal', function () {
+        cropper = new Cropper(imageToCrop, {
+            aspectRatio: 1,
+            viewMode: 1,
+            guides: true,
+            background: false,
+            autoCropArea: 1,
+            zoomable: true
+        });
+    });
+
+    cropModalElement.addEventListener('hidden.bs.modal', function () {
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+    });
+
+    cropButton.addEventListener('click', function () {
+        if (cropper) {
+            const canvas = cropper.getCroppedCanvas({
+                width: 400,
+                height: 400
+            });
+
+            canvas.toBlob((blob) => {
+                const file = new File([blob], 'category.jpg', { type: 'image/jpeg' });
+                const container = new DataTransfer();
+                container.items.add(file);
+                imageInput.files = container.files;
+
+                imagePreview.src = canvas.toDataURL();
+                imagePreviewContainer.classList.remove('d-none');
+                clearError('imageError');
+                cropModal.hide();
+            }, 'image/jpeg');
+        }
+    });
+
+    reCropBtn.addEventListener('click', () => {
+        cropModal.show();
+    });
+
     form.addEventListener('submit', (e) => {
-        e.preventDefault();
         let isValid = true;
 
         clearError('categoryNameError');
@@ -61,8 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
             isValid = false;
         }
 
-        if (isValid) {
-            form.submit();
+        if (!isValid) {
+            e.preventDefault();
         }
     });
 
