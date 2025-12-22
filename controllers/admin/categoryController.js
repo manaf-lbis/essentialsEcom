@@ -7,7 +7,7 @@ const listCategory = async (req, res) => {
     try {
         //pagenation logic
         let currentpage = req.query.currentpage || 1;
-        const limit = 5;
+        const limit = 10;
 
         //counting the total documnet for calculating pages
         const totalPages = Math.ceil(await Category.countDocuments() / limit)
@@ -113,13 +113,12 @@ const removeCategory = async (req, res) => {
             { $set: { isBlocked: true } }
         );
 
-        //redirecting to category listing page
-        return res.redirect('/admin/category');
+        //return JSON for AJAX
+        return res.json({ success: true, message: 'Category blocked successfully' });
 
     } catch (error) {
-        //logging error and redirect to error page
         console.log(error);
-        return res.status(500).redirect('/admin/pagenotFound');
+        return res.status(500).json({ success: false, message: 'Failed to block' });
     }
 };
 
@@ -149,17 +148,24 @@ const updateCategory = async (req, res) => {
         //extracting data from body
         const { categoryName, description, _id } = req.body;
 
+        let updateData = { categoryName, description };
+
+        // Check if new image is uploaded
+        if (req.file) {
+            updateData.image = req.file.filename;
+        }
+
         //updating new details in dataBase
         await Category.updateOne(
             { _id },
-            { categoryName, description }
+            { $set: updateData }
         );
 
         //redirecting category listing page
         res.redirect('/admin/category');
 
     } catch (error) {
- 
+
         //logging error and redirecting error page 
         console.log(error);
         return res.redirect('/admin/pagenotFound');
@@ -175,8 +181,9 @@ const restoreCategory = async (req, res) => {
         // updating category status unblocked
         await Category.updateOne(
             { _id },
-            { $set: { isBlocked: false }
-        });
+            {
+                $set: { isBlocked: false }
+            });
 
         //updating all products in this category unbolocked
         await Product.updateMany(
@@ -184,13 +191,12 @@ const restoreCategory = async (req, res) => {
             { $set: { isBlocked: false } }
         );
 
-        //redirect category listing page
-        res.redirect('/admin/category');
+        //return JSON for AJAX
+        return res.json({ success: true, message: 'Category restored successfully' });
 
     } catch (error) {
-        //logging error and redirect to error page 
         console.log(error);
-        return res.status(500).redirect('/admin/pagenotFound');
+        return res.status(500).json({ success: false, message: 'Failed to restore' });
     }
 };
 

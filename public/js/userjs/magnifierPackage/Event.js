@@ -6,12 +6,12 @@
 *
 * @author Mark Rolich <mark.rolich@gmail.com>
 */
-var Event = function () {
+var MagnifierEvent = function () {
     "use strict";
     this.attach = function (evtName, element, listener, capture) {
-        var evt         = '',
-            useCapture  = (capture === undefined) ? true : capture,
-            handler     = null;
+        var evt = '',
+            useCapture = (capture === undefined) ? true : capture,
+            handler = null;
 
         if (window.addEventListener === undefined) {
             evt = 'on' + evtName;
@@ -28,7 +28,7 @@ var Event = function () {
         }
 
         return handler.apply(element, [evt, function (ev) {
-            var e   = ev || event,
+            var e = ev || event,
                 src = e.srcElement || e.target;
 
             listener(e, src);
@@ -36,8 +36,8 @@ var Event = function () {
     };
 
     this.detach = function (evtName, element, listener, capture) {
-        var evt         = '',
-            useCapture  = (capture === undefined) ? true : capture;
+        var evt = '',
+            useCapture = (capture === undefined) ? true : capture;
 
         if (window.removeEventListener === undefined) {
             evt = 'on' + evtName;

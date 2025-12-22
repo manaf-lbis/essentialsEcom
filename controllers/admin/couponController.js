@@ -6,9 +6,10 @@ const coupons = async (req, res) => {
 
         //coupon page pagenation
         let currentPage = Number(req.query.pageReq) || 1;
-        const limit = 5;
+        const limit = 10;
         const count = Math.ceil(await Coupon.countDocuments() / limit);
-        currentPage = currentPage + 1 > count ? count : currentPage;
+        currentPage = currentPage > count ? count : currentPage;
+        currentPage = currentPage <= 0 ? 1 : currentPage;
         const skip = (currentPage - 1) * limit;
         const coupons = await Coupon.find().skip(skip).limit(limit);
 
@@ -38,12 +39,12 @@ const createCouponPage = (req, res) => {
 const newCoupon = async (req, res) => {
     try {
         //extracting coupon details from body
-        const { discount, minPurchaseValue, expiryDate } = req.body;
+        const { discount, minPurchaseValue, expiryDate, discountType, maxDiscountAmount } = req.body;
         const couponCode = req.body.couponCode.toUpperCase();
 
         //creating new coupon object
         const coupon = new Coupon(
-            { couponCode, discount, minPurchaseValue, expiryDate }
+            { couponCode, discount, minPurchaseValue, expiryDate, discountType, maxDiscountAmount }
         );
 
         //saving coupon to data base

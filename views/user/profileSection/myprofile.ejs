@@ -1,84 +1,118 @@
 <html lang="en">
 
 <%- include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/profile/profile.css'}) %>
-    <link rel="stylesheet" href="/css/commonCss/userProfileLeft/userProfileLeftbar.css">
 
     <body>
-
         <%- include('../../partials/userNavbar.ejs') %>
 
+            <div class="profile-container">
 
-        <section class=" container rounded-2 bg-light">
-            <ol class="d-flex align-items-center list-unstyled m-0 ">
-                <li><a class="text-decoration-none" href="/home">Home /</a></li>
-                <li><a class="text-decoration-none" href="/profile" >Profile</a></li>
-            </ol>
-          </section>
+                <!-- Main Content (inserted after sidebar in partial) -->
+                <script>
+                    // Move content to correct location in DOM if needed, 
+                    // or simpler: just render the active page specific content here
+                    // The partial renders style + sidebar.
+                    // We need to structure this so the partial is closed or we rearrange.
+                    // Actually the partial closes the aside but leaves profile-layout open?
+                    // No, the partial has <style> and <aside>.
+                    // We need to wrap the <aside> and <main> in <div class="profile-layout">
+                </script>
 
-            <section class="container d-flex gap-2">
+                <div class="profile-layout">
+                    <!-- Re-include sidebar here properly -->
+                    <%- include('../../partials/userprofile/profileLayoutMinimal.ejs', { activePage: 'profile' }) %>
 
-                <%- include('../../partials/userprofile/profileleftSec.ejs',{userData}) %>
-
-
-                    <!-- right Section -->
-                    <section id="rightSection">
-                        <h5>Profile</h5>
-                        <div class="line"></div>
-
-                        <form class="mt-4 mx-5">
-
-                            <input id="_id" type="text" value="<%= userData._id  %>" name="_id" hidden>
-
-
-                            <div class="form-group">
-                                <label for="name">Full Name</label><span id="nameerr" class=" text-danger"> </span>
-                                <input type="text" class="form-control w-50" value="<%= userData.name  %>" id="name"
-                                    placeholder="Full Name" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label for="dateOfBirth" value="<%= userData.dateOfBirth %>">Date of Birth</label>
-                                <span id="doberr" class=" text-danger"></span>
-
-                                <input type="date" class="form-control w-50" id="dateOfBirth" name="dateOfBirth"
-                                    value="<%= userData.dateOfBirth ? new Date(userData.dateOfBirth).toISOString().split('T')[0] : '' %>"
-                                    disabled>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="">Gender</label> <span id="gendererr" class=" text-danger"> </span><br>
-                                <div class="mx-3">
-
-
-                                    <input name="gender" id="male" value="male" type="radio" <%=userData.gender==="male"
-                                        ? 'checked' : '' %> disabled>
-                                    <label for="male">Male</label><br>
-
-                                    <input name="gender" id="female" value="female" <%=userData.gender==="female"
-                                        ? 'checked' : '' %> type="radio" disabled>
-                                    <label for="female">Female</label>
-
+                        <!-- Main Profile Card -->
+                        <main class="profile-content-card">
+                            <!-- Header Section -->
+                            <div class="sidebar-header border-0 pb-0 mb-4">
+                                <!-- Content from previous file... -->
+                                <div class="d-flex align-items-center">
+                                    <div class="user-avatar"
+                                        style="width: 80px; height: 80px; border-radius: 50%; background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 600; margin-right: 1.5rem;">
+                                        <%= userData.name.charAt(0).toUpperCase() %>
+                                    </div>
+                                    <div>
+                                        <h2
+                                            style="margin: 0 0 0.5rem 0; font-size: 1.5rem; font-weight: 600; color: #212529;">
+                                            <%= userData.name %>
+                                        </h2>
+                                        <p style="margin: 0; color: #6c757d;">
+                                            <%= userData.phone %>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="phone">Mobile Number</label> <span id="phoneerr" class=" text-danger">
-                                </span>
-                                <input type="text" class="form-control w-50" value="<%= userData.phone %>" id="phone"
-                                    placeholder="Mobile Number" disabled>
+                            <!-- Form Section -->
+                            <div>
+                                <h3 style="font-size: 1.1rem; font-weight: 600; color: #212529; margin-bottom: 1.5rem;">
+                                    Personal Information</h3>
 
+                                <form>
+                                    <input id="_id" type="text" value="<%= userData._id %>" name="_id" hidden>
+
+                                    <div class="mb-3">
+                                        <label for="name" class="d-block mb-2 fw-medium text-secondary">Full
+                                            Name</label>
+                                        <span id="nameerr" class="text-danger small d-block"></span>
+                                        <input type="text" class="form-control" value="<%= userData.name %>" id="name"
+                                            placeholder="Enter your full name" disabled style="padding: 0.65rem 1rem;">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="dateOfBirth" class="d-block mb-2 fw-medium text-secondary">Date
+                                            of Birth</label>
+                                        <span id="doberr" class="text-danger small d-block"></span>
+                                        <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth"
+                                            value="<%= userData.dateOfBirth ? new Date(userData.dateOfBirth).toISOString().split('T')[0] : '' %>"
+                                            disabled style="padding: 0.65rem 1rem;">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="d-block mb-2 fw-medium text-secondary">Gender</label>
+                                        <span id="gendererr" class="text-danger small d-block"></span>
+                                        <div class="d-flex gap-4 mt-2">
+                                            <div class="d-flex align-items-center">
+                                                <input name="gender" id="male" value="male" type="radio"
+                                                    <%=userData.gender==="male" ? 'checked' : '' %> disabled
+                                                class="me-2">
+                                                <label for="male" class="check-label">Male</label>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <input name="gender" id="female" value="female"
+                                                    <%=userData.gender==="female" ? 'checked' : '' %> type="radio"
+                                                disabled class="me-2">
+                                                <label for="female" class="check-label">Female</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="phone" class="d-block mb-2 fw-medium text-secondary">Mobile
+                                            Number</label>
+                                        <span id="phoneerr" class="text-danger small d-block"></span>
+                                        <input type="text" class="form-control" value="<%= userData.phone %>" id="phone"
+                                            placeholder="Enter mobile number" disabled style="padding: 0.65rem 1rem;">
+                                    </div>
+
+                                    <div class="d-flex gap-2 mt-4">
+                                        <button type="button" onclick="getEdit()" id="editBtn"
+                                            class="btn btn-primary px-4">
+                                            Edit Profile
+                                        </button>
+                                        <a href="/logout" class="btn btn-outline-danger px-4">
+                                            Sign Out
+                                        </a>
+                                        <button type="button" id="submitBtn" class="btn btn-success px-4" hidden>
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
-
-                            <button type="button" onclick="getEdit()" id="editBtn" class="btn btn-primary">Edit
-                                Profile</button>
-                            <button type="button" id="submitBtn" class="btn btn-primary" hidden>Submit</button>
-
-                        </form>
-                    </section>
-
-
-            </section>
-
-
+                        </main>
+                </div>
+            </div>
 
             <%- include('../../partials/userFooter.ejs') %>
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

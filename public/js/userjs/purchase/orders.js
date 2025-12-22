@@ -5,139 +5,105 @@ cancelOrderBtn.forEach((ele) => {
 })
 
 async function cancelOrder(event) {
-
-    // stop a tag submission 
     event.preventDefault();
 
-    await Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Cancell order!"
-    }).then(async (result) => {
+    const result = await ConfirmAction(
+        "Are you sure?",
+        "You won't be able to revert this!",
+        "Confirm Cancellation!"
+    );
 
-        if (result.isConfirmed) {
-
-            //asking the reson for cancellation 
-            const { value: text } = await Swal.fire({
-                input: "textarea",
-                inputLabel: "Message",
-                inputPlaceholder: "Type your message here...",
-                inputAttributes: {
-                    "aria-label": "Type your message here"
-                },
-                showCancelButton: true
-            });
-            if (text.trim()) {
-
-                await Swal.fire({
-                    title: "Cancelled!",
-                    text: "Order Cancelled.",
-                    icon: "success"
-                });
-
-                // Redirecting to the href of the a tag after confirmation
-                window.location.href = event.target.closest('a').getAttribute('href').trim() + `&cancellationReason=${text}`
-
-            }
-
-
-        }
-    });
-};
-
-
-
-
-const ratingBtn = document.querySelectorAll('.ratingBtn');
-
-ratingBtn.forEach((ele) => {
-    ele.addEventListener('click', rateProduct)
-})
-
-let rating = 0
-
-const myRating = document.getElementById('myRating')
-myRating.addEventListener('change.coreui.rating', (event) => {
-
-    rating = event.value
-    console.log(event);
-
-})
-
-
-function rateProduct(event) {
-
-    const orderId = event.target.closest('.mainCard').querySelector('.orderId').innerHTML
-    const productId = event.target.closest('.mainCard').querySelector('.productId').getAttribute('productId')
-    console.log(orderId, productId, rating);
-
-
-
-    //call when submit button clicked
-    const ratingSubmit = document.getElementById('ratingSubmit')
-    ratingSubmit.addEventListener('click', async () => {
-
-        const comment = document.getElementById('comment').value;
-
-        const response = await fetch('/rateProduct', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ comment, productId, orderId, rating })
+    if (result.isConfirmed) {
+        const { value: text } = await Swal.fire({
+            input: "textarea",
+            inputLabel: "Cancellation Reason",
+            inputPlaceholder: "Tell us why you're cancelling...",
+            showCancelButton: true,
+            confirmButtonText: 'Confirm Cancellation',
+            cancelButtonText: 'Back'
         });
 
-        if (response.ok) {
-            window.location.href = '/orders';
-        } else {
+        if (text && text.trim()) {
+            SuccessToast("Order Cancelled.");
+            window.location.href = event.target.closest('a').getAttribute('href').trim() + `&cancellationReason=${text}`;
+        }
+    }
+}
 
-            Swal.fire({
-                title: "error!",
-                text: "Something went wrong.",
-                icon: "success"
-            });
+const ratingBtn = document.querySelectorAll('.ratingBtn');
+let selectedRating = 0;
 
+const myRating = document.getElementById('myRating');
+if (myRating) {
+    myRating.addEventListener('change.coreui.rating', (event) => {
+        selectedRating = event.value;
+    });
+}
+
+ratingBtn.forEach((ele) => {
+    ele.addEventListener('click', (event) => {
+        const btn = event.currentTarget;
+        const orderId = btn.closest('.card').querySelector('.orderId').innerText.trim();
+        const productId = btn.closest('.mainCard').querySelector('.productId').getAttribute('productId');
+        document.getElementById('modalOrderId').value = orderId;
+        document.getElementById('modalProductId').value = productId;
+        selectedRating = 0;
+        document.getElementById('comment').value = '';
+    });
+});
+
+const ratingSubmit = document.getElementById('ratingSubmit');
+if (ratingSubmit) {
+    ratingSubmit.addEventListener('click', async () => {
+        const orderId = document.getElementById('modalOrderId').value;
+        const productId = document.getElementById('modalProductId').value;
+        const comment = document.getElementById('comment').value;
+        const rating = selectedRating;
+
+        if (!rating || rating === 0) {
+            WarningToast("Please select a star rating.");
+            return;
         }
 
+        try {
+            const response = await fetch('/rateProduct', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ comment, productId, orderId, rating })
+            });
 
-    })
-
+            if (response.ok) {
+                SuccessToast("Your review has been submitted.");
+                window.location.reload();
+            } else {
+                ErrorToast("Something went wrong.");
+            }
+        } catch (error) {
+            console.error(error);
+            ErrorToast("Network error occurred.");
+        }
+    });
 }
 
 document.querySelectorAll('.orderReturnBtn').forEach((ele) => {
     ele.addEventListener('click', returnProduct)
-
 })
 
 async function returnProduct(event) {
     event.preventDefault()
 
+    const result = await ConfirmAction(
+        "Are you sure?",
+        "Are you sure you want to return this product?",
+        "Confirm Return!"
+    );
 
-    await Swal.fire({
-        title: "Are you sure?",
-        text: "are you sure want to return this product!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Confirm Return!"
-    }).then(async (result) => {
-
-        if (result.isConfirmed) {
-            // Redirecting to the href of the a tag after confirmation
+    if (result.isConfirmed) {
+        SuccessToast("Return request submitted.");
+        setTimeout(() => {
             window.location.href = event.target.closest('a').getAttribute('href');
-
-            await Swal.fire({
-                title: "Cancelled!",
-                text: "Return Cancelled.",
-                icon: "success"
-            });
-        }
-    });
-
-
+        }, 1000);
+    }
 }

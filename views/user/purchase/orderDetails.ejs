@@ -1,176 +1,166 @@
 <html lang="en">
+
 <head>
-  
-  <%-include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/purchase/orderDetailedPage.css'})  %>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+  <%-include('../../partials/htmlHeadUser.ejs',{csspath:''}) %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body class="d-flex flex-column">
 
-  <%- include('../../partials/userNavbar.ejs')  %>
+<body class="d-flex flex-column" style="background-color: #f8f9fa;">
 
-    <section class=" container rounded-2 bg-light">
-        <ol class="d-flex align-items-center list-unstyled m-0 ">
-            <li><a class="text-decoration-none" href="/home">Home/</a></li>
-            <li><a class="text-decoration-none" href="/orders"> orders/</a></li>
-            <li><a class="text-decoration-none" > Order Details</a></li>
+  <%- include('../../partials/userNavbar.ejs') %>
 
-        </ol>
-    </section>
-
-
-    <div class="container mt-5">
-
-      <div class="card mb-3">
-        <h5 class="card-header">Order summary</h5>
-        <div class="card-body">
-
-            <div class="container ordersummarry">
-
-                <div class="row">
-
-                    <div class="row address">
-                        <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
-                            <p><strong>Delivery Address:</strong></p>
-                            <p><%= orders[0].address.fullName%></p>
-                            <p><%= orders[0].address.houseName%></p>
-                            <p><%= orders[0].address.area%></p>
-                            <p><%= orders[0].address.state%></p>
-                            <p><%= orders[0].address.pincode%></p>
-                        </div>
-                        <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
-                            <p><strong>Shipping From:</strong></p>
-                            <p>Essentials</p>
-                            <p>381/Essential Tower </p>
-                            <p>Anagalapura</p>
-                            <p>bangloore</p>
-                            <p>691723</p>
-
-
-                        </div>
-
-                        <div class="col-lg-4 col-md-12 mt-3 mb-4 mb-lg-0">
-                            <p><strong>Order Details</strong></p>
-                            <p> <strong>order Id :</strong> #<%=orders[0].orderId  %></p>
-                            <p> <strong>Ordered Date:</strong>  <%=orders[0].orderDate.toString().substring(0,15) %></p>
-                            <p> <strong>Payment Methord:</strong>   <%= orders[0].paymentMethod=== 'COD' ? 'Cash on Delivery' :orders[0].paymentMethod %></p>
-                           
-                            <% if(orders[0].orderItems[0].status === 'Pending for Payment'){ %>
-                              <p  class="text-Danger"><strong>Payment Status: </strong> Failed (complete payment) </p>
-                             <% } %>
-                           
-                            <p><strong>Sub Total:</strong> ₹<%= orders[0].totalPrice.toFixed(2)%></p>
-
-                            <% if(orders[0].coupon){ %>
-                              <p><strong>Discount:</strong> ₹<%= orders[0].discount.toFixed(2)%></p>
-                             <% } %>
-                             <p><strong>Shipping Charge (-):</strong> ₹<%= orders[0].deliveryCharge ?? 0  %></p>
-
-                            <p class="text-danger"><strong>Grand Total:  ₹<%= orders[0].finalPrice.toFixed(2)%> </strong></p>
-
-
-                        </div>
-                        
-                    </div>
-
-
-                    <div class="line"></div>
-
-                   
-                </div>
-
-
-            </div>
-
-        </div>
+    <div class="profile-container">
+      <!-- Breadcrumbs -->
+      <div class="mb-4">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="/home" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="/orders" class="text-decoration-none">Orders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order #<%=orders[0].orderId %>
+            </li>
+          </ol>
+        </nav>
       </div>
 
+      <div class="profile-layout">
+        <%- include('../../partials/userprofile/profileLayoutMinimal.ejs', { activePage: 'orders' }) %>
 
-
-        <div class="card">
-            <div class="card-header">
-              <h5>Items <%= orders[0].orderItems.length%> | Order ID : #<%=orders[0].orderId  %></h5>
+          <!-- Main Content -->
+          <main class="profile-content-card">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+              <div class="d-flex align-items-center gap-3">
+                <a href="/orders"
+                  class="btn btn-outline-secondary btn-sm rounded-circle d-flex align-items-center justify-content-center"
+                  style="width: 32px; height: 32px;">
+                  <i class="fas fa-arrow-left"></i>
+                </a>
+                <h4 class="fw-bold text-dark m-0">Order Summary</h4>
+              </div>
+              <span class="badge bg-light text-dark border">
+                <%=orders[0].orderDate.toString().substring(0,15) %>
+              </span>
             </div>
 
+            <div class="row mb-5">
+              <!-- Shipping Info -->
+              <div class="col-md-6 mb-4 mb-md-0">
+                <h6 class="text-uppercase text-muted fw-bold small mb-3">Delivery Address</h6>
+                <div class="p-3 bg-light rounded-3 h-100">
+                  <p class="fw-bold mb-1">
+                    <%= orders[0].address.fullName%>
+                  </p>
+                  <p class="mb-1 text-muted small">
+                    <%= orders[0].address.houseName%>, <%= orders[0].address.area%>
+                  </p>
+                  <p class="mb-1 text-muted small">
+                    <%= orders[0].address.state%> - <%= orders[0].address.pincode%>
+                  </p>
+                </div>
+              </div>
 
-           <% for(let product of orders[0].orderItems){  %>
-                <div class="card-body ">
-                    <!-- Single item -->
-                    <div class="row">
-                      <div class="col-lg-2 col-md-12 mb-4 mb-lg-0">
-                        <!-- Image -->
-                        <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-                          <img src="<%= product.productId.productImage[0]%>"
-                            class="w-100" alt="Blue Jeans Jacket" />
-                          <a href="#!">
-                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-                          </a>
-                        </div>
-                        <!-- Image -->
-                      </div>
-        
-                      <div class=" data col-lg-5 col-md-6 mb-4 mb-lg-0">
-                        <!-- Data -->
-
-
-                        <div class="row">
-                            <div class="col-12 text-truncate">
-                                <strong><%= product.productId.productName%></strong>
-                            </div>
-                          </div>
-
-
-
-                        <p>Color : <%= product.productId.color%></p>
-                        <p>Size : <%= product.productId.size%></p>
-                        <p>Brand : <%= product.productId.brand%></p>
-                        <p>Quantity : <%= product.quantity%></p>
-                        <p >Price: ₹ <span class="price"><%= product.productId.sellingPrice%></span>/-</p>
-                        <% if(product.status === 'Cancelled'){ %>
-                          <p class="text-danger"> Cancellation Reason : <%= product.cancellationReason  %> </p> 
-                         <% } %>
-  
-                      </div>
-
-        
-                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-0 d-flex align-items-center justify-content-center">
-                        <!-- Quantity -->
-                       <div id="items" class="d-flex mb-4" style="max-width: 300px">
-                        <!-- Price -->
-                            <span class="text-start text-md-center a">
-
-                              <% if(product.status === 'Cancelled'){ %>
-                               <p class="text-danger mb-0"> <strong>Order Cancelled</strong>  </p> 
-                              <% } %>
-
-                                <p>Total Amount per item</p>
-                                <strong class="totalPrice"  >₹ <%= product.quantity * product.productId.sellingPrice %>/-</strong>
-                              </span>
-                        <!-- Price -->
-                        </div>
-
-                    </div>
-
-
-                    <div style="height: 2px; width: 100%; background-color: rgb(199, 198, 198);"></div>
-                    <!-- Single item -->
+              <!-- Order Totals -->
+              <div class="col-md-6">
+                <h6 class="text-uppercase text-muted fw-bold small mb-3">Payment Details</h6>
+                <div class="p-3 bg-light rounded-3 h-100">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Payment Method</span>
+                    <span class="fw-medium">
+                      <%= orders[0].paymentMethod==='COD' ? 'Cash on Delivery' : orders[0].paymentMethod %>
+                    </span>
                   </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Subtotal</span>
+                    <span>₹<%= orders[0].totalPrice.toFixed(2)%></span>
+                  </div>
+                  <% if(orders[0].coupon){ %>
+                    <div class="d-flex justify-content-between mb-2 text-success">
+                      <span>Discount</span>
+                      <span>- ₹<%= orders[0].discount.toFixed(2)%></span>
+                    </div>
+                    <% } %>
+                      <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Shipping</span>
+                        <span>₹<%= orders[0].deliveryCharge ?? 0 %></span>
+                      </div>
+                      <hr class="my-2">
+                      <div class="d-flex justify-content-between fw-bold fs-5">
+                        <span>Total</span>
+                        <span class="text-primary">₹<%= orders[0].finalPrice.toFixed(2)%></span>
+                      </div>
+                      <% if(orders[0].orderItems[0].status==='Pending for Payment' ){ %>
+                        <div class="mt-2 text-center">
+                          <span class="badge bg-danger">Payment Failed</span>
+                        </div>
+                        <% } %>
+                </div>
+              </div>
             </div>
-        <% } %>
 
+            <!-- Items List -->
+            <div class="mb-4">
+              <h4 class="fw-bold text-dark mb-3">Items (<%= orders[0].orderItems.length%>)</h4>
+            </div>
 
-          </div>
+            <% for(let product of orders[0].orderItems){ %>
+              <div class="card mb-3 border-0 shadow-sm bg-white rounded-3 overflow-hidden">
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col-md-2 mb-3 mb-md-0 text-center">
+                      <div class="bg-light rounded p-2 d-inline-block">
+                        <img src="<%= product.productId.productImage[0]%>" class="img-fluid"
+                          style="max-height: 80px; width: auto; object-fit: contain;"
+                          alt="<%= product.productId.productName%>" />
+                      </div>
+                    </div>
+                    <div class="col-md-5 mb-3 mb-md-0">
+                      <h6 class="fw-bold mb-1 text-dark">
+                        <%= product.productId.productName%>
+                      </h6>
+                      <div class="small text-muted mb-2">
+                        <span class="me-3">Color: <span class="text-dark">
+                            <%= product.productId.color%>
+                          </span></span>
+                        <span class="me-3">Size: <span class="text-dark">
+                            <%= product.productId.size%>
+                          </span></span>
+                        <span>Brand: <span class="text-dark">
+                            <%= product.productId.brand%>
+                          </span></span>
+                      </div>
+                      <% if(product.status==='Cancelled' ){ %>
+                        <div class="text-danger small"><i class="fas fa-ban me-1"></i> Cancelled: <%=
+                            product.cancellationReason %>
+                        </div>
+                        <% } %>
+                    </div>
+                    <div class="col-md-2 text-center mb-3 mb-md-0">
+                      <span class="text-muted small d-block mb-1">Qty</span>
+                      <span class="fw-bold">
+                        <%= product.quantity%>
+                      </span>
+                    </div>
+                    <div class="col-md-3 text-end">
+                      <p class="mb-0 text-muted small">Total</p>
+                      <h6 class="fw-bold text-primary mb-0">₹ <%= (product.quantity *
+                          product.productId.sellingPrice).toFixed(2) %>
+                      </h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% } %>
 
-
+          </main>
+      </div>
     </div>
 
+    <footer>
+      <%- include('../../partials/userFooter.ejs') %>
+    </footer>
 
-   <footer>
-    <%- include('../../partials/userFooter.ejs')  %>
-   </footer>
-
-   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
+
 </html>

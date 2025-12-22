@@ -7,7 +7,9 @@ const Product = require('../../models/productSchema');
 const Coupon = require('../../models/couponSchema');
 const walletController = require('../../controllers/user/walletController')
 const razorpayInstance = require('../../config/razorpay');
-const Category = require('../../models/categorySchema')
+const Category = require('../../models/categorySchema');
+const User = require('../../models/userSchema');
+const Wallet = require('../../models/walletSchema');
 
 
 function getUserIdFromSession(req) {
@@ -107,7 +109,7 @@ async function createOrder(orderInfo) {
                 productId: ele.productId,
                 quantity: ele.quantity,
                 price: cartItems[0].productDetails[index].sellingPrice,
-                status: paymentMethod !== 'COD' ? 'Pending for Payment' : 'Pending',
+                status: (paymentMethod === 'Online Payment') ? 'Pending for Payment' : 'Pending',
                 category: ele.category
             });
 
@@ -172,7 +174,7 @@ async function createOrder(orderInfo) {
             paymentMethod: paymentMethod,
             discount: cartCoupon?.coupon?.discount ?? 0,
             coupon,
-            paymentId: paymentMethod !== 'COD' ? orderInfo.razorpayOrder : '', //initalise payment id with order id after order sucess change to payment id 
+            paymentId: paymentMethod === 'Online Payment' ? orderInfo.razorpayOrder : '', //initalise payment id with order id after order sucess change to payment id 
 
         });
 
@@ -246,12 +248,6 @@ const placeOrder = async (req, res) => {
 
                 //creating new order with status pending
                 await createOrder(orderInfo);
-
-                // Store order details in session for later use
-                req.session.pendingOrder = {
-                    userId,
-                    razorpayOrderId: razorpayOrder.id,
-                };
             };
 
 
@@ -264,6 +260,29 @@ const placeOrder = async (req, res) => {
                 // render order fail page
                 res.render('user/purchase/orderFailedPage')
             };
+        } else if (paymentMethod === 'Wallet') {
+            // Calculate total amount
+            const { finalAmount } = await calculateTotalAmountAfterDiscount(userId);
+            let totalAmountToCheck = finalAmount;
+            if (totalAmountToCheck < 500) { totalAmountToCheck += 40; }
+
+            const userWallet = await Wallet.findOne({ userId });
+
+            if (userWallet && userWallet.balance >= totalAmountToCheck) {
+                const order = await createOrder(orderInfo);
+                if (order) {
+                    // Fetch the created order
+                    const orderDetails = await Order.findOne({ userId }).sort({ orderDate: -1 }).limit(1);
+
+                    // Deduct from wallet
+                    await walletController.updateUserWallet(userId, totalAmountToCheck, 'debit', 'Order Payment', orderDetails.orderId);
+
+                    res.render('user/purchase/orderSuccessPage', { orderDetails });
+                }
+            } else {
+                console.log("Insufficient Wallet Balance");
+                res.render('user/purchase/orderFailedPage');
+            }
         };
 
     } catch (error) {
@@ -297,8 +316,11 @@ const allOrders = async (req, res) => {
             .skip(skip)
             .limit(limit)
 
+        // fetch user data
+        const userData = await User.findOne({ _id: userId });
+
         //render orders page with order details
-        res.render('user/purchase/orders', { orders, currentpage })
+        res.render('user/purchase/orders', { orders, currentpage, userData })
 
 
     } catch (error) {
@@ -324,6 +346,9 @@ const cancelOrder = async (req, res) => {
         // Locate the item to cancel within the order
         const orderItem = order.orderItems.find(item => item.productId.toString() === productId);
 
+
+        // Capture original status BEFORE updating it
+        const previousStatus = orderItem.status;
 
         // Calculate the total price after cancelling the item
         const itemTotalPrice = orderItem.price * orderItem.quantity;
@@ -358,9 +383,11 @@ const cancelOrder = async (req, res) => {
         // calculating final price
         order.finalPrice = order.totalPrice - order.discount;
 
-        if (order.paymentMethod === 'Online Payment') {
+        // Only refund to wallet if payment was COMPLETED (not pending)
+        // Check PREVIOUS status - 'Pending for Payment' means unpaid
+        if (order.paymentMethod === 'Online Payment' && previousStatus !== 'Pending for Payment') {
             //refund the order amount to wallet
-            await walletController.updateUserWallet(userId, itemTotalPrice - order.discount, 'credit', 'Cancellation Refund');
+            await walletController.updateUserWallet(userId, itemTotalPrice - order.discount, 'credit', 'Cancellation Refund', order.orderId);
         }
 
         //final price is lessthan 500 add delivery charge
@@ -404,13 +431,17 @@ const orderDetails = async (req, res) => {
     try {
         // extracting order id from request
         const { orderId } = req.query;
-        
+        const userId = getUserIdFromSession(req);
+
         // find the order details
         const orders = await Order.find({ orderId })
             .populate('orderItems.productId')
 
+        // fetch user data for profile sidebar
+        const userData = await User.findOne({ _id: userId });
+
         //render order details page with all details
-        res.render('user/purchase/orderDetails', { orders })
+        res.render('user/purchase/orderDetails', { orders, userData })
 
     } catch (error) {
         //logging error and render error page

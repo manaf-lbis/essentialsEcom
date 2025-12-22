@@ -2,52 +2,52 @@ const countdown = document.getElementById('countdown');
 const resendBtn = document.getElementById('resendBtn');
 
 
-function timer(){
+function timer() {
 
-   let decCounter = 60;
-    const counter = setInterval(()=>{
+    let decCounter = 60;
+    const counter = setInterval(() => {
         decCounter--;
         countdown.innerHTML = `00:${decCounter}`;
-        if(decCounter==0){
+        if (decCounter == 0) {
             clearInterval(counter);
             resendBtn.classList.remove('disabled');
         }
 
-    },1000);
+    }, 1000);
 
 }
 
 timer();
 
 
-resendBtn.addEventListener('click', ()=>{
+resendBtn.addEventListener('click', () => {
 
-    fetch('/resentotp',{method:'GET',})
-    .then((result)=>{
+    fetch('/resentotp', { method: 'GET', })
+        .then((result) => {
 
-        Swal.fire({
-            title: 'OTP Sent!',
-            text: 'Check your email for the OTP.',
-            icon: 'success',
-            confirmButtonText: 'OK',
-        });
-        console.log(result);
-        
+            Swal.fire({
+                title: 'OTP Sent!',
+                text: 'Check your email for the OTP.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+            });
+            console.log(result);
 
-    }).catch((e)=>{ 
-        console.log(e)
-            alert('somthing wrong',e)
-    })
+
+        }).catch((e) => {
+            console.log(e)
+            alert('somthing wrong', e)
+        })
 
     resendBtn.classList.add('disabled');
-    
+
     timer();
 });
 
 
 
 
-  
+
 // otp verify
 const verifyOtp = async () => {
     const enteredOtp = document.getElementById('userOtp').value;
@@ -62,20 +62,20 @@ const verifyOtp = async () => {
     });
 
 
-    if(response.ok){
+    if (response.ok) {
 
-       await Swal.fire({
+        await Swal.fire({
             title: 'Sucessfull',
             text: 'Account Created SucessFull',
             icon: 'success',
             confirmButtonText: 'OK',
         });
 
-        window.location.href = '/'
+        window.location.href = '/home'
 
 
-        
-    }else{
+
+    } else {
 
         Swal.fire({
             icon: "error",
@@ -85,8 +85,7 @@ const verifyOtp = async () => {
         });
 
     }
-    
+
 }
 
 
-      

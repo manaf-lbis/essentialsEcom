@@ -11,11 +11,20 @@ const couponSchema = new Schema({
         type: Number,
         required: true,
     },
+    discountType: {
+        type: String,
+        enum: ['fixed', 'percentage'],
+        default: 'fixed'
+    },
+    maxDiscountAmount: {
+        type: Number,
+        default: null
+    },
     expiryDate: {
         type: Date,
         required: true
     },
-    usedCount:{
+    usedCount: {
         type: Number,
         default: 0
     },

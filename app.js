@@ -24,7 +24,7 @@ app.use(
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { 
+    cookie: {
       secure: false,
       maxAge: 1000 * 60 * 60 * 24,
     },
@@ -32,8 +32,8 @@ app.use(
 );
 
 app.use((req, res, next) => {
-    res.set('Cache-Control', 'no-store');
-    next();
+  res.set('Cache-Control', 'no-store');
+  next();
 });
 
 
@@ -54,7 +54,7 @@ app.use('/admin', adminRouter);
 
 
 //Google authentication routes
-app.use('/auth',userRouter)
+app.use('/auth', userRouter)
 
 const port = process.env.PORT || 3000;
 //listening to the port 

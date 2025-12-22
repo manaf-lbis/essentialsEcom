@@ -1,80 +1,114 @@
+<!DOCTYPE html>
 <html lang="en">
-<%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/productmanagement/productmanagement.css" }) %>
 
-    <body>
-        <%- include('../../partials/adminNavbar.ejs') %>
+<head>
+  <%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/productmanagement/productmanagement.css" }) %>
+    <style>
+      .form-label {
+        font-weight: 600;
+        color: #344767;
+      }
 
-            <div class="container-fluid wrapper">
-                <%- include("../../partials/adminLeftsidebar.ejs") %>
+      .form-control:focus,
+      .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+      }
+    </style>
+</head>
 
-                    <div class="mainpanel">
-                        <nav class="navbar rounded-3 bg-body-tertiary">
-                            <div class="container-fluid">
-                                <h4>Coupon Management</h4>
-                                <div class="d-flex">
+<body class="bg-light">
 
-                                </div>
-                            </div>
-                        </nav>
-                        <!-- nav ends -->
+  <%- include('../../partials/adminNavbar.ejs') %>
 
-                        <div class="container my-4">
-                            <div class="row justify-content-center">
-                              <div class="col-md-6">
-                                <div class="card shadow coupon-card">
-                                  <div class="card-body">
-                                    <h4 class="card-title text-center mb-4">Generate a Coupon</h4>
-                                    
-                                    <form id="couponForm">
-                                        <div class="mb-3">
-                                          <label for="couponCode" class="form-label">Coupon Code</label>
-                                          <input type="text" name="couponCode" id="couponCode" class="form-control" placeholder="Enter coupon code" >
-                                          <div id="couponCodeError" class="text-danger"></div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                          <label for="discountAmount" class="form-label">Discount Amount</label>
-                                          <input type="number" name="discount" id="discountAmount" class="form-control" placeholder="Enter discount Amount" >
-                                          <div id="discountAmountError" class="text-danger"></div>
-                                        </div>
-                                      
-                                        <div class="mb-3">
-                                          <label for="minPurchase" class="form-label">Minimum Purchase Value</label>
-                                          <input type="number" name="minPurchaseValue" id="minPurchase" class="form-control" placeholder="Enter minimum purchase amount" >
-                                          <div id="minPurchaseError" class="text-danger"></div>
-                                        </div>
-                                      
-                                        <div class="mb-3">
-                                          <label for="expiryDate" class="form-label">Expiry Date</label>
-                                          <input type="date" name="expiryDate" id="expiryDate" class="form-control" >
-                                          <div id="expiryDateError" class="text-danger"></div>
-                                        </div>
-                                        
-                                        <button type="submit" class="btn btn-primary w-100">Generate Coupon</button>
-                                      </form>
+    <div class="container-fluid wrapper">
+      <%- include("../../partials/adminLeftsidebar.ejs") %>
 
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+        <div class="mainpanel p-4">
+          <!-- Header -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h4 class="fw-bold mb-1">Create New Coupon</h4>
+              <p class="text-muted small mb-0">Generate a new discount code</p>
+            </div>
+            <a href="/admin/coupons" class="btn btn-outline-secondary">
+              <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+          </div>
 
+          <!-- Add Coupon Card -->
+          <div class="card border-0 shadow-sm" style="max-width: 800px; margin: 0 auto;">
+            <div class="card-body p-4">
 
+              <form id="couponForm">
 
+                <!-- Coupon Code -->
+                <div class="mb-4">
+                  <label for="couponCode" class="form-label">Coupon Code</label>
+                  <input type="text" name="couponCode" id="couponCode" class="form-control text-uppercase"
+                    placeholder="e.g., SUMMER2024" maxlength="15">
+                  <div class="form-text">Code will be automatically uppercase.</div>
+                  <div id="couponCodeError" class="text-danger small mt-1"></div>
+                </div>
 
+                <div class="row">
+                  <!-- Discount Type -->
+                  <div class="col-md-6 mb-4">
+                    <label for="discountType" class="form-label">Discount Type</label>
+                    <select name="discountType" id="discountType" class="form-select">
+                      <option value="fixed">Fixed Amount (₹)</option>
+                      <option value="percentage">Percentage (%)</option>
+                    </select>
+                  </div>
 
+                  <!-- Discount Value -->
+                  <div class="col-md-6 mb-4">
+                    <label for="discountAmount" class="form-label">Discount Value</label>
+                    <input type="number" name="discount" id="discountAmount" class="form-control" placeholder="0">
+                    <div id="discountAmountError" class="text-danger small mt-1"></div>
+                  </div>
+                </div>
 
+                <!-- Max Discount (Dynamic) -->
+                <div class="mb-4" id="maxDiscountField" style="display: none;">
+                  <label for="maxDiscountAmount" class="form-label">Max Discount Amount (₹)</label>
+                  <input type="number" name="maxDiscountAmount" id="maxDiscountAmount" class="form-control"
+                    placeholder="Enter limit for % discount">
+                  <div class="form-text">Maximum amount a user can save with this percentage.</div>
+                </div>
 
-                    </div>
+                <div class="row">
+                  <!-- Min Purchase -->
+                  <div class="col-md-6 mb-4">
+                    <label for="minPurchase" class="form-label">Minimum Purchase (₹)</label>
+                    <input type="number" name="minPurchaseValue" id="minPurchase" class="form-control" placeholder="0">
+                    <div id="minPurchaseError" class="text-danger small mt-1"></div>
+                  </div>
+
+                  <!-- Expiry Date -->
+                  <div class="col-md-6 mb-4">
+                    <label for="expiryDate" class="form-label">Expiry Date</label>
+                    <input type="date" name="expiryDate" id="expiryDate" class="form-control">
+                    <div id="expiryDateError" class="text-danger small mt-1"></div>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-3">
+                  <button type="button" class="btn btn-light me-md-2"
+                    onclick="window.location.href='/admin/coupons'">Cancel</button>
+                  <button type="submit" class="btn btn-primary px-4">Generate Coupon</button>
+                </div>
+              </form>
 
             </div>
+          </div>
+        </div>
+    </div>
 
-            </div>
-            </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/adminjs/coupon/createCoupon.js"></script>
 
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            <script src="/js/adminjs/coupon/createCoupon.js"></script>
-
-    </body>
+</body>
 
 </html>

@@ -1,142 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include("../partials/htmlHead.ejs", { csspath: "/css/adminCss/addproduct/addproduct.css" }) %>
-    <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.min.css">
-    <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <!-- Navbar -->
+
+<body class="bg-light">
+
     <%- include('../partials/adminNavbar.ejs') %>
 
-    <div class="container-fluid wrapper">
-        <!-- Left Panel -->
-        <%- include("../partials/adminLeftsidebar.ejs") %>
+        <div class="container-fluid wrapper">
+            <%- include("../partials/adminLeftsidebar.ejs") %>
 
-        <div class="mainpanel">
-            <nav class="navbar rounded-3 bg-body-tertiary">
-                <div class="container-fluid">
-                    <h4>Add Product</h4>
-                </div>
-            </nav>
-            <!-- Nav ends    -->
-       <form id="form" action="/admin/updateProduct" method="post" enctype="multipart/form-data" >
-            <div class="productDetails row pb-5">
-                <div class="left col-md-5">
-
-                    <!-- <form id="productForm" action="/add-product" method="POST" enctype="multipart/form-data"> -->
-                        <label for="productName">Product Name</label>
-                        <input id="productName" type="text" value="<%= dbResult.productName%>" class="form-control" name="productName" placeholder="Product Name" >
-                        <div id="productNameErr" class="validate-err"></div>
-
-                        <input type="hidden" id="_id" name="_id" value="<%= dbResult._id %>">
-
-                        <label for="brand">Brand</label>
-                        <input id="brandName" type="text" value="<%= dbResult.brand%>" class="form-control" name="brand" placeholder="Brand of the product" >
-                        <div id="brandNameErr" class="validate-err"></div>
-
-                        <label for="color">Color</label>
-                        <input id="color" type="text" value="<%= dbResult.color%>" class="form-control" name="color" placeholder="Color" >
-                        <div id="colorErr" class="validate-err"></div>
-
-                        <label for="size">Size</label>
-                        <input id="size" type="text" value="<%= dbResult.size%>"  class="form-control" name="size" placeholder="Size" >
-                        <div id="sizeErr" class="validate-err"></div>
-
-                        <label for="size">Quantity</label>
-                        <input id="quantity" type="number" value="<%= dbResult.quantity%>"  class="form-control" name="quantity" placeholder="quantity" >
-                        <div id="quantityErr" class="validate-err"></div>
-
-                        
-                        <label for=" Regular Price">Regular Price</label>
-                        <input id="regularPrice" type="number" value="<%= dbResult.regularPrice%>" class="form-control" min="0" name="regularPrice" placeholder="Regular Price" >
-                        <div id="priceErr1" class="validate-err"></div>
-
-                        <label for="Selling price">selling Price</label>
-                        <input id="sellingPrice" type="number" value="<%= dbResult.sellingPrice%>" class="form-control" min="0" name="sellingPrice" placeholder="Selling Price" >
-                        <div id="priceErr2" class="validate-err"></div>
-
-                        <label for="material">Material</label>
-                        <input id="material" type="text" value="<%= dbResult.material%>" class="form-control" name="material" placeholder="Material of the product..." >
-                        <div id="materialErr" class="validate-err"></div>
-
-
-                        <label for="">Product status</label><br>
-                        <select name="status" class="w-100 " name="" id="">
-                            <option value ="Available">Available</option>
-                            <option  value ="Out of Stock" >Out of Stock</option>
-                        </select><br>
-
-                        <label for="description">About</label>
-                        <input id="description" type="text" value="<%= dbResult.description%>" class="form-control" name="description" placeholder="Detailed description about the product.." >
-                        <div id="descriptionErr" class="validate-err"></div>
-                    <!-- </form> -->
-                </div>
-
-                <div class="col-md-5 right">
-
-                    <div>
-                        <% dbResult.productImage.forEach((ele) => { %>
-
-                        <div class="position-relative d-inline-block me-2 mt-2">
-                            <img class="rounded-3 border border-dark" height="100" src="<%= ele  %>" alt="">
-
-                            <a class="imageDeleteBtn" href="/admin/removeProductImage/?productId=<%= dbResult._id%>&image=<%= ele%>">
-                                <button type="button" class="btn-close position-absolute bg-danger " style="top: 0; right: 0;" aria-label="Close"></button>
-                            </a>
+                <div class="mainpanel p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h4 class="fw-bold mb-1">Edit Product</h4>
+                            <p class="text-muted small mb-0">Update product details and manage images.</p>
                         </div>
-
-                      <%  });  %>
-                    
+                        <div>
+                            <a href="/admin/products" class="btn btn-outline-secondary px-3 me-2">Cancel</a>
+                            <button form="editProductForm" type="submit" class="btn btn-primary px-4 fw-bold">
+                                <i class="fas fa-save me-2"></i>Update Product
+                            </button>
+                        </div>
                     </div>
 
-                   <!-- First image input -->
-                    <div>
-                        <label for="productImage1">Upload Image 1</label>
-                        <input type="file" id="productImage1"  class="form-control" accept=".jpeg,.jpg,.png" onchange="prepareCrop(event, 'imagePreview1')">
-                        <img id="imagePreview1" src="" alt="Image Preview 1" style="display:none; width:100%; max-height:200px; object-fit:contain;">
-                        <canvas id="cropImage1" name="cropImage1" style="display:none;"></canvas>
-                        <button type="button" class="btn btn-primary mt-2" onclick="cropImage('cropImage1', 'croppedImagePreview1')">Crop Image 1</button>
-                        <div id="croppedImagePreview1" class="mt-3"></div>
-                    </div>
+                    <form id="editProductForm" novalidate onsubmit="return false">
+                        <input type="hidden" name="_id" id="_id" value="<%= dbResult._id %>">
 
-                    <!-- Second image input -->
-                    <div>
-                        <label for="productImage2">Upload Image 2</label>
-                        <input type="file" id="productImage2"  class="form-control" accept=".jpeg,.jpg,.png" onchange="prepareCrop(event, 'imagePreview2')">
-                        <img id="imagePreview2" src="" alt="Image Preview 2" style="display:none; width:100%; max-height:200px; object-fit:contain;">
-                        <canvas id="cropImage2" name="cropImage2" style="display:none;"></canvas>
-                        <button type="button" class="btn btn-primary mt-2" onclick="cropImage('cropImage2', 'croppedImagePreview2')">Crop Image 2</button>
-                        <div id="croppedImagePreview2" class="mt-3"></div>
-                    </div>
+                        <div class="row g-4">
+                            <!-- Left Column: General Info & Details -->
+                            <div class="col-lg-8">
+                                <!-- General Information -->
+                                <div class="card mb-4">
+                                    <div class="card-header bg-white py-3">
+                                        <h6 class="mb-0 fw-bold">General Information</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="productName" class="form-label">Product Name *</label>
+                                            <input type="text" class="form-control" id="productName" name="productName"
+                                                value="<%= dbResult.productName %>" required>
+                                            <div class="invalid-feedback">Product Name is required</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="description" class="form-label">Description *</label>
+                                            <textarea class="form-control" id="description" name="description" rows="5"
+                                                required><%= dbResult.description %></textarea>
+                                            <div class="invalid-feedback">Description is required</div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <!-- Third image input -->
-                    <div>
-                        <label for="productImage3">Upload Image 3</label>
-                        <input type="file" id="productImage3"  class="form-control" accept=".jpeg,.jpg,.png" onchange="prepareCrop(event, 'imagePreview3')">
-                        <img id="imagePreview3" src="" alt="Image Preview 3" style="display:none; width:100%; max-height:200px; object-fit:contain;">
-                        <canvas id="cropImage3" name="cropImage3" style="display:none;"></canvas>
-                        <button type="button" class="btn btn-primary mt-2" onclick="cropImage('cropImage3', 'croppedImagePreview3')">Crop Image 3</button>
-                        <div id="croppedImagePreview3" class="mt-3"></div>
-                    </div>
+                                <!-- Product Details -->
+                                <div class="card mb-4">
+                                    <div class="card-header bg-white py-3">
+                                        <h6 class="mb-0 fw-bold">Product Details</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="brand" class="form-label">Brand *</label>
+                                                <input type="text" class="form-control" id="brand" name="brand"
+                                                    value="<%= dbResult.brand %>" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="status" class="form-label">Status</label>
+                                                <select class="form-select" id="status" name="status">
+                                                    <option value="Available" <%=dbResult.status==='Available'
+                                                        ? 'selected' : '' %>>Available</option>
+                                                    <option value="Out of Stock" <%=dbResult.status==='Out of Stock'
+                                                        ? 'selected' : '' %>>Out of Stock</option>
+                                                </select>
+                                            </div>
+                                            <!-- Category is usually fixed or harder to move, but allowing edit if backend handles it -->
+                                            <div class="col-md-4">
+                                                <label for="color" class="form-label">Color *</label>
+                                                <input type="text" class="form-control" id="color" name="color"
+                                                    value="<%= dbResult.color %>" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="size" class="form-label">Size *</label>
+                                                <input type="text" class="form-control" id="size" name="size"
+                                                    value="<%= dbResult.size %>" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="material" class="form-label">Material *</label>
+                                                <input type="text" class="form-control" id="material" name="material"
+                                                    value="<%= dbResult.material %>" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: Pricing & Media -->
+                            <div class="col-lg-4">
+                                <!-- Pricing -->
+                                <div class="card mb-4">
+                                    <div class="card-header bg-white py-3">
+                                        <h6 class="mb-0 fw-bold">Pricing & Stock</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <label for="regularPrice" class="form-label">Regular Price (₹) *</label>
+                                            <input type="number" class="form-control" id="regularPrice"
+                                                name="regularPrice" min="0" value="<%= dbResult.regularPrice %>"
+                                                required>
+                                            <div class="invalid-feedback">Valid Regular Price is required</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="sellingPrice" class="form-label">Selling Price (₹) *</label>
+                                            <input type="number" class="form-control" id="sellingPrice"
+                                                name="sellingPrice" min="0" value="<%= dbResult.sellingPrice %>"
+                                                required>
+                                            <div class="invalid-feedback">Selling Price must be less than Regular Price
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="quantity" class="form-label">Stock Quantity *</label>
+                                            <input type="number" class="form-control" id="quantity" name="quantity"
+                                                min="0" value="<%= dbResult.quantity %>" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Media -->
+                                <div class="card">
+                                    <div
+                                        class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0 fw-bold">Product Images</h6>
+                                        <span class="badge bg-secondary">Min 2 / Max 6</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row g-2">
+                                            <% for(let i=0; i < 6; i++) { let existingImg=dbResult.productImage[i]; let
+                                                slotIndex=i + 1; %>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label small text-muted">Image <%= slotIndex %>
+                                                            </label>
+                                                    <div class="image-upload-container p-2"
+                                                        id="drop-zone-<%= slotIndex %>"
+                                                        onclick="if(!'<%= existingImg %>') document.getElementById('image<%= slotIndex %>').click()"
+                                                        style="min-height: 150px;">
+
+                                                        <input type="file" id="image<%= slotIndex %>" name="images"
+                                                            class="d-none" accept="image/*"
+                                                            onchange="handleImageNative(this, <%= slotIndex %>)">
+
+                                                        <!-- If existing image, show it & Delete button -->
+                                                        <!-- If no image, show Upload trigger -->
+
+                                                        <% if(existingImg) { %>
+                                                            <div id="existing-view-<%= slotIndex %>"
+                                                                class="text-center w-100 h-100">
+                                                                <img src="<%= existingImg %>"
+                                                                    class="image-preview d-block mb-2"
+                                                                    style="max-height: 100px; margin: 0 auto;">
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-danger w-100"
+                                                                    onclick="deleteExistingImage('<%= dbResult._id %>', '<%= existingImg %>', <%= slotIndex %>)">
+                                                                    <i class="fas fa-trash me-1"></i> Remove
+                                                                </button>
+                                                            </div>
+
+                                                            <!-- Hidden placeholders for upload UI components so JS can toggle them if deleted -->
+                                                            <div id="upload-content-<%= slotIndex %>"
+                                                                class="btn-upload-trigger" style="display:none;">
+                                                                <i class="fas fa-cloud-upload-alt fs-4 mb-2"></i><br>
+                                                                <span class="small">Upload</span>
+                                                            </div>
+                                                            <img id="preview-<%= slotIndex %>" class="image-preview"
+                                                                style="display:none; max-height: 120px;">
+                                                            <div id="actions-<%= slotIndex %>"
+                                                                class="image-actions justify-content-center"
+                                                                style="display:none;">
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-primary px-2 py-1"
+                                                                    onclick="window.event.stopPropagation(); initCrop(<%= slotIndex %>)"><i
+                                                                        class="fas fa-crop-alt"></i></button>
+                                                                <button type="button"
+                                                                    class="btn btn-sm btn-outline-danger px-2 py-1"
+                                                                    onclick="window.event.stopPropagation(); removeImage(<%= slotIndex %>)"><i
+                                                                        class="fas fa-trash"></i></button>
+                                                            </div>
+
+                                                            <% } else { %>
+
+                                                                <div id="existing-view-<%= slotIndex %>"
+                                                                    style="display:none;"></div>
+
+                                                                <div id="upload-content-<%= slotIndex %>"
+                                                                    class="btn-upload-trigger">
+                                                                    <i
+                                                                        class="fas fa-cloud-upload-alt fs-4 mb-2"></i><br>
+                                                                    <span class="small">Upload</span>
+                                                                </div>
+                                                                <img id="preview-<%= slotIndex %>" class="image-preview"
+                                                                    style="max-height: 120px;">
+                                                                <div id="actions-<%= slotIndex %>"
+                                                                    class="image-actions justify-content-center">
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-outline-primary px-2 py-1"
+                                                                        onclick="window.event.stopPropagation(); initCrop(<%= slotIndex %>)"><i
+                                                                            class="fas fa-crop-alt"></i></button>
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger px-2 py-1"
+                                                                        onclick="window.event.stopPropagation(); removeImage(<%= slotIndex %>)"><i
+                                                                            class="fas fa-trash"></i></button>
+                                                                </div>
+                                                                <% } %>
+
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                
-                <div class="w-50">
-                    <a href="/admin/products">
-                       <button id="cancelBtn"  type="button" class="btn btn-danger" >Cancel</button> 
-                    </a>
-                    
-                    <button id="submitBtn" type="button" class="btn btn-success" >Update product</button>
-                </div>
-
-            </div>
-        </form>
-
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/js/adminjs/editproduct.js"></script>
+        <!-- Crop Modal Same as Add Product -->
+        <div class="modal fade" id="cropModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold">Crop Image</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="img-container">
+                            <img id="cropImageTarget" src="" alt="Crop Target" style="width: 100%; max-height: 500px;">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary fw-bold" id="btnApplyCrop">Apply Crop</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- We create a new script for Edit specific logic -->
+        <script src="/js/adminjs/editProduct.js"></script>
 </body>
+
 </html>

@@ -1,305 +1,297 @@
 <html lang="en">
 
 <head>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/css/coreui.min.css" rel="stylesheet" integrity="sha384-/ElSMRaKgsWY7yc9is+yGoOmLb0lEnL0i8BqJoNBrejJNHx8+6ZSD0u13ea6fUn3" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/css/coreui.min.css" rel="stylesheet"
+        integrity="sha384-/ElSMRaKgsWY7yc9is+yGoOmLb0lEnL0i8BqJoNBrejJNHx8+6ZSD0u13ea6fUn3" crossorigin="anonymous">
 
-    <%-include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/purchase/cart.css'}) %>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    <%- include('../../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/purchase/cart.css'}) %>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
             integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
             crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
-<body class="d-flex flex-column">
-    
-
+<body class="d-flex flex-column" style="background-color: #f8f9fa;">
 
     <%- include('../../partials/userNavbar.ejs') %>
 
-    <section class=" container rounded-2 bg-light">
-        <ol class="d-flex align-items-center list-unstyled m-0 ">
-            <li><a class="text-decoration-none" href="/home">Home /</a></li>
-            <li><a class="text-decoration-none" > Orders</a></li>
-        </ol>
-    </section>
+        <div class="profile-container">
+            <div class="profile-layout">
+                <%- include('../../partials/userprofile/profileLayoutMinimal.ejs', { activePage: 'orders' }) %>
 
- 
-
-        <header>
-            <section class="h-100 gradient-custom">
-                <div class="container py-2">
-
-
-                    <div class="row d-flex justify-content-center my-4">
-                        <div class="col-md-10">
-
-
-                            <!-- card -->
-                             <% for(let order of orders){  %>
-                            <div class="mainCard card mb-4">
-                                <div class="card-header px-3 py-3">
-                                    <div class="row container-fluid">
-                                        <div class="col-lg-5">
-                                            <table>
-                                                <tr>
-                                                    <th class="pe-5">Order Id</th>
-                                                    <th>Deliver to </th>
-                                                </tr>
-                                                <tr>
-                                                    <td class="pe-5 orderId"><%= order.orderId %></td>
-                                                    <td><%= order.address.fullName%></td>
-                                                </tr>
-                    
-                                            </table>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <table>
-                                                <tr>
-                                                    <th class="pe-5">Ordered Date</th>
-                                                </tr>
-                                                <tr >
-                                                    <td><%= order.orderDate.toString().substring(4,15)%></td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                       
-
-                                    </div>
-                                </div>
-
-                                <% for(let product of order.orderItems){ %>
-                                <!-- if multiple products in single order card body iterate  -->
-                                <div class="card-body">
-                                    <!-- Single item -->
-                                    <div class="row">
-                                        <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-                                            <!-- Image -->
-                                            <div class="bg-image hover-overlay hover-zoom ripple rounded"
-                                                data-mdb-ripple-color="light">
-                                                <img src="<%= product.productId.productImage[0]%>" class="w-50" alt="Blue Jeans Jacket" />
-                                                <a href="#!">
-                                                    <div class="mask"
-                                                        style="background-color: rgba(251, 251, 251, 0.2)">
-                                                    </div>
-                                                </a>
-                                            </div>
-                                            <!-- Image -->
-                                        </div>
-
-                                        <div class="col-lg-5 col-md-6 mb-4 mb-lg-0 ">
-                                            <!-- Data -->
-                                            <p><strong><%= product.productId.productName.substring(0,45)%></strong></p>
-                                            <p>Color:<%= product.productId.color%></p>
-                                            <p>Price:<%= product.productId.sellingPrice%></p>
-                                            <p>Qty:<%= product.quantity%></p>
-                                                
-                                                
-                                            <% if(product.status === 'Pending'){ %>
-                                                <span>Order Status : </span><span class="pe-5 text-warning fw-bold">Order Placed</span>
-                                            <% }else if(product.status === 'Processing'){ %>
-                                                <span>Order Status : </span><span class="pe-5 text-info fw-bold">Processing</span>
-                                            <% }else if(product.status === 'Shipped'){ %>
-                                                <span>Order Status : </span><span class="pe-5 text-primary fw-bold">Shipped</span>
-                                            <% } else if(product.status === 'Delivered'){ %>
-                                                <span>Order Status : </span><span class="pe-5 text-success fw-bold">Delivered</span>
-                                            <% } else if(product.status === 'Cancelled'){ %>
-                                                <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Order Cancelled By user</span>
-                                            <% } else if(product.status === 'Rejected'){ %>
-                                                <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Order Rejected by admin</span>
-                                            <% }else if(product.status === 'ReturnRequested'){ %>
-                                                <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Return Requested</span>
-                                            <% } else if(product.status === 'Returned'){ %>
-                                                <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Returned</span>
-                                            <% } else if(product.status === 'Pending for Payment'){ %>
-                                                <span>Order Status : </span><span class="pe-5 text-Danger fw-bold">Payment not completed</span>
-                                            <% } %>
-
-
-                                            <div>
-                                                <% if(product?.deliveryDate && !product?.returnedDate){ %>
-                                                <span>Delivered on : </span><small class="pe-5 text-info fw-bold"><%=product?.deliveryDate.toString().substring(0,24)  %></small>
-                                                <% } %>
-                                            </div>
-                                                  
-
-
-                                        </div>
-
-                                        <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-
-                                               <!-- product return before 7 days of delivery  -->
-                                            <% if((Date.now() - product?.deliveryDate) / (1000 * 60 * 60 * 24) <= 7 && product.status !== 'ReturnRequested' && product.status !== 'Returned' ){ %>
-
-                                                <a class="orderReturnBtn" href="/returnOrder/?orderId=<%= order.orderId%>&productId=<%= product.productId._id %>">
-                                                    <button  type="button"  class="btn w-100 btn-outline-danger mb-2 ">
-                                                        Return Product
-                                                    </button>
-                                               </a>
-
-                                            <% } %>
-
-
-                                            <% if(product.status !== 'Cancelled' && product.status !== 'Delivered' && product.status !== 'Rejected' && product.status !== 'ReturnRequested' && product.status !== 'Returned'  ){ %>
-                                            <a class="cancelOrderBtn" href="/cancelOrder/?orderId=<%= order.orderId%>&productId=<%= product.productId._id %> ">
-                                                <button type="button"  class="btn btn-outline-danger mb-2 w-100">Cancel Order</button>
-                                               
-                                            </a>
-                                            <% } else if(product.status === 'Delivered' &&  product.isRated === false){%>
-
-                                                <!-- Button trigger modal -->
-                                                 <input class="productId" hidden productId="<%= product.productId._id %>" >
-                                                <button type="button" class="btn w-100 btn-outline-warning ratingBtn mb-2" data-toggle="modal" data-target="#exampleModalCenter">
-                                                    Rate the Product
-                                                </button>
-                                                
-                                            <% } %>
-
-                                           
-
-
-                                            <% if(product.isRated === true){%>
-                                                 <!-- rating -->
-                                                 <h6>Rating</h6>
-                                                <div data-coreui-read-only="true" data-coreui-precision="0.25" data-coreui-toggle="rating" data-coreui-value=" <%= product.rating%> "></div>
-                                            <% } %>
-
-                                          
-                                            <a href="/orderDetailPage/?orderId=<%= order.orderId %>">
-                                                <button type="button" class="btn w-100 btn-outline-info"  >
-                                                    Order Details
-                                                </button>
-                                            </a>
-
-                                            <% if(product.status === 'Pending for Payment'){%>
-                                                <a  href="/retryPayment/?orderId=<%= order.orderId %>">
-                                                    <button type="button"  class="btn btn-primary mt-2 w-100">Complete your Payment</button>
-                                                </a>
-                                               
-                                           <% } %>
-
-
-                                           <!-- Download invoice -->
-                                           <% if(product.status === 'Delivered' ){%>
-                                            <a href="/invoice/?orderId=<%= order.orderId %>">
-                                                <button id="downloadBtn" style="background-color: rgb(122 122 144);" class="btn btn-primary w-100 mt-2">
-                                                    <i class="bi bi-file-earmark-arrow-down"></i> Download Invoice
-                                                </button>
-                                            </a>
-                                            
-                                        <% } %>
-                                            
-
-
-
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                                <div class="line"></div>
-                                <!-- card body end  -->
-                                <% } %>
-
-
-                            </div>
-                            <!-- card ends -->
-                             <% } %>
-
-
-                        <!-- pagenation -->
-                        <Section class="d-flex justify-content-center mt-3">
-                            <div aria-label="Page navigation example " >
-                            <ul class="pagination ">
-                              <li class="page-item">
-                                <a class="page-link border border-primary" href="/orders/?currentpage=<%= currentpage-1 %>" aria-label="Previous">
-                                  <span aria-hidden="true">&laquo;</span>
-                                  <span class="sr-only">Previous</span>
-                                </a>
-                              </li>
-                         
-                              <li class="page-item border border-success"><a class="page-link " ><%= currentpage %></a></li>
-                            
-                              <li class="page-item">
-                                <a class="page-link border border-primary" href="/orders/?currentpage=<%= Number(currentpage)+1 %>" aria-label="Next">
-                                  <span aria-hidden="true">&raquo;</span>
-                                  <span class="sr-only">Next</span>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                        </Section>
-
-
-
-                             
-
-
-
+                    <!-- Main Content -->
+                    <main class="profile-content-card border-0 bg-transparent p-0 shadow-none">
+                        <div class="mb-4">
+                            <h4 class="fw-bold text-dark">My Orders</h4>
                         </div>
 
+                        <% if(orders && orders.length> 0) { %>
+                            <% for(let order of orders){ %>
+                                <div class="card mb-4 border-0 shadow-sm rounded-4 overflow-hidden">
+                                    <div
+                                        class="card-header bg-white px-4 py-3 border-bottom-0 d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-4">
+                                            <div>
+                                                <small class="text-uppercase text-muted fw-bold d-block mb-1"
+                                                    style="font-size: 0.75rem; letter-spacing: 0.5px;">Order ID</small>
+                                                <span class="text-dark fw-bold orderId"
+                                                    style="font-family: monospace; font-size: 0.95rem;">
+                                                    <%= order.orderId %>
+                                                </span>
+                                            </div>
+                                            <div class="d-none d-md-block border-start h-50 mx-2"></div>
+                                            <div>
+                                                <small class="text-uppercase text-muted fw-bold d-block mb-1"
+                                                    style="font-size: 0.75rem; letter-spacing: 0.5px;">Date
+                                                    Placed</small>
+                                                <span class="text-dark">
+                                                    <%= order.orderDate.toString().substring(4,15)%>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="text-end d-none d-md-block">
+                                            <small class="text-uppercase text-muted fw-bold d-block mb-1"
+                                                style="font-size: 0.75rem; letter-spacing: 0.5px;">Ship To</small>
+                                            <span class="text-dark fw-medium">
+                                                <%= order.address.fullName%>
+                                            </span>
+                                        </div>
+                                    </div>
 
+                                    <div class="card-body p-0">
+                                        <% for(let product of order.orderItems){ %>
+                                            <div class="p-4 border-top border-light mainCard">
+                                                <div class="row">
+                                                    <div class="col-lg-2 mb-3 mb-lg-0">
+                                                        <div
+                                                            class="bg-light rounded p-2 text-center h-100 d-flex align-items-center justify-content-center">
+                                                            <img src="<%= product.productId.productImage[0]%>"
+                                                                class="img-fluid"
+                                                                style="max-height: 100px; object-fit: contain;"
+                                                                alt="Product">
+                                                        </div>
+                                                    </div>
 
+                                                    <div class="col-lg-6 mb-3 mb-lg-0">
+                                                        <h6 class="fw-bold mb-2 text-dark">
+                                                            <%= product.productId.productName.substring(0,60)%>...
+                                                        </h6>
 
-                    </div>
-                </div>
-            </section>
-        </header>
+                                                        <div class="d-flex flex-wrap gap-3 mb-2 small text-muted">
+                                                            <span><strong>Color:</strong>
+                                                                <%= product.productId.color%>
+                                                            </span>
+                                                            <span><strong>Qty:</strong>
+                                                                <%= product.quantity%>
+                                                            </span>
+                                                            <span><strong>Price:</strong> ₹<%=
+                                                                    product.productId.sellingPrice%></span>
+                                                        </div>
+
+                                                        <div class="mb-2">
+                                                            <% if(product.status==='Pending' ){ %>
+                                                                <span class="badge bg-warning text-dark"><i
+                                                                        class="fas fa-clock me-1"></i> Order
+                                                                    Placed</span>
+                                                                <% }else if(product.status==='Processing' ){ %>
+                                                                    <span class="badge bg-info text-white"><i
+                                                                            class="fas fa-cog me-1"></i>
+                                                                        Processing</span>
+                                                                    <% }else if(product.status==='Shipped' ){ %>
+                                                                        <span class="badge bg-primary"><i
+                                                                                class="fas fa-shipping-fast me-1"></i>
+                                                                            Shipped</span>
+                                                                        <% } else if(product.status==='Delivered' ){ %>
+                                                                            <span class="badge bg-success"><i
+                                                                                    class="fas fa-check-circle me-1"></i>
+                                                                                Delivered</span>
+                                                                            <small class="text-muted d-block mt-1">On
+                                                                                <%=product?.deliveryDate?.toString().substring(0,16)
+                                                                                    %>
+                                                                            </small>
+                                                                            <% } else if(product.status==='Cancelled' ){
+                                                                                %>
+                                                                                <span class="badge bg-danger"><i
+                                                                                        class="fas fa-times me-1"></i>
+                                                                                    Cancelled</span>
+                                                                                <% } else if(product.status==='Rejected'
+                                                                                    ){ %>
+                                                                                    <span
+                                                                                        class="badge bg-danger">Rejected</span>
+                                                                                    <% }else
+                                                                                        if(product.status==='ReturnRequested'
+                                                                                        ){ %>
+                                                                                        <span
+                                                                                            class="badge bg-warning text-dark">Return
+                                                                                            Requested</span>
+                                                                                        <% } else
+                                                                                            if(product.status==='Returned'
+                                                                                            ){ %>
+                                                                                            <span
+                                                                                                class="badge bg-secondary">Returned</span>
+                                                                                            <% } else
+                                                                                                if(product.status==='Pending for Payment'
+                                                                                                ){ %>
+                                                                                                <span
+                                                                                                    class="badge bg-danger">Payment
+                                                                                                    Failed</span>
+                                                                                                <% } %>
+                                                        </div>
+                                                    </div>
+
+                                                    <div
+                                                        class="col-lg-4 d-flex flex-column justify-content-center gap-2">
+
+                                                        <a href="/orderDetailPage/?orderId=<%= order.orderId %>"
+                                                            class="btn btn-outline-primary btn-sm w-100">
+                                                            View Details
+                                                        </a>
+
+                                                        <!-- Action Buttons based on status -->
+                                                        <% if(product.status==='Pending for Payment' ){%>
+                                                            <a href="/retryPayment/?orderId=<%= order.orderId %>"
+                                                                class="btn btn-danger btn-sm w-100">
+                                                                <i class="fas fa-exclamation-circle me-1"></i> Retry
+                                                                Payment
+                                                            </a>
+                                                            <% } %>
+
+                                                                <% if(product.status==='Delivered' &&
+                                                                    product.isRated===false){%>
+                                                                    <button type="button"
+                                                                        class="btn btn-outline-warning btn-sm w-100 ratingBtn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#exampleModalCenter">
+                                                                        <i class="fas fa-star me-1"></i> Rate
+                                                                        Product
+                                                                    </button>
+                                                                    <input class="productId" hidden
+                                                                        productId="<%= product.productId._id %>">
+                                                                    <% } else if(product.isRated===true){ %>
+                                                                        <div class="text-center small text-warning">
+                                                                            <i class="fas fa-star"></i> You rated:
+                                                                            <%= product.rating%>
+                                                                        </div>
+                                                                        <% } %>
+
+                                                                            <% if((Date.now() - product?.deliveryDate) /
+                                                                                (1000 * 60 * 60 * 24) <=7 &&
+                                                                                product.status==='Delivered' ){ %>
+                                                                                <a href="/returnOrder/?orderId=<%= order.orderId%>&productId=<%= product.productId._id %>"
+                                                                                    class="btn btn-outline-danger btn-sm w-100 orderReturnBtn">
+                                                                                    Return Item
+                                                                                </a>
+                                                                                <% } %>
+
+                                                                                    <% if(['Pending', 'Processing'
+                                                                                        , 'Shipped'
+                                                                                        ].includes(product.status)){ %>
+                                                                                        <a href="/cancelOrder/?orderId=<%= order.orderId%>&productId=<%= product.productId._id %>"
+                                                                                            class="cancelOrderBtn">
+                                                                                            <button
+                                                                                                class="btn btn-outline-danger btn-sm w-100">Cancel
+                                                                                                Order</button>
+                                                                                        </a>
+                                                                                        <% } %>
+
+                                                                                            <% if(product.status==='Delivered'
+                                                                                                ){%>
+                                                                                                <a href="/invoice/?orderId=<%= order.orderId %>"
+                                                                                                    class="btn btn-secondary btn-sm w-100">
+                                                                                                    <i
+                                                                                                        class="bi bi-download me-1"></i>
+                                                                                                    Invoice
+                                                                                                </a>
+                                                                                                <% } %>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                    </div>
+                                </div>
+                                <% } %>
+
+                                    <!-- Pagination -->
+                                    <nav class="d-flex justify-content-center mt-4">
+                                        <ul class="pagination">
+                                            <li class="page-item <%= currentpage <= 1 ? 'disabled' : '' %>">
+                                                <a class="page-link"
+                                                    href="/orders/?currentpage=<%= currentpage-1 %>">Previous</a>
+                                            </li>
+                                            <li class="page-item active"><a class="page-link">
+                                                    <%= currentpage %>
+                                                </a></li>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="/orders/?currentpage=<%= Number(currentpage)+1 %>">Next</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+
+                                    <% } else { %>
+                                        <div class="card p-5 text-center">
+                                            <div class="mb-3">
+                                                <i class="fas fa-shopping-bag fa-3x text-muted opacity-50"></i>
+                                            </div>
+                                            <h5>No orders yet</h5>
+                                            <p class="text-muted">Looks like you haven't placed any orders yet.</p>
+                                            <a href="/home" class="btn btn-primary mt-2"
+                                                style="max-width: 200px; margin: 0 auto;">Start Shopping</a>
+                                        </div>
+                                        <% } %>
+                    </main>
+            </div>
+        </div>
 
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Review and Ratin</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                <div class="modal-body ">
-
-                <div class="d-flex flex-column align-items-center">
-
-                    <div>
-                        <div id="myRating" data-coreui-size="lg" data-coreui-precision="0.5" data-coreui-toggle="rating" data-coreui-value="0" data-coreui-max="5"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Write a Review</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                  
-                    <div class="form-group w-100">
-                        <label for="exampleFormControlTextarea1">Review</label>
-                        <textarea class="form-control border border-warning" id="comment" rows="3"></textarea>
+                    <div class="modal-body ">
+                        <input type="hidden" id="modalOrderId">
+                        <input type="hidden" id="modalProductId">
+
+                        <div class="d-flex flex-column align-items-center">
+
+                            <div class="mb-3">
+                                <div id="myRating" data-coreui-size="lg" data-coreui-precision="0.5"
+                                    data-coreui-toggle="rating" data-coreui-value="0" data-coreui-max="5"></div>
+                            </div>
+
+                            <div class="form-group w-100">
+                                <label for="comment" class="form-label fw-bold">Your Review</label>
+                                <textarea class="form-control" id="comment" rows="3"
+                                    placeholder="What did you like or dislike?"></textarea>
+                            </div>
+                        </div>
+
                     </div>
-
-
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" id="ratingSubmit" class="btn btn-primary">Submit Review</button>
+                    </div>
                 </div>
-
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" id="ratingSubmit" class="btn btn-primary">Rate Now</button>
-                </div>
-            </div>
             </div>
         </div>
-        <!-- modal end -->
-
-
-
 
         <footer>
             <%- include('../../partials/userFooter.ejs') %>
         </footer>
 
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/js/coreui.bundle.min.js" integrity="sha384-mLGa1g62d9QzDXVGjvdUasvKUjkIoq7kjvKJsQifgQdr9x+4Ge3SZuGRTHYwvAl/" crossorigin="anonymous"></script>
-        
-
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui-pro@5.6.0/dist/js/coreui.bundle.min.js"
+            integrity="sha384-mLGa1g62d9QzDXVGjvdUasvKUjkIoq7kjvKJsQifgQdr9x+4Ge3SZuGRTHYwvAl/"
+            crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="/js/userjs/purchase/orders.js"></script>
-
 </body>
 
 </html>

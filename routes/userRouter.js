@@ -17,27 +17,34 @@ const wallerController = require('../controllers/user/walletController');
 const couponController = require('../controllers/user/couponController');
 const paymentController = require('../controllers/user/paymentController.js');
 const invoiceController = require('../controllers/user/invoiceController.js');
+const apiSearchController = require('../controllers/user/apiSearchController');
+const { authLimiter, otpLimiter } = require('../middlewares/rateLimiters');
 
+// ... existing code ...
+
+// search suggestions API
+router.get('/api/search-suggestions', userMiddleware.isAuthenticated, apiSearchController.getSuggestions);
 
 // google auth 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/user' }), userController.googleAuth)
 
 //user route
-router.get('/', userMiddleware.isNotAuthenticated, userController.loadLoginpage);
+router.get('/', userController.loadLandingPage);
+router.get('/login', userMiddleware.isNotAuthenticated, userController.loadLoginpage);
 router.get('/signup', userMiddleware.isNotAuthenticated, userController.loadSignupPage);
-router.post('/signup', userController.addNewUser);
-router.get('/resentotp', userController.resentotp);
-router.post('/verify-otp', userController.verifyOtp);
-router.post('/login', userController.verifyLogin);
+router.post('/signup', authLimiter, userController.addNewUser);
+router.get('/resentotp', otpLimiter, userController.resentotp);
+router.post('/verify-otp', authLimiter, userController.verifyOtp);
+router.post('/login', authLimiter, userController.verifyLogin);
 router.get('/home', userMiddleware.isAuthenticated, userController.loadHome);
 router.get('/logout', userController.userLogout);
 
 //forgot password
 router.get('/forgotPassword', forgotPassword.forgotPassword);
-router.post('/verifyEmail', forgotPassword.verifyEmail);
-router.post('/verifyOtp', forgotPassword.verifyOtp);
-router.post('/changePassword', forgotPassword.changePassword);
+router.post('/verifyEmail', authLimiter, forgotPassword.verifyEmail);
+router.post('/verifyOtp', otpLimiter, forgotPassword.verifyOtp);
+router.post('/changePassword', authLimiter, forgotPassword.changePassword);
 
 // profile section 
 router.get('/profile', userMiddleware.isAuthenticated, profileController.profilePage);
@@ -53,8 +60,8 @@ router.get('/resetPassword', userMiddleware.isAuthenticated, profileController.r
 router.post('/resetPassword', userMiddleware.isAuthenticated, profileController.resetPassword)
 
 //referral section
-router.get('/referrals', userMiddleware.isAuthenticated,referralsController.referralsPage)
-router.get('/checkReferralCode',referralsController.checkReferralCode)
+router.get('/referrals', userMiddleware.isAuthenticated, referralsController.referralsPage)
+router.get('/checkReferralCode', referralsController.checkReferralCode)
 
 //product details
 router.get('/product/:id', userMiddleware.isAuthenticated, productsController.getDetailedPage);
@@ -93,15 +100,17 @@ router.get('/removeFromWishlist', userMiddleware.isAuthenticated, wishlistContro
 router.get('/walletLedger', userMiddleware.isAuthenticated, wallerController.getWallet)
 
 //coupon
-router.get('/checkCouponCode',userMiddleware.isAuthenticated,couponController.checkCouponCode )
-router.get('/couponAfterChange',userMiddleware.isAuthenticated,couponController.couponAfterChange )
+router.get('/checkCouponCode', userMiddleware.isAuthenticated, couponController.checkCouponCode)
+router.get('/couponAfterChange', userMiddleware.isAuthenticated, couponController.couponAfterChange)
+router.get('/available-coupons', userMiddleware.isAuthenticated, couponController.getAvailableCoupons)
+router.get('/remove-coupon', userMiddleware.isAuthenticated, couponController.removeCoupon)
 
 //payment
-router.post('/payment/callback',userMiddleware.isAuthenticated,paymentController.paymentResponse)
-router.get('/retryPayment',userMiddleware.isAuthenticated,paymentController.retryPayment)
+router.post('/payment/callback', paymentController.paymentResponse)
+router.get('/retryPayment', userMiddleware.isAuthenticated, paymentController.retryPayment)
 
 //invoice
-router.get('/invoice',userMiddleware.isAuthenticated,invoiceController.generateInvoice)
+router.get('/invoice', userMiddleware.isAuthenticated, invoiceController.generateInvoice)
 
 module.exports = router;
 

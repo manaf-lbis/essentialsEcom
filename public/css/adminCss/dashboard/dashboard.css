@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: #D0FFEF;
+  background-color: #f8fafc;
   font-family: "Inter", sans-serif;
 }
 
@@ -21,12 +21,86 @@ body {
   justify-content: space-between;
   gap: 15px;
 }
+
 .wrapper .mainpanel {
   flex-grow: 1;
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #f8fafc;
   padding-bottom: 80px;
+  margin-left: 260px;
+  /* Adjust for fixed sidebar */
+  width: calc(100% - 260px);
+  /* Prevent horizontal overflow */
 }
+
 .wrapper .mainpanel h4 {
   padding: 15px 0 5px 15px;
-}/*# sourceMappingURL=dashboard.css.map */
+}
+
+.premium-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+.kpi-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  border: none;
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+.uppercase {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.chart-container {
+  width: 100%;
+  position: relative;
+}
+
+.extra-small {
+  font-size: 0.7rem;
+}
+
+#recentOrdersTable thead th {
+  padding: 12px 10px;
+  font-weight: 700;
+  background-color: #f8f9fa;
+  color: #64748b;
+}
+
+#recentOrdersTable tbody td {
+  padding: 15px 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.bg-success-subtle {
+  background-color: #e6f7ef !important;
+}
+
+.bg-danger-subtle {
+  background-color: #feecef !important;
+}
+
+.bg-primary-subtle {
+  background-color: #e8f2ff !important;
+}
+
+.mainpanel {
+  background-color: #f8fafc !important;
+}
+
+.sticky-top {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
+}
+
+.badge {
+  font-weight: 600;
+}

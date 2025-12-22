@@ -1,0 +1,12 @@
+--- Starting Page Verification ---
+Testing Checkout Page at C:\Users\login\Desktop\essentials test\views\user\purchase\checkout.ejs...
+SUCCESS: Checkout Page compiled and rendered successfully.
+
+
+Testing Order Details Page at C:\Users\login\Desktop\essentials test\views\user\purchase\orderDetails.ejs...
+SUCCESS: Order Details Page compiled and rendered successfully.
+
+
+Testing Wishlist Page at C:\Users\login\Desktop\essentials test\views\user\purchase\wishlist.ejs...
+SUCCESS: Wishlist Page compiled and rendered successfully.
+--- Verification Complete ---

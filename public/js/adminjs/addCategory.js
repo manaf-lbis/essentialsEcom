@@ -1,40 +1,91 @@
-const submitBtn = document.getElementById('submitBtn');
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('addCategoryForm');
+    const categoryNameInput = document.getElementById('categoryName');
+    const descriptionInput = document.getElementById('description');
+    const imageInput = document.getElementById('categoryImage');
+    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
 
-//clear errmsg
-function clearErr(){
-    document.getElementById('categoryErr').innerHTML = '';
-    document.getElementById('descriptionErr').innerHTML = ''
-}
+    // Real-time Image Preview
+    imageInput.addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            if (!validTypes.includes(file.type)) {
+                showError('imageError', 'Invalid file type. Only JPG, JPEG, and PNG are allowed.');
+                this.value = ''; // Clear input
+                imagePreviewContainer.classList.add('d-none');
+                return;
+            }
 
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreviewContainer.classList.remove('d-none');
+                clearError('imageError');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            imagePreviewContainer.classList.add('d-none');
+        }
+    });
 
+    // Form Validation on Submit
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let isValid = true;
 
-submitBtn.addEventListener('click', (event) => {
-    event.preventDefault();
+        // Clear previous errors
+        clearError('categoryNameError');
+        clearError('descriptionError');
+        clearError('imageError');
 
-    clearErr()//clear previous err;
+        // 1. Validate Category Name
+        const nameValue = categoryNameInput.value.trim();
+        if (nameValue === '') {
+            showError('categoryNameError', 'Category Name is required.');
+            isValid = false;
+        } else if (!/^[a-zA-Z\s]+$/.test(nameValue)) {
+            showError('categoryNameError', 'Category Name should contain only alphabets.');
+            isValid = false;
+        } else if (nameValue.length < 3) {
+            showError('categoryNameError', 'Category Name must be at least 3 characters.');
+            isValid = false;
+        }
 
-    const categoryName = document.getElementById('categoryName').value;
-    const description = document.getElementById('description').value;
-    const form = document.getElementById('form');
-    
-    let validation = true;
+        // 2. Validate Description
+        const descValue = descriptionInput.value.trim();
+        if (descValue === '') {
+            showError('descriptionError', 'Description is required.');
+            isValid = false;
+        } else if (descValue.length < 10) {
+            showError('descriptionError', 'Description must be at least 10 characters.');
+            isValid = false;
+        }
 
+        // 3. Validate Image
+        if (imageInput.files.length === 0) {
+            showError('imageError', 'Please upload a category image.');
+            isValid = false;
+        }
 
-    if (categoryName.trim().length < 4) {
-        document.getElementById('categoryErr').innerHTML = 'invalid category Name';
-        validation = false;
-    };
+        if (isValid) {
+            form.submit();
+        }
+    });
 
-    if (description.trim().length <= 10) {
-        document.getElementById('descriptionErr').innerHTML = 'Add  a description '
-        validation = false;
-    };
-
-    if (validation) {
-        form.submit();
+    function showError(elementId, message) {
+        const errorElement = document.getElementById(elementId);
+        if (errorElement) {
+            errorElement.textContent = message;
+        }
     }
 
+    function clearError(elementId) {
+        const errorElement = document.getElementById(elementId);
+        if (errorElement) {
+            errorElement.textContent = '';
+        }
+    }
 });
-
-
-

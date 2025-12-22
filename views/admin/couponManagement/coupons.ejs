@@ -1,100 +1,218 @@
+<!DOCTYPE html>
 <html lang="en">
-<%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/productmanagement/productmanagement.css" }) %>
 
-    <body>
-        <%- include('../../partials/adminNavbar.ejs') %>
+<head>
+  <%- include("../../partials/htmlHead.ejs", { csspath: "/css/adminCss/productmanagement/productmanagement.css" }) %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+      .coupon-table {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
 
-            <div class="container-fluid wrapper">
-                <%- include("../../partials/adminLeftsidebar.ejs") %>
+      .coupon-table th {
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        background-color: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem;
+      }
 
-                <div class="mainpanel">
-                    <nav class="navbar rounded-3 bg-body-tertiary">
-                        <div class="container-fluid">
-                            <h4>Coupon Management</h4>
-                            <div class="d-flex">
-                                <a href="/admin/addCoupons">
-                                    <button class="btn btn-outline-primary ms-3" type="button">Add Coupon</button>
-                                </a>
+      .coupon-table td {
+        vertical-align: middle;
+        padding: 1rem;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        font-size: 0.9rem;
+      }
 
-                            </div>
-                        </div>
-                    </nav>
-                    <!-- nav ends -->
+      .action-btn {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.2s;
+        margin: 0 2px;
+        border: none;
+        cursor: pointer;
+      }
 
-                    <div class="userListing">
-                        <div class="header">
-                            <ul>
-                                <li>Coupon Code</li>
-                                <li>Discount <br> <small>(min pur - discount)</small></li>
-                                <li>Usage Count </li>
-                                <li>Expiry Date</li>
-                                <li>Status</li>
-                                <li></li>
-                            </ul>
-                        </div>
-                        <!-- user listing -->
-                        <div class=" userListing list">
+      .btn-delete {
+        background-color: #fef2f2;
+        color: #ef4444;
+      }
 
+      .btn-delete:hover {
+        background-color: #fee2e2;
+      }
 
-                            <% for(let coupon of coupons){  %>
+      .status-badge {
+        padding: 4px 12px;
+        border-radius: 99px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
 
-                                <div class=" header user">
-                                    <ul>
-                                        <li><%=coupon.couponCode  %></li>
-                                        <li>  <%= '₹'+ coupon.minPurchaseValue + ' - ' +'₹'+  coupon.discount  %> </li>
-                                        <li> <%=coupon.usedCount  %></li>
-                                        <li class="text-danger"><%=coupon.expiryDate.toString().substring(4,15)  %> </li>
-                                        
-                                        <% if(coupon.expiryDate < Date.now() ){ %>
-                                          <li class="text-danger"> Expired </li>
-                                        <% }else if(coupon.isActive === false){ %>
-                                          <li class="text-danger"> inActive </li>
-                                        <% }else{ %>
-                                          <li class="text-success"> Active </li>
-                                        <% } %>
-                                     
+      .status-active {
+        background-color: #dcfce7;
+        color: #15803d;
+      }
 
-                                        <li>
-                                            <% if(coupon.expiryDate > Date.now() && coupon.isActive === true ){ %>
-                                            <a class="couponDeleteBtn" href="/admin/disableCoupon/?_id=<%=coupon._id %>">
-                                              <img src="/assets/images/delete1.png" couponId alt="">
-                                            </a>
-                                            <% } %>
-                                        </li>
-                                    </ul>
-                                </div>
+      .status-expired {
+        background-color: #fef2f2;
+        color: #b91c1c;
+      }
 
-                                <% } %>
-                        </div>
+      .status-inactive {
+        background-color: #f1f5f9;
+        color: #64748b;
+      }
+    </style>
+</head>
 
-                        
-                        <section class="d-flex justify-content-center mt-3 " aria-label="Page navigation example">
-                            <ul class="pagination">
-                              <li class="page-item">
-                                <a class="page-link" href="/admin/coupons/?pageReq=<%=currentPage-1 %>" aria-label="Previous">
-                                  <span aria-hidden="true">&laquo;</span>
-                                  <span class="sr-only">Previous</span>
-                                </a>
-                              </li>
-                               <li class="page-item"><a class="page-link" href=""> <%=currentPage %></a></li>
-                              <li class="page-item">
-                                <a class="page-link" href="/admin/coupons/?pageReq=<%=currentPage+1 %>" aria-label="Next">
-                                  <span aria-hidden="true">&raquo;</span>
-                                  <span class="sr-only">Next</span>
-                                </a>
-                              </li>
-                            </ul>
-                        </section>
+<body class="bg-light">
 
+  <%- include('../../partials/adminNavbar.ejs') %>
 
-                    </div>
+    <div class="container-fluid wrapper">
+      <%- include("../../partials/adminLeftsidebar.ejs") %>
 
-                </div>
+        <div class="mainpanel p-4">
+          <!-- Header -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h4 class="fw-bold mb-1">Coupon Management</h4>
+              <p class="text-muted small mb-0">Manage discounts and offers</p>
             </div>
+            <a href="/admin/addCoupons" class="btn btn-primary fw-bold">
+              <i class="fas fa-plus me-2"></i>Add Coupon
+            </a>
+          </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-            <script src="/js/adminjs/coupon/coupons.js"></script>
+          <!-- Coupons Table -->
+          <div class="coupon-table mb-4">
+            <div class="table-responsive">
+              <table class="table mb-0">
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Discount</th>
+                    <th>Usage</th>
+                    <th>Expiry</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if(coupons && coupons.length> 0) { %>
+                    <% for(let coupon of coupons){ %>
+                      <tr id="row-<%= coupon._id %>">
+                        <td class="fw-bold text-primary">
+                          <%= coupon.couponCode %>
+                        </td>
+                        <td>
+                          <div class="fw-bold">₹<%= coupon.discount %>
+                          </div>
+                          <div class="small text-muted">Min: ₹<%= coupon.minPurchaseValue %>
+                          </div>
+                        </td>
+                        <td>
+                          <%= coupon.usedCount %>
+                        </td>
+                        <td>
+                          <%= new Date(coupon.expiryDate).toLocaleDateString() %>
+                        </td>
+                        <td>
+                          <% if (new Date(coupon.expiryDate) < new Date()) { %>
+                            <span class="status-badge status-expired">Expired</span>
+                            <% } else if (!coupon.isActive) { %>
+                              <span class="status-badge status-inactive">Inactive</span>
+                              <% } else { %>
+                                <span class="status-badge status-active">Active</span>
+                                <% } %>
+                        </td>
+                        <td class="text-end">
+                          <% if (new Date(coupon.expiryDate)> new Date() && coupon.isActive) { %>
+                            <button class="action-btn btn-delete" onclick="disableCoupon('<%= coupon._id %>')"
+                              title="Disable/Remove">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                            <% } %>
+                        </td>
+                      </tr>
+                      <% } %>
+                        <% } else { %>
+                          <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">No coupons found.</td>
+                          </tr>
+                          <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-    </body>
+          <!-- Pagination -->
+          <nav aria-label="Page navigation" class="d-flex justify-content-center">
+            <ul class="pagination">
+              <li class="page-item <%= Number(currentPage) <= 1 ? 'disabled' : '' %>">
+                <a class="page-link" href="/admin/coupons/?pageReq=<%= Number(currentPage)-1 %>">Previous</a>
+              </li>
+              <li class="page-item active">
+                <a class="page-link" href="#">
+                  <%= currentPage %>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="/admin/coupons/?pageReq=<%= Number(currentPage)+1 %>">Next</a>
+              </li>
+            </ul>
+          </nav>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      async function disableCoupon(id) {
+        const result = await Swal.fire({
+          title: 'Disable Coupon?',
+          text: "Users will no longer be able to use this coupon.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          confirmButtonText: 'Yes, Disable it!'
+        });
+
+        if (result.isConfirmed) {
+          try {
+            const response = await fetch(`/admin/disableCoupon/?_id=${id}`);
+            const data = await response.json();
+
+            if (response.ok) {
+              Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Coupon Disabled',
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => window.location.reload());
+            } else {
+              throw new Error(data.message || 'Failed to disable');
+            }
+          } catch (error) {
+            Swal.fire('Error', 'Something went wrong', 'error');
+          }
+        }
+      }
+    </script>
+</body>
 
 </html>

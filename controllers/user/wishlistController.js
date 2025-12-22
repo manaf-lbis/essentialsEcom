@@ -1,4 +1,5 @@
 const Wishlist = require('../../models/wishlistSchema');
+const User = require('../../models/userSchema');
 
 function getUserIdFromSession(req) {
     return req.session?._id ?? req.session.passport?.user;
@@ -17,6 +18,9 @@ const wishlist = async (req, res) => {
         // populate user wishlist products  details
         const wishlist = await Wishlist.findOne({ userId }).populate('products.productId');
 
+        // Fetch user data for sidebar
+        const userData = await User.findById(userId);
+
 
         if (wishlist) {
             const totalProducts = wishlist.products.length;
@@ -30,7 +34,8 @@ const wishlist = async (req, res) => {
             res.render('user/purchase/wishlist', {
                 wishlist: { ...wishlist.toObject(), products: paginatedProducts },
                 currentpage,
-                totalPages
+                totalPages,
+                userData // Pass user data for sidebar
             });
 
         } else {
@@ -38,7 +43,8 @@ const wishlist = async (req, res) => {
             res.render('user/purchase/wishlist', {
                 wishlist: { products: [] },
                 currentpage,
-                totalPages: 1
+                totalPages: 1,
+                userData // Pass user data for sidebar
             });
         };
 
@@ -55,7 +61,7 @@ const wishlistToggle = async (req, res) => {
     try {
         const userId = getUserIdFromSession(req);
         const { productId } = req.query
-       
+
         // find wishlist products
         const wishlist = await Wishlist.findOne({ userId });
 
@@ -66,7 +72,7 @@ const wishlistToggle = async (req, res) => {
                 return product.productId.toString() === productId.toString()
             });
 
-            
+
             if (productExist) {
                 // if exist , remove product from wishlist
                 await Wishlist.updateOne(
@@ -83,13 +89,13 @@ const wishlistToggle = async (req, res) => {
                     { userId },
                     { $push: { products: { productId: productId } } }
                 );
-                
+
                 // respond with success message
                 res.status(200).json({ message: 'Added To Wishlist' })
             };
 
         } else {
-            
+
             // creating new wishlist object
             const wishlist = new Wishlist(
                 { userId, products: [{ productId: productId }] }

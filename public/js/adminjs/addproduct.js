@@ -1,257 +1,218 @@
-// Object to store Cropper instances for each image
-var croppers = {};
 
-// Function to initialize the cropper when an image is uploaded
-function prepareCrop(event, previewId) {
-    const input = event.target;
-    const imagePreview = document.getElementById(previewId);
+// State Management
+let cropper = null;
+let currentCropIndex = null;
+const croppedBlobs = {}; // Stores final blobs: {1: Blob, 2: Blob, 3: Blob}
+const originalFiles = {}; // Stores original files: {1: File, ...}
 
-    // If a file is selected, create a new cropper instance
+// DOM Elements
+const form = document.getElementById('productForm');
+const cropModal = new bootstrap.Modal(document.getElementById('cropModal'), { keyboard: false });
+const cropImageTarget = document.getElementById('cropImageTarget');
+const btnApplyCrop = document.getElementById('btnApplyCrop');
+
+// 1. Handle File Selection
+function handleImageNative(input, index) {
     if (input.files && input.files[0]) {
+        const file = input.files[0];
+
+        // Validate File Type
+        if (!['image/jpeg', 'image/png', 'image/jpg', 'image/webp'].includes(file.type)) {
+            Swal.fire({ icon: 'error', title: 'Invalid File', text: 'Please select a valid image (JPG, PNG, WEBP).' });
+            input.value = ''; // Reset
+            return;
+        }
+
+        originalFiles[index] = file;
+
+        // Show Preview
         const reader = new FileReader();
         reader.onload = function (e) {
-            imagePreview.src = e.target.result;
-            imagePreview.style.display = 'block';
+            const preview = document.getElementById(`preview-${index}`);
+            const uploadContent = document.getElementById(`upload-content-${index}`);
+            const actions = document.getElementById(`actions-${index}`);
 
-            // Initialize the Cropper once the image is fully loaded
-            imagePreview.onload = function () {
-                // If a cropper already exists, reinitialize it (allow re-cropping)
-                if (croppers[previewId]) {
-                    croppers[previewId].replace(imagePreview.src); // Update the cropper with new image
-                } else {
-                    // Initialize the cropper
-                    croppers[previewId] = new Cropper(imagePreview, {
-                        aspectRatio: 1 / 1,
-                        viewMode: 1,
-                        autoCropArea: 1,
-                        scalable: true,
-                        zoomable: true,
-                        movable: true,
-                        cropBoxResizable: true,
-                    });
-                }
-            };
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            uploadContent.style.display = 'none';
+            actions.style.display = 'flex';
         };
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
     }
 }
 
-let croppedImages = [];
-// Function to crop the image and display the result
-function cropImage(canvasId, previewId) {
-    const croppedImagePreview = document.getElementById(previewId);
-    const imagePreviewId = previewId.replace(
-        'croppedImagePreview',
-        'imagePreview'
-    );
-    const cropper = croppers[imagePreviewId];
+// 2. Init Crop Modal
+function initCrop(index) {
+    currentCropIndex = index;
+    const file = originalFiles[index]; // Always crop from original
+    if (!file) return;
 
-    if (cropper) {
-        const croppedCanvas = cropper.getCroppedCanvas();
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        cropImageTarget.src = e.target.result;
 
-        if (croppedCanvas) {
-            const croppedImageData = croppedCanvas.toDataURL('image/jpeg');
+        // Destroy old cropper if exists
+        if (cropper) cropper.destroy();
 
-            croppedCanvas.toBlob(function (blob) {
-                croppedImages.push(blob); // Store the blob in the array instead of an object
-                console.log('Cropped image stored:', blob);
-            }, 'image/jpeg');
+        cropModal.show();
 
-            // Display the cropped image in the preview div
-            croppedImagePreview.innerHTML =
-                '<img src="' +
-                croppedImageData +
-                '" alt="Cropped Image" style="width: 100px;">';
-        } else {
-            console.error('Cropped canvas not available.');
-        }
-
-        // Optionally, destroy the cropper after cropping
-        cropper.destroy();
-        delete croppers[imagePreviewId];
-    } else {
-        console.error('Cropper is not initialized for', previewId);
-    }
-}
-
-// form validation
-
-const submitBtn = document.getElementById('submitBtn');
-const cancelBtn = document.getElementById('cancelBtn');
-// const form = document.getElementById('form');
-
-function clearErr() {
-    const err = document.getElementsByClassName('validate-err');
-    for (let ele of err) {
-        ele.innerHTML = '';
-    }
-}
-
-submitBtn.addEventListener('click', (e) => {
-    const productName = document.getElementById('productName').value.trim();
-    const brandName = document.getElementById('brandName').value.trim();
-    const color = document.getElementById('color').value.trim();
-    const size = document.getElementById('size').value.trim();
-    const category = document.getElementById('category').value;
-    const regularPrice = document.getElementById('regularPrice').value.trim();
-    const sellingPrice = document.getElementById('sellingPrice').value.trim();
-    const material = document.getElementById('material').value.trim();
-    const description = document.getElementById('description').value.trim();
-    const quantity = document.getElementById('quantity').value.trim();
-    const image1 = document.getElementById('imagePreview1').src;
-    const image2 = document.getElementById('imagePreview2').src;
-    const image3 = document.getElementById('imagePreview3').src;
-
-    clearErr();
-
-    e.preventDefault();
-
-    let validatation = true;
-
-    if (productName.length < 4) {
-        validatation = false;
-        document.getElementById('productNameErr').innerHTML =
-            'Product name Shoul atleast 4 Char.';
-    }
-
-    if (brandName.length < 4) {
-        validatation = false;
-        document.getElementById('brandNameErr').innerHTML =
-            'Brand name Shoul atleast 4 Char.';
-    }
-
-    if (color.length < 3) {
-        validatation = false;
-        document.getElementById('colorErr').innerHTML = 'Enter a Valid Color.';
-    }
-
-    if (size.length <= 0) {
-        validatation = false;
-        document.getElementById('sizeErr').innerHTML = 'Enter a proper size';
-    }
-
-    if (category === '') {
-        validatation = false;
-        document.getElementById('categoryErr').innerHTML = 'Select Category';
-    }
-
-    if (regularPrice <= 0) {
-        validatation = false;
-        document.getElementById('priceErr1').innerHTML =
-            'Price shoul be greater than 0';
-    }
-
-    if (quantity <= 0) {
-        validatation = false;
-        document.getElementById('quantityErr').innerHTML =
-            'Quantity should be minimum 1';
-    }
-
-
-    if (sellingPrice <= 0 || Number(sellingPrice) > Number(regularPrice)) {
-        validatation = false;
-        document.getElementById('priceErr2').innerHTML =
-            'Selling price Should be Lessthan regular price';
-    }
-
-    if (material.length < 3) {
-        validatation = false;
-        document.getElementById('materialErr').innerHTML = 'enter a valid Material';
-    }
-
-    if (description.length < 50) {
-        validatation = false;
-        document.getElementById('descriptionErr').innerHTML =
-            'Description Should be minimum 50 charater';
-    }
-
-    if (!image1) {
-        validatation = false;
-        document.getElementById('productImage1Err').innerHTML = 'Upload image';
-    }
-
-    if (!image2) {
-        validatation = false;
-        document.getElementById('productImage2Err').innerHTML = 'Upload image';
-    }
-
-    if (!image3) {
-        validatation = false;
-        document.getElementById('productImage3Err').innerHTML = 'Upload image';
-    }
-
-    if (validatation) {
-        submitDataToServer();
-    }
-
-    function submitDataToServer() {
-        const formData = new FormData();
-
-        // Append text data
-        formData.append('productName', productName);
-        formData.append('brand', brandName);
-        formData.append('color', color);
-        formData.append('size', size);
-        formData.append('category', category);
-        formData.append('regularPrice', regularPrice);
-        formData.append('sellingPrice', sellingPrice);
-        formData.append('material', material);
-        formData.append('description', description);
-        formData.append('quantity', quantity);
-
-        // Append cropped images to FormData
-        for (let i = 0; i < croppedImages.length; i++) {
-            const imageBlob = croppedImages[i];
-            formData.append('images', imageBlob, `image_${i}.png`); // Ensure the 'images' field name matches multer config
-        }
-
-        // Send data to the server
-        fetch('/admin/addProduct', {
-            method: 'POST',
-            body: formData,
-        })
-            .then((success) => {
-
-                const title = "Success";
-                const text = "Product added sucessfull";
-                const icon = "success";
-
-                const result = showAlert(title, text, icon)
-
-                setTimeout(()=>{
-                    window.location.href = '/admin/addproduct';
-                },2500)
-
-            })
-            .catch((err) => {
-
-                console.log('Product data sending error:', err);
-
-                const title = "Failed to add product";
-                const text = "Somthing went wrong";
-                const icon = "error";
-
-                const result = showAlert(title, text, icon)
-
-                setTimeout(()=>{
-                    window.location.href = '/admin/addproduct';
-                },2500)
+        // Init Cropper after modal is shown to ensure dimensions are correct
+        setTimeout(() => {
+            cropper = new Cropper(cropImageTarget, {
+                aspectRatio: 1, // Square crop or free (NaN)
+                viewMode: 1,
+                autoCropArea: 0.8,
             });
+        }, 200);
+    };
+    reader.readAsDataURL(file);
+}
 
+// 3. Apply Crop
+btnApplyCrop.addEventListener('click', () => {
+    if (!cropper) return;
 
-    }
+    // Get cropped canvas
+    const canvas = cropper.getCroppedCanvas({
+        width: 800,
+        height: 800,
+        imageSmoothingQuality: 'high'
+    });
 
+    canvas.toBlob((blob) => {
+        // Store blob
+        croppedBlobs[currentCropIndex] = blob;
+
+        // Update Preview
+        const preview = document.getElementById(`preview-${currentCropIndex}`);
+        preview.src = URL.createObjectURL(blob);
+
+        cropModal.hide();
+
+        // Optional: Notify user
+        // Swal.fire({ icon: 'success', title: 'Cropped', toast: true, position: 'top-end', showConfirmButton: false, timer: 1000 });
+
+    }, 'image/jpeg', 0.9);
 });
 
+// 4. Remove Image
+function removeImage(index) {
+    const input = document.getElementById(`image${index}`);
+    const preview = document.getElementById(`preview-${index}`);
+    const uploadContent = document.getElementById(`upload-content-${index}`);
+    const actions = document.getElementById(`actions-${index}`);
 
-function showAlert(title, text, icon) {
+    input.value = ''; // Reset file input
+    preview.src = '';
+    preview.style.display = 'none';
+    uploadContent.style.display = 'block';
+    actions.style.display = 'none';
 
-        Swal.fire({
-            title: title,
-            text: text,
-            icon: icon
-        })
-        return true
-    
-
+    delete originalFiles[index];
+    delete croppedBlobs[index];
 }
+
+// 5. Validation Logic
+function validateForm() {
+    let isValid = true;
+
+    // Helper to set invalid
+    const setInvalid = (id, msg) => {
+        const el = document.getElementById(id);
+        el.classList.add('is-invalid');
+        const feedback = el.nextElementSibling;
+        if (feedback) feedback.textContent = msg;
+        isValid = false;
+    };
+
+    // Reset Validation
+    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+
+    // Required Fields
+    const required = ['productName', 'description', 'brand', 'category', 'color', 'size', 'material', 'quantity', 'regularPrice', 'sellingPrice'];
+    required.forEach(field => {
+        const value = document.getElementById(field).value.trim();
+        if (!value) setInvalid(field, `${field} is required`);
+    });
+
+    // Semantic Checks
+    const regPrice = parseFloat(document.getElementById('regularPrice').value);
+    const sellPrice = parseFloat(document.getElementById('sellingPrice').value);
+
+    if (sellPrice >= regPrice) {
+        setInvalid('sellingPrice', 'Selling Price must be lower than Regular Price');
+    }
+
+    // Image Count Check
+    const imageCount = Object.keys(originalFiles).length;
+    if (imageCount < 2) {
+        Swal.fire({ icon: 'warning', title: 'Images Missing', text: 'Please upload at least 2 images (Max 6).' });
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+// 6. Handling Form Submission
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    // Show Loading
+    Swal.fire({ title: 'Uploading...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+    const formData = new FormData(form);
+
+    // Replace Images in FormData
+    // We need to clear existing native 'images' from FormData because we want to send specific blobs/files
+    formData.delete('images');
+
+    // Append Images manually (Cropped > Original)
+    // Constraint: Backend expects key 'images'
+    for (let i = 1; i <= 6; i++) {
+        const blob = croppedBlobs[i];
+        const original = originalFiles[i];
+
+        if (blob) {
+            // Append cropped blob
+            formData.append('images', blob, `image-${i}.jpg`);
+        } else if (original) {
+            // Append original file if not cropped
+            formData.append('images', original);
+        }
+    }
+
+    try {
+        const response = await fetch('/admin/addProduct', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Product added successfully.',
+                confirmButtonText: 'Go to Products'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/admin/products';
+                } else {
+                    window.location.reload();
+                }
+            });
+        } else {
+            throw new Error(result.message || 'Validation failed');
+        }
+
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Something went wrong!'
+        });
+    }
+});

@@ -1,98 +1,107 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', () => {
     const couponForm = document.getElementById('couponForm');
-    const expiryDateInput = document.getElementById('expiryDate');
+    const discountTypeSelect = document.getElementById('discountType');
+    const maxDiscountField = document.getElementById('maxDiscountField');
 
-    const today = new Date().toISOString().split('T')[0];
-    expiryDateInput.min = today;
+    // Toggle Max Discount field
+    discountTypeSelect.addEventListener('change', function () {
+        if (this.value === 'percentage') {
+            maxDiscountField.style.display = 'block';
+        } else {
+            maxDiscountField.style.display = 'none';
+        }
+    });
 
-    couponForm.addEventListener('submit', function (e) {
-
+    couponForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        // Reset errors
+        document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+
+        // Get values
+        const couponCode = document.getElementById('couponCode').value.trim();
+        const discountType = document.getElementById('discountType').value;
+        const discountAmount = parseFloat(document.getElementById('discountAmount').value);
+        const minPurchase = parseFloat(document.getElementById('minPurchase').value);
+        const expiryDate = document.getElementById('expiryDate').value;
+        const maxDiscount = parseFloat(document.getElementById('maxDiscountAmount').value);
 
         let isValid = true;
 
-        // Clear previous error messages
-        document.getElementById('couponCodeError').textContent = '';
-        document.getElementById('discountAmountError').textContent = '';
-        document.getElementById('minPurchaseError').textContent = '';
-        document.getElementById('expiryDateError').textContent = '';
-
-        // Validation for Coupon Code
-        const couponCode = document.getElementById('couponCode');
-        if (couponCode.value.trim().length < 5) {
-            document.getElementById('couponCodeError').textContent = 'Coupon code must be at least 5 characters.';
+        // Validation Logic
+        if (!couponCode) {
+            document.getElementById('couponCodeError').textContent = 'Coupon Code is required';
+            isValid = false;
+        } else if (couponCode.length < 3) {
+            document.getElementById('couponCodeError').textContent = 'Code must be at least 3 characters';
             isValid = false;
         }
 
-        // Validation for Discount Amount
-        const discountAmount = document.getElementById('discountAmount');
-        if (discountAmount.value < 100) {
-            document.getElementById('discountAmountError').textContent = 'Discount amount must be above ₹100.';
+        if (isNaN(discountAmount) || discountAmount <= 0) {
+            document.getElementById('discountAmountError').textContent = 'Valid discount amount is required';
             isValid = false;
         }
 
-        // Validation for Minimum Purchase Value
-        const minPurchase = document.getElementById('minPurchase');
-        if (minPurchase.value <= 0) {
-            document.getElementById('minPurchaseError').textContent = 'Minimum purchase value must be greater than 0.';
+        if (discountType === 'percentage' && discountAmount > 100) {
+            document.getElementById('discountAmountError').textContent = 'Percentage cannot exceed 100%';
             isValid = false;
         }
 
-        // Validation for Expiry Date
-        const expiryDate = document.getElementById('expiryDate');
-        if (expiryDate.value < today) {
-            document.getElementById('expiryDateError').textContent = 'Expiry date must be today or in the future.';
+        if (isNaN(minPurchase) || minPurchase < 0) {
+            document.getElementById('minPurchaseError').textContent = 'Valid minimum purchase is required';
             isValid = false;
         }
 
-        // Prevent form submission if validation fails
+        if (!expiryDate) {
+            document.getElementById('expiryDateError').textContent = 'Expiry Date is required';
+            isValid = false;
+        } else if (new Date(expiryDate) < new Date()) {
+            document.getElementById('expiryDateError').textContent = 'Expiry Date must be in the future';
+            isValid = false;
+        }
+
         if (isValid) {
-            createCoupon()
-        }
+            try {
+                const formData = {
+                    couponCode,
+                    discount: discountAmount,
+                    minPurchaseValue: minPurchase,
+                    expiryDate,
+                    discountType,
+                    maxDiscountAmount: discountType === 'percentage' ? maxDiscount : null
+                };
 
+                const response = await fetch('/admin/newCoupon', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Coupon created successfully!',
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => window.location.href = '/admin/coupons');
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Failed to create coupon'
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong'
+                });
+            }
+        }
     });
 });
-
-
-async function createCoupon() {
-
-    const couponForm = document.getElementById('couponForm');
-
-    const formData = {
-        couponCode: couponForm.couponCode.value,
-        discount: couponForm.discount.value,
-        minPurchaseValue: couponForm.minPurchaseValue.value,
-        expiryDate: couponForm.expiryDate.value,
-    };
-
-
-   const response = await fetch('/admin/createCoupon', {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    });
-
-   const jsonResponse =  await response.json()
-
-    if(response.ok){
-
-        await Swal.fire({
-            title: "Coupon Created Sucessfully",
-            text: `Coupon Code '${jsonResponse.couponCode}'`,
-        });
-
-        window.location.href = '/admin/coupons'
-
-    }else if(response.status === 400){
-
-        await Swal.fire({
-            icon:'error',
-            title: "Coupon Not created",
-            text: `Coupon Code Already Exist`,
-        });
-    }
-    
-}
-

@@ -1,0 +1,9 @@
+C:\Users\login\Desktop\essentials test\views\user\purchase\orders.ejs:8
+    6|         integrity="sha384-/ElSMRaKgsWY7yc9is+yGoOmLb0lEnL0i8BqJoNBrejJNHx8+6ZSD0u13ea6fUn3" crossorigin="anonymous">
+    7| 
+ >> 8|     <%-include('.. /../partials/htmlHeadUser.ejs',{csspath:'/css/userCss/purchase/cart.css'}) %>
+    9| 
+    10|         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    11|         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+
+Could not find the include file ".. /../partials/htmlHeadUser.ejs"

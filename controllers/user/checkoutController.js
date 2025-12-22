@@ -12,6 +12,8 @@ function getUserIdFromSession(req) {
     return req.session?._id ?? req.session.passport?.user;
 }
 
+const Wallet = require('../../models/walletSchema');
+
 //render checkout page
 const getCheckutPage = async (req, res) => {
     try {
@@ -39,6 +41,12 @@ const getCheckutPage = async (req, res) => {
         //fetching cart details using cartdetails function
         const { totalAmount, totalItems, amountAfterDiscount, discount } = await cartController.getCartDetails(req);
 
+        //fetching coupon details that added in the cart 
+        const coupon = await Cart.findOne({ userId }).populate('coupon');
+
+        // Fetch user wallet
+        const wallet = await Wallet.findOne({ userId });
+
         //calculating shipping charge
         const deliveryCharge = amountAfterDiscount < 500 ? 40 : 0;
 
@@ -48,7 +56,9 @@ const getCheckutPage = async (req, res) => {
             totalItems,
             userAddress,
             amountAfterDiscount: (amountAfterDiscount + deliveryCharge),
-            discount, deliveryCharge
+            discount, deliveryCharge,
+            coupon,
+            wallet // Pass wallet to view
         });
 
     } catch (error) {

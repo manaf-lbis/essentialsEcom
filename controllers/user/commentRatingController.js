@@ -39,6 +39,18 @@ const addComment = async (req, res) => {
             await newComment.save();
         };
 
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.status(200).json({
+                success: true,
+                message: "Review added successfully",
+                comment: {
+                    userId: { name: req.user?.name || 'You' }, // Fallback if user info not readily available
+                    comment: comment,
+                    date: new Date()
+                }
+            });
+        }
+
         //redirect to product page
         res.redirect(`/product/${productId}`)
 
@@ -106,7 +118,7 @@ const addrating = async (req, res) => {
     } catch (error) {
         //logging error and sending error to clint side
         console.log(error);
-        res.ststus(500).json({ message: 'internal server error' })
+        res.status(500).json({ message: 'internal server error' })
     };
 
 };

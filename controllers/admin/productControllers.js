@@ -9,7 +9,7 @@ const products = async (req, res) => {
     //paroduct page pagenation
     const searchQuery = req.query.search ?? '';
     let currentPage = Number(req.query.pageReq) || 1;
-    const limit = 5;
+    const limit = 10;
 
     //count products for page nation
     const count = Math.ceil(await Product.countDocuments({
@@ -33,7 +33,7 @@ const products = async (req, res) => {
     }).skip(skip).limit(limit);
 
     //render product listing page
-    res.render('admin/productmanagement', { products, currentPage, searchQuery });
+    res.render('admin/productmanagement', { products, currentPage, totalPages: count, searchQuery });
 
 
   } catch (error) {
@@ -97,27 +97,28 @@ const addProduct = async (req, res) => {
 };
 
 
-//soft delete on product 
-const removeProduct = async (req, res) => {
+//soft delete on product (Block)
+const blockProduct = async (req, res) => {
   try {
-    //extract product id for request params
     const _id = req.params.id;
-
-    //mark the product as blocked for a soft delete
-    await Product.updateOne(
-      { _id },
-      { isBlocked: true }
-    );
-
-    //redirect to product listing page
-    res.redirect('/admin/products')
-
+    await Product.updateOne({ _id }, { isBlocked: true });
+    return res.status(200).json({ success: true, message: 'Product blocked successfully' });
   } catch (error) {
-    //logging error and redirect to error page
-    console.log(error);
-    return res.status(500).redirect('pagenotFound');
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Error blocking product' });
   }
+};
 
+//restore product (Unblock)
+const unblockProduct = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    await Product.updateOne({ _id }, { isBlocked: false });
+    return res.status(200).json({ success: true, message: 'Product unblocked successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Error unblocking product' });
+  }
 };
 
 
@@ -153,7 +154,7 @@ const updateProduct = async (req, res) => {
     const imagesArray = req.files.map(file => `/uploads/${file.filename}`);
 
     // updating database with updated product details
-     await Product.updateOne({ _id },
+    await Product.updateOne({ _id },
       {
         $set: {
           productName,
@@ -187,8 +188,8 @@ const updateProduct = async (req, res) => {
 //deleting the product image
 const removeImage = async (req, res) => {
   try {
-    //extract product image and id from request query
-    const { productId, image } = req.query
+    const { productId, image } = req.body; // Changed to body for POST/DELETE usually, but let's check how it's called
+    // Wait, AJAX usually sends JSON body.
 
     //remove matched image address from database
     await Product.updateOne(
@@ -197,22 +198,19 @@ const removeImage = async (req, res) => {
     );
 
     //removing matched image from uploads directory
-    fs.unlink(`public${image}`, (error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('image deleted');
-      }
-    });
+    const filePath = path.join(__dirname, '../../public', image);
+    if (fs.existsSync(filePath)) {
+      fs.unlink(filePath, (error) => {
+        if (error) console.log(error);
+        else console.log('image deleted');
+      });
+    }
 
-    //redirect to product edit page
-    res.redirect(`/admin/editProduct/${productId}`)
+    return res.json({ success: true, message: 'Image removed successfully' });
 
   } catch (error) {
-    //logging error and redirect to error page
     console.log(error);
-    return res.status(500).redirect('pagenotFound');
-
+    return res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
 
@@ -222,8 +220,9 @@ module.exports = {
   products, //products listing page
   addproductPage, //add product page 
   addProduct, //new product submission 
-  removeProduct, //soft delete of product
   editProduct, //edit request for a product
   updateProduct, // update edit to database
   removeImage, //deleting the product image
+  blockProduct, //soft delete (Block)
+  unblockProduct, //restore (Unblock)
 };

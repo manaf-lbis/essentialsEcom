@@ -7,7 +7,7 @@ const razorpayInstance = require('../../config/razorpay')
 
 // adding payment response to order (callback from razorpay)
 const paymentResponse = async (req, res) => {
-    try {        
+    try {
         const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body;
         const secret = process.env.RAZORPAY_KEY_SECRET;
 
@@ -17,44 +17,52 @@ const paymentResponse = async (req, res) => {
             .update(razorpay_order_id + "|" + razorpay_payment_id)
             .digest('hex');
 
-
         if (generatedSignature === razorpay_signature) {
-            // Retrieve order info from session
-            const pendingOrder = req.session.pendingOrder;
-            const { razorpayOrderId, userId } = pendingOrder
 
-            // update order status to payment pending
-            const updating =await Order.updateOne(
-                { paymentId: razorpayOrderId },
-                { $set: { 'orderItems.$[elem].status': 'Pending', paymentId: razorpay_payment_id } },
+            // FIRST: Find the order using razorpay_order_id (set during createOrder)
+            const orderDetails = await Order.findOne({ paymentId: razorpay_order_id });
+
+            if (!orderDetails) {
+                console.log("Order not found with paymentId:", razorpay_order_id);
+                return res.render('user/purchase/orderFailedPage');
+            }
+
+            // SECOND: Update the order status and replace paymentId with actual payment_id
+            const updating = await Order.updateOne(
+                { _id: orderDetails._id },
                 {
-                    arrayFilters: [{ 'elem.status': 'Pending for Payment' }],
-                }
+                    $set: {
+                        'orderItems.$[elem].status': 'Pending',
+                        paymentId: razorpay_payment_id
+                    }
+                },
+                { arrayFilters: [{ 'elem.status': 'Pending for Payment' }] }
             );
 
-            // find the last order
-            const orderDetails = await Order.findOne({ userId: userId })
-                .sort({ orderDate: -1 })
-                .limit(1)
+            // Verify update was successful
+            if (updating.modifiedCount === 0) {
+                console.log("Failed to update order status for orderId:", orderDetails.orderId);
+                // Even if status update fails, payment was verified, so show success
+            }
 
-            //clearing session variable
-            delete req.session.pendingOrder;
+            // Update the paymentId in our fetched order for display
+            orderDetails.paymentId = razorpay_payment_id;
 
-            //render order success page
+            // Render order success page
             res.render('user/purchase/orderSuccessPage', { orderDetails });
 
         } else {
             // Signature verification failed
-            console.log('signature fail');
-            // render order fail page
+            console.log('Signature verification failed');
+            console.log('Expected signature:', generatedSignature);
+            console.log('Received signature:', razorpay_signature);
             res.render('user/purchase/orderFailedPage');
-        };
+        }
 
     } catch (error) {
-        //logging error and render order fail page
-        console.log(error);
+        console.error('Error in paymentResponse:', error);
         res.render('user/purchase/orderFailedPage');
-    };
+    }
 };
 
 //retrying payment
@@ -75,14 +83,14 @@ const retryPayment = async (req, res) => {
             }
         );
 
-        //storing details to the session for later use
-        req.session.pendingOrder = {
-            userId: order.userId,
-            razorpayOrderId: order.paymentId
-        };
-
-
         if (razorpayOrder) {
+
+            // Update the existing order with the NEW razorpay order ID
+            // This is critical so that the callback can find the order.
+            order.paymentId = razorpayOrder.id;
+            await order.save();
+
+
             //render payment page
             res.render('user/purchase/paymentPage',
                 { razorpayOrder, finalAmount: order.finalPrice, razorpayKey: process.env.RAZORPAY_KEY_ID }

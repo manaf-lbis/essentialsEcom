@@ -3,27 +3,27 @@ const Schema = mongoose.Schema;
 
 const walletSchema = new Schema({
   userId: {
-    type: Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   balance: {
     type: Number,
     required: true,
     default: 0,
-    min: 0 
+    min: 0
   },
   transactions: [
     {
-      type: { 
-        type: String, 
+      type: {
+        type: String,
         enum: ['credit', 'debit'],
-        required: true 
+        required: true
       },
       amount: {
         type: Number,
         required: true,
-        min: 0 
+        min: 0
       },
       date: {
         type: Date,
@@ -31,21 +31,25 @@ const walletSchema = new Schema({
       },
       description: {
         type: String,
-        default: '' 
+        default: ''
+      },
+      orderId: {
+        type: String, // Reference to Order.orderId (the unique orderId, not _id)
+        default: null
       },
       status: {
         type: String,
-        enum: ['successs','failed'],
+        enum: ['successs', 'failed'],
         default: 'successs'
       }
     }
   ]
 },
-{
-    timestamps:true
-});
+  {
+    timestamps: true
+  });
 
 
-const Wallet =  mongoose.model('Wallet', walletSchema);
+const Wallet = mongoose.model('Wallet', walletSchema);
 
 module.exports = Wallet;

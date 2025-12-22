@@ -1,306 +1,303 @@
-<html>
-<link rel="stylesheet" href="/css/userCss/productDetails/magnifier.css">
-<%- include('../partials/htmlHeadUser.ejs',{csspath:"/css/userCss/productDetails/productDetails.css"}) %>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <%- include('../partials/htmlHeadUser.ejs',{csspath:"/css/userCss/productDetails/productDetails.css"}) %>
+    <link rel="stylesheet" href="/css/userCss/productDetails/magnifier.css">
+    <title>
+      <%= dbResult.productName %> | Essentials
+    </title>
+</head>
 
-  <body>
-    <%- include("../partials/userNavbar.ejs") %>
+<body class="bg-light">
+  <%- include("../partials/userNavbar.ejs") %>
 
-      <section class=" container rounded-2 bg-light">
-        <ol class="d-flex align-items-center list-unstyled m-0 ">
-          <li><a class="text-decoration-none" href="/home">Home/</a></li>
-          <li><a class="text-decoration-none">ProductDetails</a></li>
+    <div class="container py-4">
+      <!-- Breadcrumbs -->
+      <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb bg-transparent p-0 m-0 small">
+          <li class="breadcrumb-item"><a href="/home" class="text-decoration-none text-muted">Home</a></li>
+          <li class="breadcrumb-item"><a href="/search" class="text-decoration-none text-muted">Shop</a></li>
+          <li class="breadcrumb-item active text-dark fw-bold" aria-current="page">Product Details</li>
         </ol>
-      </section>
+      </nav>
 
-      <div class="container">
-
-        <div class="detailsWrapper">
-          <!--================!!!!!! left section product view/addtocart/img !!!!============= -->
-          <div class="productView">
-
-            <div class="sideBar">
-              <!-- mini images -->
-              <% for(let image of dbResult.productImage){ %>
-                <div>
-                  <img class="smallThumbnail" src="<%=image %>" alt="">
-                </div>
-                <% } %>
-
-            </div>
-            <div class="productImgSec">
-              <div class="imageSec">
-
-                <div class="imageSec ">
-                  <a class="magnifier-thumb-wrapper">
-                    <img class="imageSec " id="thumb" src="<%= dbResult.productImage[0]  %>"
-                      data-large-img-url="<%= dbResult.productImage[0]  %>" data-large-img-wrapper="preview">
-                  </a>
-                  <!-- <div class="magnifier-preview" id="preview" style="width: 400px; height: 300px"></div> -->
-                </div>
-
-              </div>
-              <div class="addtoCartSec">
-                <div class="row g-1 mt-0 ">
-
-                  <div class="d-flex" id="">
-
-                    <div class="col-3"><input type="number" max="5" productid="<%= dbResult._id %>" name="quantity"
-                        class="form-control border-dark-subtle input-number quantity quantitySelection  " value="1"
-                        onkeydown="return false;" min="0" max="">
-                    </div>
-
-                    <div class="col-7"><a class="btn btn-primary rounded-1 p-2 fs-7 btn-cart "><svg width="18"
-                          height="18">
-                          <use xlink:href="#cart"></use>
-                        </svg> Add to Cart</a>
-                    </div>
-
-                    <div class="col-6"><a class="btn btn-primary rounded-1 p-2 fs-7 "><svg width="18" height="18">
-                          <use xlink:href="#plus"></use>
-                        </svg> Buy Now</a>
-                    </div>
-
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-
-
+      <div class="detailsWrapper">
+        <!-- Left Section: Product Images -->
+        <div class="productView">
+          <div class="sideBar">
+            <% dbResult.productImage.forEach((image, index)=> { %>
+              <img class="smallThumbnail <%= index === 0 ? 'active' : '' %>" src="<%= image %>"
+                alt="Thumbnail <%= index + 1 %>" onclick="updateMainImage('<%= image %>')">
+              <% }) %>
           </div>
 
-          <!--================= right section /all details================-->
-          <div class="productDetails">
-            <!-- product title -->
-            <h4>
-              <%= dbResult.productName%>
-            </h4>
-            <!-- ========= Price section =========== -->
-            <div class="line"></div>
-            <h6 class="text-success">Special Price</h6>
-            <del>₹<%= dbResult.regularPrice.toFixed(2) %></del>
+          <div class="productImgSec">
+            <div class="imageSec shadow-sm">
+              <a class="magnifier-thumb-wrapper w-100 h-100 d-flex align-items-center justify-content-center">
+                <img id="thumb" src="<%= dbResult.productImage[0] %>"
+                  data-large-img-url="<%= dbResult.productImage[0] %>" data-large-img-wrapper="preview"
+                  alt="<%= dbResult.productName %>">
+              </a>
+            </div>
+
+            <div class="addtoCartSec">
+              <div class="d-flex gap-2">
+                <input type="number" id="mainQty" productid="<%= dbResult._id %>" name="quantity"
+                  class="form-control quantitySelection" value="1" min="1" max="5" style="width: 70px;">
+
+                <button class="btn-pd btn-cart flex-grow-1 btn-cart-action" data-id="<%= dbResult._id %>"
+                  productid="<%= dbResult._id %>">
+                  <svg width="18" height="18" fill="currentColor">
+                    <use xlink:href="#cart"></use>
+                  </svg>
+                  <span class="small fw-bold">Add</span>
+                </button>
+
+                <button class="btn-pd btn-buy-now flex-grow-1 btn-buy-now-action" data-id="<%= dbResult._id %>"
+                  productid="<%= dbResult._id %>">
+                  <svg width="18" height="18" fill="currentColor">
+                    <use xlink:href="#plus"></use>
+                  </svg>
+                  <span class="small fw-bold">Buy Now</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Section: Product Info -->
+        <div class="productDetails">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="badge bg-success-bg-subtle text-success px-3 py-2 rounded-pill fw-bold">Organic Choice</span>
+            <button class="btn btn-link text-primary p-0 fw-bold text-decoration-none small" type="button"
+              data-bs-toggle="offcanvas" data-bs-target="#reviewsOffcanvas">
+              <i class="far fa-comment-alt me-1"></i>
+              <span id="reviewCountBadge">
+                <%= comments && comments.comments ? comments.comments.length : 0 %>
+              </span> Reviews
+            </button>
+          </div>
+          <h4>
+            <%= dbResult.productName %>
+          </h4>
+
+          <div class="price-tag mt-3">
             <h3>₹<%= dbResult.sellingPrice.toFixed(2) %>
             </h3>
-            <p>inclusive of all taxes</p>
-
-            <div class="line"></div>
-            <img src="/assets/images/bluetick.webp" alt=""><span>Free shipping on orders over ₹500</span><br>
-            <img src="/assets/images/bluetick.webp" alt=""><span>7 Days Replacement Policy</span>
-
-            <div class="line"></div>
-            <!-- ======specificatio Table====== -->
-            <h6>Specfication</h6>
-            <table>
-              <tr>
-                <th>Color</th>
-                <td>
-                  <%= dbResult.color %>
-                </td>
-              </tr>
-              <tr>
-                <th>Material</th>
-                <td>
-                  <%= dbResult.material %>
-                </td>
-              </tr>
-              <tr>
-                <th>Size</th>
-                <td>
-                  <%= dbResult.size %>
-                </td>
-              </tr>
-              <tr>
-                <th>Available Stock</th>
-                <td>
-                  <%= dbResult.quantity%> pcs.
-                </td>
-              </tr>
-
-            </table>
-
-            <div class="line"></div>
-            <h6>About this Product</h6>
-            <ul>
-              <li>
-                <%= dbResult.description %>
-              </li>
-            </ul>
+            <del class="text-muted ms-2">₹<%= dbResult.regularPrice.toFixed(2) %></del>
+            <span class="discount-badge ms-3">
+              <%= (((dbResult.regularPrice - dbResult.sellingPrice) / dbResult.regularPrice) * 100).toFixed(0) %>% OFF
+            </span>
           </div>
-        </div>
-        <!-- ============Ends============= -->
+          <p class="text-muted small mb-4">Inclusive of all taxes</p>
 
-        <!-- comment Section -->
-
-        <body class="bg-light">
-          <!-- Comment section -->
-          <div class="page-width container pt-3">
-            <div>
-              <h3>Comments</h3>
-              <hr />
-              <!-- Add comment -->
-
-              <div class="card mb-3">
-                <div class="card-body">
-                  <h5 class="card-title">Leave a comment</h5>
-                  <hr />
-
-                  <form method="post" action="/comment">
-                    <div class="form-group">
-                      <textarea rows="3" name="comment" class="form-control bg-light"
-                        placeholder="Enter your comment here..." style="resize: none;"></textarea>
-                    </div>
-                    <input type="hidden" name="productId" value="<%= dbResult._id %>">
-
-                    <button type="submit" class="btn btn-outline-primary btn-block">Comment</button>
-                  </form>
-
-                </div>
-              </div>
-
-              <% if(comments){ %>
-
-                <% for(let comment of comments?.comments){ %>
-                  <!-- First comment -->
-                  <div class="card mb-3">
-                    <div class="card-body">
-                      <h5 class="card-title">
-                        <%=comment?.userId?.name %>
-                      </h5>
-                      <p class="card-text">
-                        <%=comment?.comment %>
-                      </p>
-                      <hr />
-                      <div class="d-flex justify-content-end ">
-                        <small>
-                          <%=comment.date.toString().substring(4,15) %>
-                        </small>
-                      </div>
-
-                    </div>
-                  </div>
-                  <% } %>
-                    <% } %>
-
-
+          <div class="feature-list mb-4">
+            <div class="feature-item">
+              <i class="fas fa-truck-moving"></i>
+              <span>Free shipping on orders over ₹500</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-undo-alt"></i>
+              <span>7 Days Replacement Policy</span>
             </div>
           </div>
+
+          <div class="line"></div>
+
+          <h6 class="fw-bold mb-3 small text-uppercase text-muted letter-spacing-1">Specifications</h6>
+          <div class="spec-grid">
+            <div class="spec-item">
+              <div class="spec-label">Color</div>
+              <div class="spec-value">
+                <%= dbResult.color %>
+              </div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Material</div>
+              <div class="spec-value">
+                <%= dbResult.material %>
+              </div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Size</div>
+              <div class="spec-value">
+                <%= dbResult.size %>
+              </div>
+            </div>
+            <div class="spec-item">
+              <div class="spec-label">Stock Status</div>
+              <div class="spec-value <%= dbResult.quantity > 0 ? 'text-success' : 'text-danger' %>">
+                <%= dbResult.quantity> 0 ? dbResult.quantity + ' available' : 'Out of Stock' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="line"></div>
+
+          <h6 class="fw-bold mb-2 small text-uppercase text-muted letter-spacing-1">About this Product</h6>
+          <p class="description small text-muted">
+            <%= dbResult.description %>
+          </p>
+        </div>
       </div>
 
+      <!-- Reviews Offcanvas -->
+      <div class="offcanvas offcanvas-end rounded-start-4 border-0 shadow-lg" tabindex="-1" id="reviewsOffcanvas"
+        aria-labelledby="reviewsOffcanvasLabel" style="width: 400px;">
+        <div class="offcanvas-header border-bottom p-4">
+          <h5 class="offcanvas-title fw-bold" id="reviewsOffcanvasLabel">Reviews (<%= comments && comments.comments ?
+              comments.comments.length : 0 %>)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0 d-flex flex-column bg-light">
 
-      <!-- comment section ends -->
+          <!-- Review List -->
+          <div id="reviewListContainer" class="review-list flex-grow-1 overflow-auto p-4 custom-scrollbar">
+            <% if(comments && comments.comments && comments.comments.length> 0) { %>
+              <% comments.comments.reverse().forEach(comment=> { %>
+                <div class="comment-card bg-white p-3 rounded-4 shadow-sm mb-3 border-0">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center gap-2">
+                      <div
+                        class="user-avatar rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center fw-bold"
+                        style="width: 32px; height: 32px; font-size: 0.8rem;">
+                        <%= comment?.userId?.name ? comment.userId.name.charAt(0).toUpperCase() : 'A' %>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <span class="fw-bold text-dark" style="font-size: 0.85rem;">
+                          <%= comment?.userId?.name || 'Anonymous' %>
+                        </span>
+                        <% if(comment.rating) { %>
+                          <div class="text-warning" style="font-size: 0.65rem;">
+                            <% for(let i=1; i<=5; i++) { %>
+                              <i class="<%= i <= comment.rating ? 'fas' : 'far' %> fa-star"></i>
+                              <% } %>
+                          </div>
+                          <% } %>
+                      </div>
+                    </div>
+                    <span class="text-muted" style="font-size: 0.7rem;">
+                      <%= new Date(comment.date).toLocaleDateString('en-IN', { day: 'numeric' , month: 'short' }) %>
+                    </span>
+                  </div>
+                  <p class="text-secondary m-0" style="font-size: 0.85rem; line-height: 1.4;">
+                    <%= comment.comment %>
+                  </p>
+                </div>
+                <% }) %>
+                  <% } else { %>
+                    <div class="text-center py-5 mt-5">
+                      <i class="far fa-comment-dots fa-3x text-muted mb-3 opacity-50"></i>
+                      <p class="text-muted small fw-bold">No reviews yet</p>
+                    </div>
+                    <% } %>
+          </div>
 
+          <!-- Add Review Section (Sticky Bottom) -->
+          <div class="p-3 bg-white border-top">
+            <form id="reviewForm" method="post" action="/comment" class="position-relative">
+              <div class="input-group bg-light rounded-pill border overflow-hidden p-1">
+                <input type="text" name="comment" class="form-control border-0 bg-transparent shadow-none ps-3 small"
+                  placeholder="Write a review..." required style="height: 44px; font-size: 0.9rem;">
+                <input type="hidden" name="productId" value="<%= dbResult._id %>">
+                <button type="submit" class="btn btn-dark rounded-pill px-4 fw-bold m-1" style="font-size: 0.85rem;">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
+      <!-- Recommended Products -->
+      <section class="mt-5 py-5 border-top">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="fw-bold m-0 fs-5">You may also like</h3>
+          <div class="swiper-buttons d-flex gap-2">
+            <button class="btn btn-outline-secondary rounded-circle swiper-prev"
+              style="width: 36px; height: 36px; padding: 0;">❮</button>
+            <button class="btn btn-outline-secondary rounded-circle swiper-next"
+              style="width: 36px; height: 36px; padding: 0;">❯</button>
+          </div>
+        </div>
 
-      <!-- ============best selling products recomentation ================== -->
-      <section id="featured-products" class="products-carousel">
-        <div class="container-lg overflow-hidden py-5">
-          <div class="row">
-            <div class="col-md-12">
-
-              <div class="section-header d-flex flex-wrap justify-content-between my-4">
-
-                <h2 class="section-title">Products Also you Like</h2>
-
-                <div class="d-flex align-items-center">
-                  <div class="swiper-buttons">
-                    <button class="swiper-prev products-carousel-prev btn btn-primary">❮</button>
-                    <button class="swiper-next products-carousel-next btn btn-primary">❯</button>
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            <% recomented.forEach(product=> { %>
+              <div class="swiper-slide p-2">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100 transition-all hover-translate">
+                  <a href="/product/<%= product._id %>" class="text-decoration-none">
+                    <img src="<%= product.productImage[0] %>" class="card-img-top p-3 rounded-4"
+                      alt="<%= product.productName %>" style="aspect-ratio: 1; object-fit: cover;">
+                    <div class="card-body text-center pt-0 px-3 pb-2">
+                      <h6 class="text-dark fw-bold text-truncate mb-2 small">
+                        <%= product.productName %>
+                      </h6>
+                      <div class="price-section d-flex justify-content-center align-items-baseline gap-2 mb-2">
+                        <span class="text-primary fw-bold small">₹<%= product.sellingPrice %></span>
+                        <del class="text-muted smaller">₹<%= product.regularPrice %></del>
+                      </div>
+                    </div>
+                  </a>
+                  <!-- Fix: Moved button-area outside anchor to prevent navigation on click -->
+                  <div class="card-footer border-0 bg-transparent pt-0 pb-3 px-3">
+                    <div class="button-area">
+                      <div class="d-flex gap-1 justify-content-center align-items-center">
+                        <input type="number" productid="<%= product._id %>"
+                          class="form-control form-control-sm quantitySelection border-0 bg-light text-center p-0"
+                          value="1" min="1" max="5" style="width: 40px; height: 32px; font-size: 0.8rem;">
+                        <button
+                          class="btn btn-secondary btn-sm flex-grow-1 btn-cart-action d-flex align-items-center justify-content-center gap-1 py-1"
+                          productid="<%= product._id %>">
+                          <svg width="12" height="12" fill="currentColor">
+                            <use xlink:href="#cart"></use>
+                          </svg>
+                          <span style="font-size: 0.75rem;">Add</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-
-              <div class="swiper">
-                <div class="swiper-wrapper">
-
-                  <!-- product slider  -->
-
-                  <% for(let product of recomented){ %>
-
-                    <div class="product-item swiper-slide">
-                      <figure>
-                        <a href="/product/<%= product._id %>" title="Product Title">
-                          <img src="<%= product.productImage[0] %>" alt="Product Thumbnail" class="tab-image">
-                        </a>
-                      </figure>
-                      <div class="d-flex flex-column text-center">
-                        <h3 class="fs-6 fw-normal">
-                          <%= product.productName.substring(0,18)+'...' %>
-                        </h3>
-
-
-
-                        <div class="d-flex justify-content-center align-items-center gap-2">
-                          <del>₹<%= product.regularPrice %></del>
-                          <span class="text-dark fw-semibold">₹<%= product.sellingPrice %></span>
-                          <span
-                            class="badge border border-dark-subtle rounded-0 fw-normal px-1 fs-7 lh-1 text-body-tertiary">10%
-                            OFF</span>
-                        </div>
-                        <div class="button-area p-3 pt-0">
-                          <div class="row g-1 mt-2">
-                            <div class="col-3"><input type="number" productid="<%= product._id %>" name="quantity"
-                                class="form-control border-dark-subtle input-number quantity quantitySelection"
-                                value="1" onkeydown="return false;" min="0" max="5"></div>
-                            <div class="col-7"><a class="btn btn-primary rounded-1 p-2 fs-7 btn-cart"><svg width="18"
-                                  height="18">
-                                  <use xlink:href="#cart"></use>
-                                </svg> Add to Cart</a></div>
-                            <div class="col-2"><a class="btn btn-outline-dark rounded-1 p-2 fs-6"><svg width="18"
-                                  height="18">
-                                  <use xlink:href="#heart"></use>
-                                </svg></a></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <% } %>
-                      <!-- product ends -->
-
-
-                </div>
-              </div>
-              <!-- / products-carousel -->
-
-            </div>
+              <% }) %>
           </div>
         </div>
       </section>
-      <!-- ============best selling products recomentation ================== -->
+    </div>
 
+    <!-- Scripts -->
+    <script src="/js/userjs/magnifierPackage/Event.js"></script>
+    <script src="/js/userjs/magnifierPackage/magnifier.js"></script>
+    <script>
+      function updateMainImage(src) {
+        const thumb = document.getElementById('thumb');
+        thumb.src = src;
+        thumb.setAttribute('data-large-img-url', src);
 
+        // Remove active class from all thumbnails and add to clicked one
+        document.querySelectorAll('.smallThumbnail').forEach(img => {
+          img.classList.remove('active');
+          if (img.src === src) img.classList.add('active');
+        });
 
+        // Re-attach magnifier for the new image if needed
+      }
 
-
-
-
-
-
-
-
-
-      <script src="/js/userjs/magnifierPackage/Event.js"></script>
-      <script src="/js/userjs/magnifierPackage/magnifier.js"></script>
-      <script>
-        var evt = new Event(), m = new Magnifier(evt);
+      document.addEventListener('DOMContentLoaded', () => {
+        const evt = new MagnifierEvent(), m = new Magnifier(evt);
         m.attach({
           thumb: '#thumb',
-          // large: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_640.jpg', 
           largeWrapper: 'preview',
           zoomable: true,
           mode: 'inside',
         });
-      </script>
-      <%- include('../partials/userFooter.ejs') %>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      });
+    </script>
 
-        <script src="/js/userjs/productDetails.js"></script>
-  </body>
+    <%- include('../partials/userFooter.ejs') %>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script src="/js/userjs/productDetails.js"></script>
+</body>
 
 </html>

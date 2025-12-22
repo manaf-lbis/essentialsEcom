@@ -27,33 +27,35 @@ router.post('/unblockUser/:id', auth.adminAuth, userController.unblockUser);
 router.get('/category', auth.adminAuth, categoryController.listCategory);
 router.get('/addCategory', auth.adminAuth, categoryController.addCategoryPage);
 router.post('/category', auth.adminAuth, config.upload.single('image'), categoryController.addCategory);
-router.get('/removeCategory',auth.adminAuth, categoryController.removeCategory);
-router.get('/editCategoryPage',auth.adminAuth, categoryController.editCategoryPage);
-router.post('/updateCategory',auth.adminAuth, categoryController.updateCategory);
-router.get('/restoreCategory',auth.adminAuth, categoryController.restoreCategory);
+router.get('/removeCategory', auth.adminAuth, categoryController.removeCategory);
+router.get('/editCategoryPage', auth.adminAuth, categoryController.editCategoryPage);
+router.post('/updateCategory', auth.adminAuth, config.upload.single('image'), categoryController.updateCategory);
+router.get('/restoreCategory', auth.adminAuth, categoryController.restoreCategory);
 
 //product
 router.get('/products', auth.adminAuth, productController.products);
 router.get('/addProduct', auth.adminAuth, productController.addproductPage);
-router.post('/addProduct', auth.adminAuth, config.upload.array('images', 3), productController.addProduct);
-router.get('/removeProduct/:id', auth.adminAuth, productController.removeProduct);
+router.post('/addProduct', auth.adminAuth, config.upload.array('images', 6), productController.addProduct);
+router.post('/blockProduct/:id', auth.adminAuth, productController.blockProduct);
+router.post('/unblockProduct/:id', auth.adminAuth, productController.unblockProduct);
 router.get('/editProduct/:id', auth.adminAuth, productController.editProduct);
-router.post('/updateProduct', auth.adminAuth,config.upload.array('images', 3),productController.updateProduct);
-router.get('/removeProductImage',auth.adminAuth,productController.removeImage)
+router.post('/updateProduct', auth.adminAuth, config.upload.array('images', 6), productController.updateProduct);
+router.post('/removeProductImage', auth.adminAuth, productController.removeImage)
 
 //orders
-router.get('/orders', auth.adminAuth,ordersController.getOrders);
-router.get('/updateOrderStatus', auth.adminAuth,ordersController.orderStatusUpdate);
+router.get('/orders', auth.adminAuth, ordersController.getOrders);
+router.get('/updateOrderStatus', auth.adminAuth, ordersController.orderStatusUpdate);
 
 //report
-router.get('/getReport', auth.adminAuth,dashboardController.getReport);
-router.get('/graphReport', auth.adminAuth,dashboardController.generateGraphReport)
+router.get('/getReport', auth.adminAuth, dashboardController.getReport);
+router.get('/graphReport', auth.adminAuth, dashboardController.generateGraphReport);
+router.get('/downloadPDF', auth.adminAuth, dashboardController.downloadSalesReportPDF);
 
 //coupon
-router.get('/coupons', auth.adminAuth,couponController.coupons);
-router.get('/addCoupons', auth.adminAuth,couponController.createCouponPage);
-router.post('/createCoupon', auth.adminAuth,couponController.newCoupon);
-router.get('/disableCoupon', auth.adminAuth,couponController.disableCoupon);
+router.get('/coupons', auth.adminAuth, couponController.coupons);
+router.get('/addCoupons', auth.adminAuth, couponController.createCouponPage);
+router.post('/createCoupon', auth.adminAuth, couponController.newCoupon);
+router.get('/disableCoupon', auth.adminAuth, couponController.disableCoupon);
 
 
 

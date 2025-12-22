@@ -5,28 +5,32 @@ const Comments = require('../../models/commentsSchema')
 
 
 //loading product detailed page
-const getDetailedPage = async (req,res)=>{
+const getDetailedPage = async (req, res) => {
     try {
         // extract user id from request
         const _id = req.params.id;
 
         // fetch product details from db
-        const dbResult  = await Product.findOne({_id});
+        const dbResult = await Product.findOne({ _id });
         const categoryId = dbResult.category;
-        
-        //fetching related product using category
-        const recomented = await Product.find({'category':categoryId});
+
+        //fetching related product using category (excluding current product)
+        const recomented = await Product.find({
+            category: categoryId,
+            _id: { $ne: _id },
+            isBlocked: false // Ensure only listed products are shown
+        }).limit(10);
 
         // fetching comments related to this product
-        const comments = await Comments.findOne({productId:_id}).populate({
-            path: 'comments.userId', 
-            model: 'User', 
-            select: 'name' 
-          });
-    
+        const comments = await Comments.findOne({ productId: _id }).populate({
+            path: 'comments.userId',
+            model: 'User',
+            select: 'name'
+        });
+
         // render product details page
-        res.render('user/productDetails',{dbResult,recomented,comments})
-        
+        res.render('user/productDetails', { dbResult, recomented, comments })
+
     } catch (error) {
         //log error and render error page 
         console.log(error);
@@ -35,20 +39,20 @@ const getDetailedPage = async (req,res)=>{
 };
 
 
-const checkQty =async (req,res)=>{
+const checkQty = async (req, res) => {
     try {
-     const {_id,qty} = req.query
-     const product=  await Product.findOne({_id});
+        const { _id, qty } = req.query
+        const product = await Product.findOne({ _id });
 
-     if( Number(qty) >= product.quantity){
-        res.status(400).json({message:'out of stock',availableQty: product.quantity});
-     }else{
-        res.status(200).json({mesage:'ok'})
-     }
+        if (Number(qty) >= product.quantity) {
+            res.status(400).json({ message: 'out of stock', availableQty: product.quantity });
+        } else {
+            res.status(200).json({ mesage: 'ok' })
+        }
 
     } catch (error) {
         // logging error
-        console.log(error); 
+        console.log(error);
     };
 };
 

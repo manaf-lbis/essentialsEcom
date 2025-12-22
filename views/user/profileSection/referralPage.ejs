@@ -1,76 +1,93 @@
 <html lang="en">
 
 <%- include('../../partials/htmlHeadUser.ejs', { csspath: '/css/userCss/profile/profile.css' }) %>
-<link rel="stylesheet" href="/css/commonCss/userProfileLeft/userProfileLeftbar.css">
 
-<body>
+    <body>
+        <%- include('../../partials/userNavbar.ejs') %>
 
-    <%- include('../../partials/userNavbar.ejs') %>
+            <div class="profile-container">
+                <div class="profile-layout">
+                    <%- include('../../partials/userprofile/profileLayoutMinimal.ejs', { activePage: 'referrals' }) %>
 
-    <section class="container rounded-2 bg-light">
-        <ol class="d-flex align-items-center list-unstyled m-0 ">
-            <li><a class="text-decoration-none" href="/home"><p>Home / </p> </a></li>
-            <li><a class="text-decoration-none" href="/profile"><p> Profile / </p></a></li>
-            <li><a class="text-decoration-none"><p> Referral Page</p> </a></li>
-        </ol>
-    </section>
+                        <!-- Main Content -->
+                        <main class="profile-content-card">
+                            <div class="mb-4 pb-2 border-bottom">
+                                <h5 class="mb-0 fw-bold">Referral Program</h5>
+                            </div>
 
-    <section class="container d-flex gap-2">
+                            <div class="text-center py-4 bg-light rounded mb-4">
+                                <h4 class="text-success mb-0"><i class="fas fa-gift me-2"></i> Get ₹150 on every
+                                    referral</h4>
+                                <p class="text-muted mb-0 mt-2">Invite your friends and earn rewards!</p>
+                            </div>
 
-        <%- include('../../partials/userprofile/profileleftSec.ejs', { userData }) %>
+                            <!-- Referral Code Display -->
+                            <div class="referral-code-section mb-5">
+                                <label for="referralCode"
+                                    class="form-label small text-muted text-uppercase fw-bold">Your Referral
+                                    Code</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control form-control-lg bg-white" id="referralCode"
+                                        value="<%= userData.referralCode %>" readonly
+                                        style="letter-spacing: 2px; font-weight: bold; color: #0d6efd;">
+                                    <button class="btn btn-outline-primary" type="button"
+                                        onclick="navigator.clipboard.writeText(document.getElementById('referralCode').value)">
+                                        <i class="far fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
 
-        <!-- Referral Section -->
-        <section id="rightSection">
-            <h5>Referral Program</h5>
-            <div class="line"></div>
-
-            <div class="mt-3 d-flex justify-content-center">
-                <h5 class="text-success">Get ₹150 on every referral</h5>
+                            <!-- List of Referred Users -->
+                            <div class="referred-users-section">
+                                <h6 class="fw-bold mb-3">Referred Users</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-hover border">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th scope="col" class="border-0">#</th>
+                                                <th scope="col" class="border-0">User Name</th>
+                                                <th scope="col" class="border-0">Referred Date</th>
+                                                <th scope="col" class="border-0 text-end">Reward</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if ( referrals.length> 0) { %>
+                                                <% referrals.forEach((user, index)=> { %>
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <%= index + 1 %>
+                                                        </th>
+                                                        <td>
+                                                            <%= user.referredUser.name %>
+                                                        </td>
+                                                        <td>
+                                                            <%= user.date.toLocaleDateString() %>
+                                                        </td>
+                                                        <td class="text-success fw-bold text-end">+ ₹<%= user.reward %>
+                                                        </td>
+                                                    </tr>
+                                                    <% }) %>
+                                                        <% } else { %>
+                                                            <tr>
+                                                                <td colspan="4" class="text-center py-4 text-muted">
+                                                                    <i class="fas fa-users mb-2 d-block"
+                                                                        style="font-size: 24px; opacity: 0.3;"></i>
+                                                                    No users referred yet. Start sharing!
+                                                                </td>
+                                                            </tr>
+                                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </main>
+                </div>
             </div>
 
-            <!-- Referral Code Display -->
-            <div class="referral-code-section mt-3">
-                <label for="referralCode"><strong>Your Referral Code:</strong></label>
-                <input type="text" class="form-control mb-3" id="referralCode" value="<%= userData.referralCode %>" readonly>
-            </div>
+            <%- include('../../partials/userFooter.ejs') %>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script src="/js/userjs/profileSection/referralPage.js"></script>
 
-            <!-- List of Referred Users -->
-            <div class="referred-users-section">
-                <h6>Referred Users</h6>
-                <table class="table table-striped mt-3">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">User Name</th>
-                            <th scope="col">Referred Date</th>
-                            <th scope="col">Reward</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if ( referrals.length > 0) { %>
-                            <% referrals.forEach((user, index) => { %>
-                                <tr>
-                                    <th scope="row"><%= index + 1 %></th>
-                                    <td><%= user.referredUser.name %></td>
-                                    <td><%= user.date.toLocaleDateString() %></td>
-                                    <td>₹<%= user.reward %> </td>
-                                </tr>
-                            <% }) %>
-                        <% } else { %>
-                            <tr>
-                                <td colspan="4" class="text-center">No users referred yet.</td>
-                            </tr>
-                        <% } %>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </section>
-
-    <%- include('../../partials/userFooter.ejs') %>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/js/userjs/profileSection/referralPage.js"></script>
-
-</body>
+    </body>
 
 </html>

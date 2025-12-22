@@ -24,30 +24,9 @@ async function addToCart(quantity, _id) {
     });
 
     if (response.ok) {
-
-        Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Added to Cart",
-            showConfirmButton: false,
-            timer: 1000,
-            width: '200px',
-            padding: '0.2rem',
-            backdrop: false
-        });
-
-
+        SuccessToast("Added to Cart");
     } else {
-        Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "Adding Failed",
-            showConfirmButton: false,
-            timer: 1000,
-            width: '200px',
-            padding: '0.2rem',
-            backdrop: false
-        });
+        ErrorToast("Adding Failed");
     }
 }
 
@@ -65,45 +44,24 @@ async function removeFromWishlist(event) {
 
     const productId = event.target.closest('div').getAttribute('productId');
 
-    Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-    }).then(async (result) => {
-        if (result.isConfirmed) {
+    const result = await ConfirmAction(
+        "Are you sure?",
+        "You won't be able to revert this!",
+        "Yes, remove it!"
+    );
 
-            const response = await fetch(`/removeFromWishlist/?productId=${productId}`, {
-                method: 'get',
-                headers: {
-                    'content-type': 'application/json'
-                }
-            });
+    if (result.isConfirmed) {
+        const response = await fetch(`/removeFromWishlist/?productId=${productId}`, {
+            method: 'get',
+            headers: { 'content-type': 'application/json' }
+        });
 
-            if (response.ok) {
-
-                await Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Item removed",
-                    showConfirmButton: false,
-                    timer: 1000,
-                    width: '200px',
-                    padding: '0.2rem',
-                    backdrop: false
-                });
-
-                console.log('success');
-
-
+        if (response.ok) {
+            SuccessToast("Item removed");
+            setTimeout(() => {
                 window.location.href = '/wishlist';
-
-            }
+            }, 1000);
         }
-    });
-
-
+    }
 }
+

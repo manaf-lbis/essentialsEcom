@@ -67,14 +67,46 @@ async function getCartDetails(req) {
 
         let amountAfterDiscount = totalAmount;
         let discount = 0;
+        let couponInvalidated = false;
 
-        if (cartitems[0]?.couponDetails?.discount) {
-            discount = cartitems[0]?.couponDetails?.discount;
-            amountAfterDiscount = totalAmount - cartitems[0]?.couponDetails?.discount;
+        if (cartitems[0]?.couponDetails) {
+            const couponDetails = cartitems[0].couponDetails;
+
+            // Validate coupon: Minimum purchase, isActive, and expiry
+            const isMinPurchaseValid = totalAmount >= (couponDetails.minPurchaseValue || 0);
+            const isActive = couponDetails.isActive !== false;
+            const isNotExpired = new Date(couponDetails.expiryDate) >= new Date();
+
+            if (isMinPurchaseValid && isActive && isNotExpired) {
+                // Calculate discount based on type
+                if (couponDetails.discountType === 'percentage') {
+                    const percentageDiscount = (totalAmount * couponDetails.discount) / 100;
+                    discount = couponDetails.maxDiscountAmount
+                        ? Math.min(percentageDiscount, couponDetails.maxDiscountAmount)
+                        : percentageDiscount;
+                } else {
+                    // Fixed discount
+                    discount = couponDetails.discount;
+                }
+
+                // Round to 2 decimal places
+                discount = Math.round(discount * 100) / 100;
+                amountAfterDiscount = totalAmount - discount;
+            } else {
+                // Coupon is no longer valid, remove it from the cart in DB
+                await Cart.updateOne(
+                    { userId: _id },
+                    { $unset: { coupon: "" } }
+                );
+                // Reset discount values for the response
+                discount = 0;
+                amountAfterDiscount = totalAmount;
+                couponInvalidated = true;
+            }
         }
 
         // Return the results
-        return { totalAmount, totalItems, cartitems, discount, amountAfterDiscount };
+        return { totalAmount, totalItems, cartitems, discount, amountAfterDiscount, couponInvalidated };
     } catch (error) {
         console.log(error);
         throw error;
@@ -89,13 +121,13 @@ const getCartPage = async (req, res) => {
         const userId = getUserIdFromSession(req)
 
         //populating cart details using getCartDetails function
-        const { totalAmount, totalItems, cartitems, amountAfterDiscount } = await getCartDetails(req);
+        const { totalAmount, totalItems, cartitems, discount, amountAfterDiscount } = await getCartDetails(req);
 
         //fetching coupon details that added in the cart 
         const coupon = await Cart.findOne({ userId }).populate('coupon');
 
         //render cart page with details
-        res.render('user/purchase/cart', { cartitems, totalAmount, totalItems, coupon, amountAfterDiscount })
+        res.render('user/purchase/cart', { cartitems, totalAmount, totalItems, coupon, discount, amountAfterDiscount })
 
     } catch (error) {
         //logging error and render error page

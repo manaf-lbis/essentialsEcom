@@ -6,7 +6,7 @@ const orderSchema = new Schema({
 
   orderId: {
     type: String,
-    default: () => uuidv4().slice(-12),
+    default: () => 'ORD-' + uuidv4().slice(-12),
     unique: true,
   },
   userId: {
@@ -21,7 +21,7 @@ const orderSchema = new Schema({
         ref: 'Product',
         required: true,
       },
-      category:{
+      category: {
         type: Schema.Types.ObjectId,
         ref: 'Category',
         required: true,

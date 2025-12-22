@@ -1,25 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #f0f0f0;
-}
-
-.container {
-  text-align: center;
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
+/* Animations and specific icons only */
 
 .checkmark-circle {
   width: 80px;
@@ -52,18 +31,22 @@ body {
   from {
     stroke-dasharray: 0, 150;
   }
+
   to {
     stroke-dasharray: 150, 150;
   }
 }
+
 @keyframes checkmarkAnimation {
   from {
     stroke-dashoffset: 48;
   }
+
   to {
     stroke-dashoffset: 0;
   }
 }
+
 h1 {
   color: #4CAF50;
   font-size: 24px;
@@ -96,4 +79,6 @@ button:hover {
   color: #888;
   cursor: pointer;
   margin-top: 10px;
-}/*# sourceMappingURL=orderSucessPage.css.map */
+}
+
+/*# sourceMappingURL=orderSucessPage.css.map */

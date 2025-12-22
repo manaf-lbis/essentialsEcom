@@ -1,42 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/css/userCss/purchase/orderSucessPage.css">
-  <title>Order Sucessfull</title>
-  
+  <% const headPath='../../partials/htmlHeadUser.ejs' ; %>
+    <%- include(headPath, {csspath: '/css/userCss/purchase/orderSucessPage.css' }) %>
+      <title>Order Successful | Essentials</title>
 </head>
-<body>
-  <div class="container">
-    <div class="checkmark-circle">
-      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-        <circle class="checkmark-circle-svg" cx="26" cy="26" r="25" fill="none"/>
-        <path class="checkmark-check" fill="none" d="M14 27l7 7 16-16"/>
-      </svg>
-    </div>
-    <h1>Thank you For Your Purchase</h1>
-    <p><%= `Your order of ${orderDetails.orderItems.length} items has been marked as successful`%></p>
-    <p><%= `your order Id is # ${orderDetails.orderId}`%></p>
-    <p>Thank you for your Order and choosing Essentials! <br> Your Order will Deliver Shortly</p>
-    <div>
-      <a href="/">
-        <button >Home</button>
-      </a>
-      <a href="/orders">
-        <button >Orders</button>
-      </a>
 
-    </div>
-   
-    
-    <!-- <p class="small-text">— Click to see opposite state —</p> -->
-  </div>
+<body class="d-flex flex-column min-vh-100 bg-light">
+  <%- include("../../partials/userNavbar.ejs") %>
 
+    <main class="flex-grow-1 py-5 mt-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg text-center p-4 p-md-5" style="border-radius: 30px;">
+              <div class="checkmark-circle mb-4">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                  <circle class="checkmark-circle-svg" cx="26" cy="26" r="25" fill="none" />
+                  <path class="checkmark-check" fill="none" d="M14 27l7 7 16-16" />
+                </svg>
+              </div>
+
+              <h1 class="fw-bold mb-3" style="color: #2c3e50; font-size: 2.5rem;">Thank You!</h1>
+              <h4 class="text-muted mb-4">Your order has been placed successfully.</h4>
+
+              <div class="order-info bg-light p-4 rounded-4 mb-4 text-start">
+                <p class="mb-2"><strong>Order ID:</strong> <span class="text-primary">#<%= orderDetails.orderId %>
+                      </span></p>
+                <p class="mb-0"><strong>Items:</strong>
+                  <%= orderDetails.orderItems.length %>
+                </p>
+              </div>
+
+              <p class="text-muted mb-5">Your order will be processed and delivered shortly. Thank you for choosing
+                Essentials!</p>
+
+              <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                <a href="/home" class="btn btn-outline-primary btn-lg rounded-pill px-5">Home</a>
+                <a href="/orders" class="btn btn-primary btn-lg rounded-pill px-5">My Orders</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <%- include("../../partials/userFooter.ejs") %>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          if (typeof SuccessToast === 'function') {
+            SuccessToast("Order Placed Successfully!");
+          }
+        });
+      </script>
 </body>
+
 </html>
-
-
-
-
-

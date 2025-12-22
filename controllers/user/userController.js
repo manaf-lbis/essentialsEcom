@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const User = require('../../models/userSchema');
 const session = require('express-session');
 const passport = require('../../config/passport');
@@ -30,6 +31,21 @@ const loadSignupPage = (req, res) => {
 };
 
 
+// Landing page rendering
+const loadLandingPage = (req, res) => {
+  try {
+    const userId = getUserIdFromSession(req);
+    // render landing page
+    return res.render('user/landing', { userId });
+
+  } catch (error) {
+    // if any error, log error and render error page
+    console.log(error);
+    return res.status(500).render('user/pagenotFound');
+  }
+};
+
+
 //login page rendering
 const loadLoginpage = (req, res) => {
   try {
@@ -53,7 +69,7 @@ const loadHome = async (req, res) => {
 
     // requiring all object to load home page
     const products = await Product.find({ isBlocked: false });
-    
+
     const category = await Category.find({ isBlocked: false });
     const wishlist = await Wishlist.findOne({ userId }, { 'products.productId': 1 })
 
@@ -92,8 +108,9 @@ const userLogout = (req, res) => {
 };
 
 // <====random otp  generating=====>
+// <====random otp  generating=====>
 const otpGenerator = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return crypto.randomInt(100000, 1000000).toString();
 };
 
 // Generating otp using node mailer
@@ -153,15 +170,18 @@ const addNewUser = async (req, res) => {
 
     // sending email with otp
     const sentInfo = await sendverification(email, otp);
-    
+
 
     if (sentInfo.accepted.length > 0) {
 
       // saving otp to session
       req.session.userOtp = otp;
 
+      // hashing password before saving to session
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       // storing data to the session for later use
-      req.session.userData = { name, email, phone, password, referralCode };
+      req.session.userData = { name, email, phone, password: hashedPassword, referralCode };
 
       // loging otp for test purpose
       console.log('first otp:', otp);
@@ -181,18 +201,20 @@ const addNewUser = async (req, res) => {
 //verify otp and and creating user
 const verifyOtp = async (req, res) => {
   try {
+    // Check if session data exists
+    if (!req.session.userData) {
+      return res.status(400).json({ message: 'Session expired, please try signing up again.' });
+    }
+
     // extract use details from session
     const { name, phone, email, password, referralCode } = req.session.userData;
     const { enteredOtp } = req.body;
-    
+
     // matching otp with saved otp
     if (enteredOtp === req.session.userOtp) {
 
-      //hashing entred password
-      const hashPassword = await bcrypt.hash(password, 10);
-
       // create and saving new user object to db
-      const user = new User({ name, phone, email, password: hashPassword });
+      const user = new User({ name, phone, email, password });
       await user.save()
 
 
@@ -202,8 +224,11 @@ const verifyOtp = async (req, res) => {
         await refferalsController.createRefferal(referralCode, user._id)
       };
 
+      // setting session for auto login 
+      req.session._id = user._id;
+
       //respond with success message
-      res.status(200).json({ message: 'otp verified Sucessfully' });
+      return res.status(200).json({ message: 'otp verified Sucessfully' });
 
     } else {
       // respond with error message
@@ -298,6 +323,7 @@ const googleAuth = (req, res) => {
 
 
 module.exports = {
+  loadLandingPage,
   loadLoginpage,
   loadSignupPage,
   addNewUser,
