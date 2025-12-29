@@ -50,6 +50,8 @@ app.use('/auth', userRouter)
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () =>
-  console.log(`running on port ${port}`)
-);
+app.listen(port, () => {
+  console.log(`running on port ${port}`);
+  console.log('BREVO_API_KEY status:', process.env.BREVO_API_KEY ? 'DEFINED' : 'NOT DEFINED');
+  console.log('EMAIL_USER status:', process.env.EMAIL_USER ? 'DEFINED' : 'NOT DEFINED');
+});

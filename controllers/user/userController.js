@@ -10,6 +10,7 @@ const Category = require('../../models/categorySchema');
 const Wishlist = require('../../models/wishlistSchema')
 const mongoose = require('mongoose');
 const refferalsController = require('./referralsController');
+const util = require('util');
 
 function getUserIdFromSession(req) {
   return req.session?._id ?? req.session.passport?.user;
@@ -131,8 +132,11 @@ const addNewUser = async (req, res) => {
     };
 
   } catch (error) {
-    console.log(error);
-    return res.render('user/signup', { message: 'Error while sending OTP' });
+    console.error('Error in addNewUser:', error);
+    if (error.response) {
+      console.error('Response Error Data:', util.inspect(error.response.data || error.response.body, { depth: null }));
+    }
+    return res.render('user/signup', { message: 'Error while sending OTP: ' + (error.message || 'Unknown error') });
   };
 };
 
