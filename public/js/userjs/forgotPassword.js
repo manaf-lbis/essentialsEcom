@@ -1,14 +1,14 @@
 const err = document.getElementById('nameerr1');
 
 async function checkEmail() {
-  err.innerHTML = '';
+  err.innerHTML = ''; //clearing previous err
 
   const email = document.getElementById('email').value;
 
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (regex.test(email)) {
-
+    //area disable for preventing submit again
     document.getElementById('emailCheck').disabled = 'disabled';
     document.getElementById('email').disabled = 'disabled';
 
@@ -27,6 +27,7 @@ async function checkEmail() {
         icon: 'success',
       });
 
+      //enable otp field
       getOtpField();
       timer();
     } else {
@@ -36,6 +37,7 @@ async function checkEmail() {
         text: 'Check you Email',
       });
 
+      // enabling disanled button
       document.getElementById('emailCheck').disabled = '';
       document.getElementById('email').disabled = '';
     }
@@ -44,6 +46,7 @@ async function checkEmail() {
   }
 }
 
+// resent timer
 const countdown = document.getElementById('countdown');
 const resendBtn = document.getElementById('resendBtn');
 
@@ -59,11 +62,13 @@ function timer() {
   }, 1000);
 }
 
+// showing otp field
 function getOtpField() {
   document.getElementById('otpSection').classList.toggle('d-none');
   document.getElementById('emailCheck').classList.toggle('d-none');
 }
 
+//otp verification
 async function verifyOtp() {
   const userOtp = document.getElementById('userOtp').value;
 
@@ -91,9 +96,11 @@ async function verifyOtp() {
       text: 'Please Try Again',
     });
 
+    
   }
 }
 
+//password validating
 function validate() {
   const password = document.getElementById('password1').value;
   const cPassword = document.getElementById('password2').value;
@@ -121,6 +128,7 @@ function validate() {
 
 }
 
+//changing request
 async function changePassword(password){
 
   const response = await fetch('/changePassword',{method:"POST",
@@ -138,7 +146,7 @@ async function changePassword(password){
       icon: "success"
     });
 
-    window.location.href = '/'
+    window.location.href = '/login'
 
   }else{
     Swal.fire({
@@ -147,5 +155,7 @@ async function changePassword(password){
       text: 'Please Try Again',
     });
   }
+
+
 
 }
