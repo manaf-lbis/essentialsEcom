@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+const { sendEmail } = require('../../utils/emailService');
 const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -88,28 +88,14 @@ const otpGenerator = () => {
 
 const sendverification = async (email, otp) => {
   try {
-    const transport = nodemailer.createTransport({
-      service: 'gmail',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.NODEMAILER_EMAIL,
-        pass: process.env.NODEMAILER_PASSWORD,
-      },
-    });
+    const subject = 'Verify your identity';
+    const htmlContent = `YOUR OTP is ${otp}`; // Keeping it simple as per original text
 
-    const mailoption = {
-      from: process.env.NODEMAILER_EMAIL,
-      to: email,
-      subject: 'Verify your identity',
-      text: `YOUR OTP is ${otp}`,
-    };
-
-    const info = await transport.sendMail(mailoption);
+    const info = await sendEmail(email, subject, htmlContent);
     return info;
 
   } catch (error) {
-    console.log('error while sending otp');
+    console.log('error while sending otp', error);
     throw error;
   };
 
