@@ -1,78 +1,85 @@
-
-const { renderFile } = require("ejs");
 const Order = require('../../models/orderSchema');
-const path = require('path');
-const puppeteer = require('puppeteer');
+const PDFDocument = require('pdfkit-table');
 
 const generateInvoice = async (req, res) => {
     try {
         const { orderId } = req.query;
 
-        const orders = await Order.findOne({ orderId }).populate('orderItems.productId');
+        const order = await Order.findOne({ orderId }).populate('orderItems.productId');
 
-        if (!orders) {
+        if (!order) {
             return res.status(404).send('Order not found');
         }
 
-        const invoicePath = path.join(__dirname, '../../views/user/invoice/invoice.ejs');
+        const doc = new PDFDocument({ margin: 50, size: 'A4' });
 
-        let invoiceHtml;
-        try {
-            invoiceHtml = await renderFile(invoicePath, { orders });
-        } catch (err) {
-            console.error('Error rendering invoice template:', err);
-            return res.status(500).send('Error rendering invoice template');
-        }
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename=invoice-${orderId}.pdf`);
 
-        let browser;
-        try {
-            browser = await puppeteer.launch({
-                headless: "new",
-                args: [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                    '--disable-dev-shm-usage', // critical for docker/cloud envs
-                    '--disable-gpu',
-                    '--no-first-run',
-                    '--no-zygote',
-                    '--single-process', // Critical for Render Free Tier (512MB RAM)
-                ],
-                executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined, // allow env override
-            });
+        doc.pipe(res);
 
-            const page = await browser.newPage();
+        // Header
+        doc.fillColor('#444444')
+            .fontSize(20)
+            .text('INVOICE', 50, 57)
+            .fontSize(10)
+            .text('Essentials.', 200, 50, { align: 'right' })
+            .text('381/Essential Tower', 200, 65, { align: 'right' })
+            .text('City Anagalapura, Main Road, 691723', 200, 80, { align: 'right' })
+            .moveDown();
 
-            // Set content with a reasonable timeout
-            await page.setContent(invoiceHtml, {
-                waitUntil: 'networkidle0',
-                timeout: 30000
-            });
+        // Customer Details
+        doc.fontSize(20).text('Bill To:', 50, 150);
+        doc.fontSize(10).text(order.address.fullName, 50, 180)
+            .text(order.address.houseName, 50, 195)
+            .text(`${order.address.area}, ${order.address.street}`, 50, 210)
+            .text(`${order.address.city}, ${order.address.state} - ${order.address.pincode}`, 50, 225)
+            .text(`Phone: ${order.address.phone}`, 50, 240)
+            .moveDown();
 
-            const pdfBuffer = await page.pdf({
-                format: 'A4',
-                printBackground: true
-            });
+        // Order Details
+        doc.fontSize(10).text(`Invoice Number: ${order.orderId}`, 400, 180)
+            .text(`Invoice Date: ${order.updatedAt.toDateString()}`, 400, 195)
+            .text(`Order Date: ${order.createdAt.toDateString()}`, 400, 210)
+            .moveDown();
 
-            await browser.close();
+        // Table
+        const table = {
+            title: "Invoice Items",
+            headers: [
+                { label: "Product", property: 'name', width: 200 },
+                { label: "Quantity", property: 'quantity', width: 100 },
+                { label: "Price", property: 'price', width: 100 },
+                { label: "Total", property: 'total', width: 100 }
+            ],
+            datas: order.orderItems.map(item => ({
+                name: item.productId ? item.productId.productName.substring(0, 30) : 'Unavailable',
+                quantity: item.quantity,
+                price: item.price.toFixed(2),
+                total: (item.quantity * item.price).toFixed(2)
+            }))
+        };
 
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=invoice-${orderId}.pdf`);
+        await doc.table(table, {
+            prepareHeader: () => doc.font("Helvetica-Bold").fontSize(10),
+            prepareRow: () => doc.font("Helvetica").fontSize(10)
+        });
 
-            res.end(pdfBuffer);
+        // Totals
+        doc.moveDown();
+        const totalX = 400;
+        doc.text(`Discount: ${order.discount.toFixed(2)}`, totalX, doc.y);
+        doc.moveDown(0.5);
+        doc.font('Helvetica-Bold').fontSize(14).text(`Grand Total: ${order.finalPrice.toFixed(2)}`, totalX, doc.y);
 
-        } catch (puppeteerError) {
-            console.error('Puppeteer error:', puppeteerError);
-            if (browser) await browser.close();
-            throw puppeteerError; // rethrow to be caught by outer catch
-        }
+        doc.end();
 
     } catch (error) {
-        console.error('CRITICAL Error generating invoice:', error);
-        res.status(500).send(`Error generating invoice: ${error.message}`);
+        console.error('Error generating invoice:', error);
+        res.status(500).send('Error generating invoice');
     }
 };
 
 module.exports = {
     generateInvoice
 };
-
