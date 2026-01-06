@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: essentials-ecom
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.9.0
+    buildpacks:
+      - key: PUPPETEER_BUILDPACK
+        url: https://github.com/puppeteer/puppeteer-buildpack.git
+      - key: NODE_BUILDPACK
+        url: https://github.com/render-inc/heroku-buildpack-nodejs
